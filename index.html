@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yasin Yel — Bilişim Teknolojileri Öğretmeni & Yazılım Geliştirici</title>
+    <meta name="description" content="Yasin Yel - Bilişim Teknolojileri Öğretmeni & iOS/Mobil Uygulama Geliştirici. 10 yıllık eğitim deneyimi ve yazılım tutkusu.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#hero" class="nav-logo">
+                <span class="logo-bracket">&lt;</span>YY<span class="logo-bracket"> /&gt;</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#about">Hakkımda</a></li>
+                <li><a href="#apps">Uygulamalar</a></li>
+                <li><a href="#skills">Yetenekler</a></li>
+                <li><a href="#contact">İletişim</a></li>
+            </ul>
+            <button class="nav-toggle" id="navToggle" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-particles" id="particles"></div>
+        <div class="hero-content">
+            <div class="hero-image-wrapper">
+                <div class="hero-image-glow"></div>
+                <img src="assets/profile.jpg" alt="Yasin Yel" class="hero-image">
+            </div>
+            <p class="hero-greeting">Merhaba, ben</p>
+            <h1 class="hero-name">Yasin Yel</h1>
+            <div class="hero-title-wrapper">
+                <span class="hero-title" id="typingText"></span>
+                <span class="typing-cursor">|</span>
+            </div>
+            <p class="hero-description">
+                10 yıllık eğitim deneyimi ile teknolojiyi ve yazılımı birleştiren bir bilişim öğretmeni.
+                Mobil uygulamalar geliştiriyor, fikirlerimi kodla hayata geçiriyorum.
+            </p>
+            <div class="hero-buttons">
+                <a href="#apps" class="btn btn-primary">
+                    <i class="fas fa-rocket"></i> Projelerimi Gör
+                </a>
+                <a href="#contact" class="btn btn-outline">
+                    <i class="fas fa-envelope"></i> İletişime Geç
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number" data-target="10">0</span>
+                    <span class="stat-suffix">+</span>
+                    <span class="stat-label">Yıl Deneyim</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" data-target="2">0</span>
+                    <span class="stat-suffix">+</span>
+                    <span class="stat-label">Yayınlanmış Proje</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" data-target="5">0</span>
+                    <span class="stat-suffix">+</span>
+                    <span class="stat-label">Teknoloji</span>
+                </div>
+            </div>
+        </div>
+        <a href="#about" class="scroll-indicator">
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
+        </a>
+    </section>
+
+    <!-- About Section -->
+    <section class="section" id="about">
+        <div class="container">
+            <h2 class="section-title">
+                <span class="section-number">01.</span> Hakkımda
+            </h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>
+                        10 yıldır özel bir eğitim kurumunda <strong>Bilişim Teknolojileri Öğretmeni</strong> olarak görev yapıyorum.
+                        Öğretmenlik mesleğimin yanında yazılım geliştirme ile yakından ilgileniyorum.
+                    </p>
+                    <p>
+                        Mobil uygulama geliştirme alanında <strong>React Native</strong> ve <strong>Expo</strong> ile iOS uygulamaları
+                        geliştirirken, masaüstü tarafında <strong>C/C++</strong> ve <strong>SQL</strong> veritabanı yönetimi konularında
+                        deneyim sahibiyim.
+                    </p>
+                    <p>
+                        Eğitim alanındaki deneyimimi teknolojiyle birleştirerek öğretmenlerin hayatını kolaylaştıracak
+                        çözümler üretmeyi hedefliyorum. İlk App Store uygulamam olan <strong>Öğrenci Takip Sistemi</strong>
+                        bu vizyonun bir ürünü.
+                    </p>
+                </div>
+                <div class="about-details">
+                    <div class="detail-card">
+                        <i class="fas fa-graduation-cap"></i>
+                        <h3>Eğitimci</h3>
+                        <p>10+ yıl Bilişim Teknolojileri Öğretmenliği</p>
+                    </div>
+                    <div class="detail-card">
+                        <i class="fas fa-mobile-alt"></i>
+                        <h3>Mobil Geliştirici</h3>
+                        <p>React Native & iOS uygulama geliştirme</p>
+                    </div>
+                    <div class="detail-card">
+                        <i class="fas fa-database"></i>
+                        <h3>Backend</h3>
+                        <p>Firebase, SQL & veritabanı yönetimi</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Apps Section -->
+    <section class="section section-dark" id="apps">
+        <div class="container">
+            <h2 class="section-title">
+                <span class="section-number">02.</span> Uygulamalarım
+            </h2>
+            <div class="app-showcase two-cards">
+                <!-- IBKIT -->
+                <div class="app-card featured">
+                    <div class="app-badge active-badge">Aktif Kullanılmakta</div>
+                    <div class="app-card-content">
+                        <div class="app-icon-large app-icon-ibkit">
+                            <i class="fas fa-server"></i>
+                        </div>
+                        <h3 class="app-name">IBKIT — BT Yönetim Sistemi</h3>
+                        <p class="app-subtitle">Isparta Bahçeşehir Koleji İçin</p>
+                        <p class="app-description">
+                            Eğitim kurumlarının bilgi işlem altyapısını yönetmek için geliştirilmiş kapsamlı bir web uygulaması.
+                            Envanter takibi, arıza yönetimi, stok kontrolü, harcama ve teklif yönetimi, laboratuvar takibi ve personel yönetimi gibi modülleri içerir.
+                        </p>
+                        <div class="app-features">
+                            <span class="feature-tag"><i class="fas fa-boxes"></i> Envanter Yönetimi</span>
+                            <span class="feature-tag"><i class="fas fa-tools"></i> Arıza Takibi</span>
+                            <span class="feature-tag"><i class="fas fa-warehouse"></i> Stok Kontrolü</span>
+                            <span class="feature-tag"><i class="fas fa-file-invoice-dollar"></i> Harcama & Teklif</span>
+                            <span class="feature-tag"><i class="fas fa-desktop"></i> Laboratuvar</span>
+                            <span class="feature-tag"><i class="fas fa-chart-bar"></i> Raporlama</span>
+                        </div>
+                        <div class="app-tech">
+                            <span>Next.js</span>
+                            <span>React</span>
+                            <span>TypeScript</span>
+                            <span>Firebase</span>
+                            <span>Vercel</span>
+                        </div>
+                        <a href="https://ibkit.vercel.app" target="_blank" class="btn btn-appstore btn-web">
+                            <i class="fas fa-globe"></i> Web Uygulamasını Ziyaret Et
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Öğrenci Takip Sistemi -->
+                <div class="app-card featured">
+                    <div class="app-badge">Yakında</div>
+                    <div class="app-card-content">
+                        <div class="app-icon-large">
+                            <img src="assets/app-icon.png" alt="Öğrenci Takip Sistemi" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-graduation-cap\'></i>'">
+                        </div>
+                        <h3 class="app-name">Öğrenci Takip Sistemi</h3>
+                        <p class="app-subtitle">Özel Ders Öğretmenleri İçin</p>
+                        <p class="app-description">
+                            Özel ders öğretmenlerinin öğrenci takibi, ders planlama, ödeme yönetimi ve
+                            deneme sınavı takibi yapmasını sağlayan kapsamlı bir mobil uygulama.
+                            Veliler de kendi hesaplarıyla çocuklarının derslerini ve ödemelerini takip edebilir.
+                        </p>
+                        <div class="app-features">
+                            <span class="feature-tag"><i class="fas fa-users"></i> Öğrenci Yönetimi</span>
+                            <span class="feature-tag"><i class="fas fa-calendar"></i> Ders Planlama</span>
+                            <span class="feature-tag"><i class="fas fa-credit-card"></i> Ödeme Takibi</span>
+                            <span class="feature-tag"><i class="fas fa-chart-line"></i> Sınav Analizi</span>
+                            <span class="feature-tag"><i class="fas fa-bell"></i> Bildirimler</span>
+                            <span class="feature-tag"><i class="fas fa-user-friends"></i> Veli Paneli</span>
+                        </div>
+                        <div class="app-tech">
+                            <span>React Native</span>
+                            <span>TypeScript</span>
+                            <span>Firebase</span>
+                            <span>Xcode</span>
+                            <span>RevenueCat</span>
+                        </div>
+                        <div class="app-store-buttons">
+                            <a href="#" class="btn btn-appstore">
+                                <i class="fab fa-apple"></i> App Store — Yakında
+                            </a>
+                            <a href="#" class="btn btn-appstore btn-playstore">
+                                <i class="fab fa-google-play"></i> Google Play — Yakında
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="more-coming">
+                <i class="fas fa-code"></i>
+                <p>Daha fazla uygulama yakında...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="section" id="skills">
+        <div class="container">
+            <h2 class="section-title">
+                <span class="section-number">03.</span> Yetenekler & Teknolojiler
+            </h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3><i class="fas fa-mobile-alt"></i> Mobil Geliştirme</h3>
+                    <div class="skill-items">
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fab fa-react"></i></div>
+                            <span>React Native</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fas fa-hammer"></i></div>
+                            <span>Xcode</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fab fa-js-square"></i></div>
+                            <span>TypeScript</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fab fa-swift"></i></div>
+                            <span>iOS Development</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3><i class="fas fa-server"></i> Backend & Veritabanı</h3>
+                    <div class="skill-items">
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fas fa-fire"></i></div>
+                            <span>Firebase</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fas fa-database"></i></div>
+                            <span>Firestore</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fas fa-table"></i></div>
+                            <span>SQL</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3><i class="fas fa-desktop"></i> Masaüstü & Diğer</h3>
+                    <div class="skill-items">
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fas fa-code"></i></div>
+                            <span>C / C++</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fas fa-hashtag"></i></div>
+                            <span>C#</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fab fa-git-alt"></i></div>
+                            <span>Git & GitHub</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fab fa-app-store-ios"></i></div>
+                            <span>App Store Connect</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section section-dark" id="contact">
+        <div class="container">
+            <h2 class="section-title">
+                <span class="section-number">04.</span> İletişim
+            </h2>
+            <p class="contact-subtitle">
+                Bir proje fikriniz mi var? İş birliği yapmak mı istiyorsunuz? Bana ulaşmaktan çekinmeyin.
+            </p>
+            <div class="contact-grid">
+                <a href="mailto:yasinyel32@gmail.com" class="contact-card">
+                    <i class="fas fa-envelope"></i>
+                    <h3>E-posta</h3>
+                    <p>yasinyel32@gmail.com</p>
+                </a>
+                <a href="https://github.com/yasinyel" target="_blank" class="contact-card">
+                    <i class="fab fa-github"></i>
+                    <h3>GitHub</h3>
+                    <p>github.com/yasinyel</p>
+                </a>
+                <a href="https://linkedin.com/in/yasinyel" target="_blank" class="contact-card">
+                    <i class="fab fa-linkedin"></i>
+                    <h3>LinkedIn</h3>
+                    <p>linkedin.com/in/yasinyel</p>
+                </a>
+                <a href="https://instagram.com/_yasinyel" target="_blank" class="contact-card">
+                    <i class="fab fa-instagram"></i>
+                    <h3>Instagram</h3>
+                    <p>@_yasinyel</p>
+                </a>
+                <a href="https://x.com/rockimist" target="_blank" class="contact-card">
+                    <i class="fab fa-x-twitter"></i>
+                    <h3>X (Twitter)</h3>
+                    <p>@rockimist</p>
+                </a>
+                <a href="https://www.youtube.com/@rockimist35" target="_blank" class="contact-card">
+                    <i class="fab fa-youtube"></i>
+                    <h3>YouTube</h3>
+                    <p>@rockimist35</p>
+                </a>
+                <a href="https://open.spotify.com/intl-tr/artist/2dzCg9V9SfBMUvXXTz2zcD" target="_blank" class="contact-card">
+                    <i class="fab fa-spotify"></i>
+                    <h3>Spotify</h3>
+                    <p>Müziklerimi Dinle</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="privacy.html">Gizlilik Politikası</a>
+                    <a href="terms.html">Kullanım Koşulları</a>
+                    <a href="support.html">Destek</a>
+                </div>
+                <p class="footer-copyright">
+                    &copy; 2026 Yasin Yel. Tüm hakları saklıdır.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

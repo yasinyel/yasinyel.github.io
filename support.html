@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Destek — Yasin Yel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .support-content { max-width: 800px; margin: 120px auto 60px; padding: 0 2rem; }
+        .support-content h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+        .support-content .subtitle { color: var(--text-secondary); margin-bottom: 2.5rem; font-size: 1.05rem; }
+        .support-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
+        .support-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; text-align: center; transition: var(--transition); }
+        .support-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+        .support-card i { font-size: 2rem; color: var(--accent); margin-bottom: 1rem; }
+        .support-card h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+        .support-card p { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem; }
+        .support-card a { color: var(--accent); font-size: 0.9rem; }
+        .support-card a:hover { text-decoration: underline; }
+        .faq { margin-top: 2rem; }
+        .faq h2 { font-size: 1.5rem; margin-bottom: 1.5rem; text-align: center; }
+        .faq-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.2rem 1.5rem; margin-bottom: 0.8rem; }
+        .faq-item h3 { font-size: 1rem; color: var(--accent-light); margin-bottom: 0.5rem; }
+        .faq-item p { color: var(--text-secondary); font-size: 0.92rem; }
+        .back-link { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--accent); margin-bottom: 2rem; font-size: 0.9rem; }
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="support-content">
+        <a href="index.html" class="back-link">&larr; Ana Sayfa</a>
+        <h1>Destek</h1>
+        <p class="subtitle">Yardima mi ihtiyaciniz var? Size yardimci olmaktan memnuniyet duyariz.</p>
+
+        <div class="support-cards">
+            <div class="support-card">
+                <i class="fas fa-envelope"></i>
+                <h3>E-posta</h3>
+                <p>Sorulariniz icin bize e-posta gonderin</p>
+                <a href="mailto:yasinyel32@gmail.com">yasinyel32@gmail.com</a>
+            </div>
+            <div class="support-card">
+                <i class="fab fa-instagram"></i>
+                <h3>Instagram</h3>
+                <p>Sosyal medyadan ulasin</p>
+                <a href="https://instagram.com/_yasinyel" target="_blank">@_yasinyel</a>
+            </div>
+            <div class="support-card">
+                <i class="fab fa-github"></i>
+                <h3>GitHub</h3>
+                <p>Hata bildirimi ve oneriler</p>
+                <a href="https://github.com/yasinyel" target="_blank">github.com/yasinyel</a>
+            </div>
+        </div>
+
+        <div class="faq">
+            <h2>Sikca Sorulan Sorular</h2>
+            <div class="faq-item">
+                <h3>Ucretsiz deneme suresi ne kadar?</h3>
+                <p>Uygulamayi 7 gun boyunca ucretsiz deneyebilirsiniz. Deneme suresi sonunda abonelik gereklidir.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Aboneligimi nasil iptal edebilirim?</h3>
+                <p>iPhone Ayarlar &gt; Apple Kimliginiz &gt; Abonelikler &gt; Ogrenci Takip Sistemi &gt; Aboneligi Iptal Et yolunu izleyerek iptal edebilirsiniz.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Hesabimi nasil silebilirim?</h3>
+                <p>Uygulama icinden Ayarlar (ogretmen) veya Profil (veli) ekranindan "Hesabimi Sil" butonuna tiklayarak hesabinizi kalici olarak silebilirsiniz.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Verilerim guvenli mi?</h3>
+                <p>Evet, tum verileriniz Firebase (Google Cloud) altyapisinda sifreli olarak saklanir ve iletilir.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
