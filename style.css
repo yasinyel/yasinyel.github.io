@@ -537,12 +537,44 @@ img {
     max-width: 550px;
 }
 
+.app-showcase.apps-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: stretch;
+}
+
+.app-showcase.apps-grid .app-card {
+    max-width: 100%;
+    width: 100%;
+}
+
+@media (max-width: 900px) {
+    .app-showcase.apps-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 .active-badge {
     background: linear-gradient(135deg, #10b981, #059669) !important;
 }
 
 .app-icon-ibkit {
     background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+}
+
+.app-icon-yoklama {
+    background: linear-gradient(135deg, #10b981, #047857) !important;
+}
+
+.app-icon-pdf {
+    background: linear-gradient(135deg, #ef4444, #b91c1c) !important;
+}
+
+.app-icon-takip {
+    background: linear-gradient(135deg, #f59e0b, #d97706) !important;
 }
 
 .btn-web {
