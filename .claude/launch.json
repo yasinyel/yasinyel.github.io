@@ -4,7 +4,7 @@
     {
       "name": "website",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8080", "--directory", "/Users/yasinyel/Desktop/yasinyel-website"],
+      "runtimeArgs": ["-m", "http.server", "8080", "--directory", "C:/Users/DELL/Desktop/calismalar/yasinyel.github.io"],
       "port": 8080
     }
   ]
