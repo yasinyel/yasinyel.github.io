@@ -581,6 +581,31 @@ img {
     font-family: 'Inter', sans-serif;
 }
 
+.app-icon-eagle {
+    background: linear-gradient(135deg, #1e3a5f, #0b1a33) !important;
+}
+
+.app-icon-ekilit {
+    background: linear-gradient(135deg, #8b5cf6, #6d28d9) !important;
+}
+
+.app-icon-cikis {
+    background: linear-gradient(135deg, #06b6d4, #0e7490) !important;
+}
+
+.app-icon-store {
+    background: linear-gradient(135deg, #ec4899, #be185d) !important;
+}
+
+.app-icon-anket {
+    background: linear-gradient(135deg, #14b8a6, #0f766e) !important;
+}
+
+.btn-static {
+    cursor: default;
+    pointer-events: none;
+}
+
 .app-icon-takip {
     background: linear-gradient(135deg, #f59e0b, #d97706) !important;
 }
@@ -729,7 +754,7 @@ img {
 /* ===== SKILLS ===== */
 .skills-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 2rem;
 }
 

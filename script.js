@@ -1,6 +1,7 @@
 // ===== TYPING EFFECT =====
 const titles = [
     'Bilişim Teknolojileri Öğretmeni',
+    'Web & Mobil Uygulama Geliştirici',
     'iOS Uygulama Geliştirici',
     'React Native Developer',
     'Yazılım Tutkunu'
