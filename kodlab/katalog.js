@@ -108,6 +108,12 @@
             parcalar: [{ id: 'oyun', ad: 'Oyun Atölyesi', url: 'oyun.html', seviye: 5, yildiz: () => { const k = oku('oyun', { yildiz: {} }).yildiz; return ['balon', 'hareket', 'yildiz', 'dusman', 'kazan'].map(g => k[g] || 0); } }]
         },
         {
+            id: 'dijital', ad: 'Dijital Dedektif', url: 'dijital.html', ikon: 'fa-user-secret', renk: '#0f766e', sinif: [3, 12],
+            aciklama: 'Sahte haberleri ve gizli reklamları yakala, kişisel bilgilerini koru, siber zorbalığa dur de, telif ve lisansları öğren.',
+            etiket: ['Medya okuryazarlığı', 'Dijital vatandaşlık', 'Telif hakkı'], kavram: 'Kaynak doğrulama, tersine görsel arama, deepfake, tık tuzağı, reklam/sponsorluk, dijital ayak izi, siber zorbalık, Creative Commons lisansları', sure: 'Bölüm başı 10 dk',
+            parcalar: [{ id: 'dijital', ad: 'Dijital Dedektif', url: 'dijital.html', seviye: 5, yildiz: () => { const k = oku('dijital', { yildiz: {} }).yildiz; return ['haber', 'reklam', 'ayakizi', 'zorbalik', 'telif'].map(b => k[b] || 0); } }]
+        },
+        {
             id: 'python', ad: 'Python Laboratuvarı', url: 'python.html', ikon: 'fa-laptop-code', renk: '#2563eb', sinif: [5, 12],
             aciklama: 'Tarayıcıda gerçek Python yaz ve çalıştır. 32 görev kendiliğinden değerlendirilir, hatalar Türkçe açıklanır. Kurulum gerekmez.',
             etiket: ['Python', 'Metin tabanlı kodlama', 'Algoritma'], kavram: 'print, değişken, input/int, if/elif/else, for/while, metin ve liste işlemleri, fonksiyon, arama ve sıralama algoritmaları', sure: 'Görev başı 5–15 dk',
@@ -154,6 +160,7 @@
         { id: 'oyuncu', ad: 'Oyun Tasarımcısı', ikon: 'fa-gamepad', aciklama: 'Oyun Atölyesi\'nde Yıldız Avcısı oyununu bitir', kosul: () => parca('oyun').yildiz()[4] > 0 },
         { id: 'pythoncu', ad: 'Pythoncu', ikon: 'fa-laptop-code', aciklama: 'Python Laboratuvarı\'nda 16 görev çöz', kosul: () => parca('python').yildiz().filter(x => x > 0).length >= 16 },
         { id: 'algoritmaci', ad: 'Algoritma Mimarı', ikon: 'fa-cubes', aciklama: 'Python\'da Fonksiyonlar ve Algoritmalar ünitesini bitir', kosul: () => parca('python').yildiz().slice(25).every(x => x > 0) },
+        { id: 'dedektif', ad: 'Dijital Dedektif', ikon: 'fa-user-secret', aciklama: 'Dijital Dedektif\'in bütün bölümlerini bitir', kosul: () => tamam('dijital') },
         { id: 'ucyuz', ad: 'Üç Yüz Yıldız', ikon: 'fa-crown', aciklama: 'Toplam 300 yıldız topla', kosul: () => PARCALAR.reduce((t, p) => t + toplam(p.id), 0) >= 300 }
     ];
 
