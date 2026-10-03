@@ -13,7 +13,14 @@ test('Bölüm sayıları motorlarla aynı', () => {
     assert.strictEqual(K.parca('mantik').seviye, require('../mantik-motor.js').BOLUMLER.length);
     assert.strictEqual(K.parca('algoritma').seviye, require('../algoritma-motor.js').ALGORITMALAR.length);
     assert.strictEqual(K.parca('tahmin').seviye, require('../tahmin-sorular.js').SEVIYELER.length);
+    assert.strictEqual(K.parca('cizim').seviye, require('../cizim-motor.js').BOLUMLER.length);
+    assert.strictEqual(K.parca('sifre').seviye, require('../sifre-motor.js').BOLUMLER.length);
+    assert.strictEqual(K.parca('web').seviye, require('../web-motor.js').BOLUMLER.length);
     for (const p of K.PARCALAR) assert.strictEqual(p.yildiz().length, p.seviye, p.id);
+    // Gizli Mesaj sırası motordaki bölüm sırasıyla aynı olmalı
+    store.sifre = Object.fromEntries(require('../sifre-motor.js').BOLUMLER.map((b, i) => [b.id, (i % 3) + 1]));
+    assert.deepStrictEqual(K.parca('sifre').yildiz(), require('../sifre-motor.js').BOLUMLER.map((_, i) => (i % 3) + 1));
+    delete store.sifre;
 });
 test('Rapor kodu gidip geliyor (Türkçe karakterlerle)', () => {
     store.robot = { yildiz: { 0: 3, 1: 2, 5: 1 } };

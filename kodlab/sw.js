@@ -1,13 +1,22 @@
 // KodLab — çevrimdışı çalışma (service worker)
 // Bütün KodLab sayfaları ilk ziyarette önbelleğe alınır; internet kesilse de etkinlikler açılır.
 // Dosya eklendiğinde DOSYALAR listesine eklenmeli ve SURUM artırılmalı (test/sw.test.js denetler).
-const SURUM = 'kodlab-v1';
+const SURUM = 'kodlab-v2';
 const DOSYALAR = [
         './',
+        'ag-motor.js',
+        'ag.html',
+        'ag.js',
         'algoritma-motor.js',
         'algoritma.html',
         'algoritma.js',
+        'cizim-motor.js',
+        'cizim.html',
+        'cizim.js',
         'gorev.html',
+        'guvenlik-motor.js',
+        'guvenlik.html',
+        'guvenlik.js',
         'hata-motor.js',
         'hata.html',
         'hata.js',
@@ -41,9 +50,18 @@ const DOSYALAR = [
         'sensin-motor.js',
         'sensin.html',
         'sensin.js',
+        'sifre-motor.js',
+        'sifre.html',
+        'sifre.js',
         'tahmin-sorular.js',
         'tahmin.html',
         'tahmin.js',
+        'web-motor.js',
+        'web.html',
+        'web.js',
+        'yz-motor.js',
+        'yz.html',
+        'yz.js',
 ];
 
 self.addEventListener('install', (e) => {
