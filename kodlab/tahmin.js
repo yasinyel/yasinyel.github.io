@@ -86,6 +86,7 @@
         delete c.dataset.ipucu;
         cevaplandi = true;
         sonuclar[sira] = sonuc.dogru;
+        KL.ses(sonuc.dogru ? 'dogru' : 'yanlis');
         c.readOnly = true;
         c.className = sonuc.dogru ? 'ok' : 'bad';
         const fb = $('fb');

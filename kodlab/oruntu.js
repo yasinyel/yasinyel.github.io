@@ -133,6 +133,7 @@
         if (!b || b.classList.contains('hata')) return;
         if (ayni(soru.secenekler[i], soru.dogru)) {
             kilit = true;
+            KL.ses('dogru');
             const bos = $('bos');
             bos.innerHTML = oge(soru.dogru);
             bos.classList.add('dolu');
@@ -140,6 +141,7 @@
             setTimeout(() => (tur < TUR ? yeniTur() : bitir()), 900);
         } else {
             hata++;
+            KL.ses('yanlis');
             b.classList.add('hata');
         }
     }

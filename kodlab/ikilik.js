@@ -69,6 +69,7 @@
         if (!k || k.disabled || kilitli) return;
         const i = +k.dataset.b;
         bitler[i] = !bitler[i];
+        KL.ses('tik');
         guncelle();
     });
 
@@ -129,11 +130,13 @@
         if (mod === 'oku' && $('okuInput').value === '') { $('okuInput').focus(); return; }
         if (!dogru) {
             hata++;
+            KL.ses('yanlis');
             const t = $('task'); t.classList.remove('shake'); t.offsetWidth; t.classList.add('shake');
             KL.bildir(mod === 'olustur' ? `Şu an ${deger()} oluşturdun, ${hedef} olmalı.` : 'Tekrar topla: sadece açık kartlar sayılır.');
             return;
         }
         kilitli = true;
+        KL.ses('dogru');
         if (mod === 'oku') $('taskQ').innerHTML = `Açık kartların gösterdiği sayı kaç?<b>${hedef}</b>`;
         KL.bildir('Doğru! 🎉', 900);
         tur++;

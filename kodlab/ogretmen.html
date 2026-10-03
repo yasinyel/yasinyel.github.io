@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#1d5fd6">
+    <link rel="icon" href="ikon/ikon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="ikon/ikon-192.png">
+    <title>Öğretmen Paneli — KodLab</title>
+    <meta name="description" content="Görev oluşturun, öğrenci ilerleme kodlarını toplayın, sınıfınızı takip edin. Sunucu ve hesap gerekmez.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="ortak.css">
+    <style>
+        main { padding: 24px 0 60px; }
+        .intro h1 { font-size: clamp(1.7rem, 4vw, 2.3rem); }
+        .intro p { color: var(--muted); margin-top: 6px; max-width: 760px; }
+        .tabs { display: flex; gap: 6px; margin: 20px 0 16px; flex-wrap: wrap; border-bottom: 1px solid var(--line); }
+        .tabs button { border: 0; background: none; padding: 10px 14px; font-weight: 700; color: var(--muted); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -1px; }
+        .tabs button.sel { color: var(--ink); border-bottom-color: var(--accent); }
+        .card { padding: 22px; }
+        h2.t { font-size: 1.15rem; margin-bottom: 12px; }
+        .grid2 { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+        label.f { display: flex; flex-direction: column; gap: 4px; font-size: .85rem; font-weight: 600; color: var(--muted); margin-bottom: 12px; }
+        input.in, select.in, textarea.in { padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); font-size: .95rem; }
+        textarea.in { font-family: var(--mono); font-size: .8rem; resize: vertical; min-height: 110px; }
+        .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+        .chips button { border: 1px solid var(--line); background: var(--surface); border-radius: 99px; padding: 6px 12px; font-weight: 600; font-size: .85rem; cursor: pointer; color: var(--muted); }
+        .chips button.sel { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+        .secim { display: flex; flex-direction: column; gap: 6px; max-height: 420px; overflow: auto; padding-right: 4px; }
+        .secim label { display: flex; gap: 10px; align-items: center; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; cursor: pointer; }
+        .secim label:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+        .secim .ik { width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center; color: #fff; flex: 0 0 auto; font-size: .9rem; }
+        .secim small { color: var(--muted); display: block; font-size: .78rem; }
+        .secim input { width: 18px; height: 18px; accent-color: var(--accent); }
+        .sonuc { text-align: center; }
+        .sonuc .qr { display: inline-block; background: #fff; padding: 10px; border-radius: 14px; line-height: 0; border: 1px solid var(--line); }
+        .sonuc input { width: 100%; font-family: var(--mono); font-size: .78rem; margin-top: 12px; }
+        .row-actions { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
+        .bos { color: var(--muted); text-align: center; padding: 30px 10px; }
+        .toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+        .toolbar .in { padding: 8px 10px; }
+        .tablo-wrap { overflow-x: auto; }
+        table.sinif { width: 100%; border-collapse: collapse; font-size: .9rem; }
+        table.sinif th { text-align: left; font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; padding: 8px 10px; border-bottom: 2px solid var(--line); cursor: pointer; white-space: nowrap; }
+        table.sinif td { padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; white-space: nowrap; }
+        table.sinif td.p { min-width: 92px; }
+        .pb { height: 6px; background: var(--bg-alt); border-radius: 99px; overflow: hidden; margin-top: 3px; width: 80px; }
+        .pb div { height: 100%; background: var(--ok); }
+        table.sinif .sil { border: 0; background: none; color: var(--muted); cursor: pointer; }
+        table.sinif .sil:hover { color: var(--bad); }
+        .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 14px; }
+        .stat { background: var(--bg-alt); border-radius: 12px; padding: 12px 14px; }
+        .stat b { font-family: var(--display); font-size: 1.6rem; display: block; }
+        .stat span { color: var(--muted); font-size: .8rem; font-weight: 600; }
+        dialog.tam { width: 100vw; height: 100vh; max-width: none; max-height: none; margin: 0; border: 0; background: var(--bg); color: var(--ink); padding: 30px; }
+        dialog.tam .ic { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; text-align: center; }
+        dialog.tam h2 { font-size: clamp(1.8rem, 5vw, 3.4rem); }
+        dialog.tam .qr { background: #fff; padding: 16px; border-radius: 20px; line-height: 0; }
+        dialog.tam .url { font-family: var(--mono); font-size: clamp(1rem, 2.4vw, 1.6rem); color: var(--accent); word-break: break-all; }
+        #kamera video { width: 100%; max-width: 480px; border-radius: 14px; background: #000; }
+        .ipucu { background: var(--accent-soft); border-radius: 12px; padding: 12px 14px; font-size: .9rem; margin-top: 12px; }
+        @media print {
+            body > header, .tabs, .toolbar, .intro, #panelGorev, #panelBaglanti, .sil, .ipucu, #ekleKart { display: none !important; }
+            .card { box-shadow: none; border: 0; }
+        }
+        @media (max-width: 900px) { .grid2 { grid-template-columns: 1fr; } .stat-row { grid-template-columns: repeat(2, 1fr); } }
+    </style>
+</head>
+<body>
+    <header class="kl-top">
+        <div class="wrap kl-top-inner">
+            <a href="./" class="kl-brand"><span class="kl-logo">&lt;/&gt;</span>KodLab</a>
+            <span class="kl-crumb"><i class="fas fa-chevron-right" style="font-size:.7em"></i><span>Öğretmen Paneli</span></span>
+            <span class="kl-spacer"></span>
+            <button class="icon-btn" id="themeBtn" aria-label="Temayı değiştir"><i class="fas fa-circle-half-stroke"></i></button>
+        </div>
+    </header>
+
+    <main class="wrap">
+        <div class="intro">
+            <h1>Öğretmen Paneli</h1>
+            <p>Görev hazırlayın, link ya da QR kodla öğrencilere dağıtın, öğrencilerin gönderdiği ilerleme kodlarını toplayıp sınıf tablosu oluşturun. <b>Hesap, sunucu veya öğrenci verisi aktarımı yoktur</b>; her şey sizin tarayıcınızda kalır.</p>
+        </div>
+        <nav class="tabs" role="tablist">
+            <button class="sel" data-p="panelGorev" role="tab"><i class="fas fa-clipboard-list"></i> Görev oluştur</button>
+            <button data-p="panelSinif" role="tab"><i class="fas fa-users"></i> Sınıfım</button>
+            <button data-p="panelBaglanti" role="tab"><i class="fas fa-qrcode"></i> Tahtada göster</button>
+        </nav>
+
+        <!-- GÖREV -->
+        <section id="panelGorev" class="grid2">
+            <div class="card">
+                <h2 class="t">1. Görevi tanımla</h2>
+                <label class="f">Görev başlığı <input class="in" id="gBaslik" value="Döngüler haftası" maxlength="60"></label>
+                <label class="f">Öğretmen adı (isteğe bağlı) <input class="in" id="gOgretmen" maxlength="40" placeholder="Yasin Hoca"></label>
+                <h2 class="t" style="margin-top:6px">2. Etkinlikleri seç</h2>
+                <div class="chips" id="kademeChips"></div>
+                <div class="secim" id="secim"></div>
+            </div>
+            <div class="card sonuc">
+                <h2 class="t">3. Öğrencilere dağıt</h2>
+                <div id="gorevSonuc" class="bos">Etkinlik seçip "Görev linki oluştur"a basın.</div>
+                <button class="btn btn-primary" id="olustur" style="margin-top:12px"><i class="fas fa-link"></i> Görev linki oluştur</button>
+                <div class="ipucu" style="text-align:left"><b>Nasıl çalışır?</b> Öğrenci linki açınca görev profiline eklenir ve yapılacakları görür. Bitirince "Teslim et" bölümündeki kodu size gönderir ya da QR kodu gösterir. Siz de "Sınıfım" sekmesine eklersiniz.</div>
+            </div>
+        </section>
+
+        <!-- SINIF -->
+        <section id="panelSinif" hidden>
+            <div class="card" id="ekleKart" style="margin-bottom:16px">
+                <h2 class="t">Öğrenci kodlarını ekle</h2>
+                <textarea class="in" id="kodlar" style="width:100%" placeholder="Öğrencilerden gelen KL1.… kodlarını buraya yapıştırın. Birden fazla kodu, hatta mesajları olduğu gibi yapıştırabilirsiniz; kodlar otomatik bulunur."></textarea>
+                <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+                    <button class="btn btn-primary" id="ekle"><i class="fas fa-plus"></i> Ekle</button>
+                    <button class="btn" id="tara" hidden><i class="fas fa-camera"></i> Kamerayla QR okut</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="stat-row" id="statlar"></div>
+                <div class="toolbar">
+                    <select class="in" id="fSinif" aria-label="Sınıf filtresi"></select>
+                    <select class="in" id="fGorev" aria-label="Görev filtresi"></select>
+                    <input class="in" id="fAra" placeholder="Öğrenci ara…" aria-label="Öğrenci ara">
+                    <span class="kl-spacer"></span>
+                    <button class="btn btn-sm" id="csv"><i class="fas fa-file-excel"></i> Excel'e aktar</button>
+                    <button class="btn btn-sm" id="yazdir"><i class="fas fa-print"></i> Yazdır</button>
+                    <button class="btn btn-sm" id="temizle"><i class="fas fa-trash"></i> Tümünü sil</button>
+                </div>
+                <div class="tablo-wrap"><table class="sinif" id="tablo"></table></div>
+            </div>
+        </section>
+
+        <!-- BAĞLANTI -->
+        <section id="panelBaglanti" hidden>
+            <div class="card sonuc">
+                <h2 class="t">KodLab'ı öğrencilerin tabletlerinde açtırın</h2>
+                <div class="qr" id="anaQr"></div>
+                <p class="url" id="anaUrl" style="font-family:var(--mono);margin-top:10px;color:var(--accent)"></p>
+                <div class="row-actions">
+                    <button class="btn btn-primary" id="anaTam"><i class="fas fa-expand"></i> Tam ekran göster</button>
+                </div>
+                <div class="ipucu" style="text-align:left;max-width:640px;margin:16px auto 0">
+                    <b>Tahtada ders anlatırken:</b> herhangi bir etkinliğin adresinin sonuna <code>?ogretmen</code> eklerseniz bütün bölümler açılır. Örneğin <code>sensin.html?ogretmen&amp;kademe=lise</code>.
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <dialog class="tam" id="tamEkran">
+        <div class="ic">
+            <h2 id="tamBaslik"></h2>
+            <div class="qr" id="tamQr"></div>
+            <div class="url" id="tamUrl"></div>
+            <button class="btn" id="tamKapat"><i class="fas fa-xmark"></i> Kapat</button>
+        </div>
+    </dialog>
+
+    <dialog class="kl-dialog" id="kamera">
+        <h2>QR okut</h2>
+        <p>Öğrencinin ekranındaki QR kodu kameraya gösterin. Okunan her kod otomatik eklenir.</p>
+        <video id="video" playsinline muted></video>
+        <p id="okunan" style="margin-top:8px;font-weight:600"></p>
+        <div class="actions"><button class="btn" id="kameraKapat">Bitti</button></div>
+    </dialog>
+
+    <script src="ortak.js"></script>
+    <script src="qr.js"></script>
+    <script src="katalog.js"></script>
+    <script src="ogretmen.js"></script>
+</body>
+</html>

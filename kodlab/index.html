@@ -3,8 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#1d5fd6">
+    <link rel="icon" href="ikon/ikon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="ikon/ikon-192.png">
     <title>KodLab — Bilişim Etkinlikleri</title>
-    <meta name="description" content="Bilişim Teknolojileri dersleri için ücretsiz, tarayıcıda çalışan kodlama ve bilgisayar bilimi etkinlikleri.">
+    <meta name="description" content="Anasınıfından liseye Bilişim Teknolojileri dersleri için ücretsiz, Türkçe, internetsiz de çalışan kodlama ve bilgisayar bilimi etkinlikleri. Öğretmen paneli ve sunucusuz sınıf takibi.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
@@ -55,6 +59,28 @@
             .hero { grid-template-columns: 1fr; padding-top: 32px; }
             .acts, .teacher { grid-template-columns: 1fr; }
         }
+        .acts { grid-template-columns: repeat(3, 1fr); }
+        .act h2 { font-size: 1.3rem; }
+        .act .yeni { position: absolute; top: 22px; right: 52px; background: #e5484d; color: #fff; font-size: .7rem; font-weight: 800; padding: 2px 8px; border-radius: 99px; letter-spacing: .04em; }
+        .karsilama { display: flex; align-items: center; gap: 16px; padding: 16px 20px; margin-top: 24px; flex-wrap: wrap; }
+        .karsilama .avatar { width: 52px; height: 52px; border-radius: 16px; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 1.5rem; flex: 0 0 auto; }
+        .karsilama .bilgi { flex: 1; min-width: 200px; }
+        .karsilama b { font-size: 1.1rem; }
+        .karsilama small { color: var(--muted); display: block; }
+        .karsilama .ybar { height: 8px; background: var(--bg-alt); border-radius: 99px; overflow: hidden; margin-top: 6px; max-width: 360px; }
+        .karsilama .ybar div { height: 100%; background: linear-gradient(90deg, var(--accent), #8b5cf6); }
+        .gorevler { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+        .gorevler a { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); text-decoration: none; color: var(--ink); font-weight: 600; }
+        .gorevler a small { color: var(--muted); font-weight: 500; }
+        .ogretmen-band { display: grid; grid-template-columns: 1.3fr 1fr; gap: 24px; padding: 28px; align-items: center; background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 12%, var(--surface)), var(--surface)); }
+        .ogretmen-band h2 { font-size: 1.6rem; }
+        .ogretmen-band p { color: var(--muted); margin-top: 8px; }
+        .ogretmen-band ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+        .ogretmen-band li { display: flex; gap: 10px; align-items: flex-start; }
+        .ogretmen-band li i { color: var(--ok); margin-top: 4px; }
+        .teacher { grid-template-columns: repeat(4, 1fr); }
+        @media (max-width: 1060px) { .acts { grid-template-columns: repeat(2, 1fr); } .teacher { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 860px) { .acts, .teacher, .ogretmen-band { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -62,7 +88,8 @@
         <div class="wrap kl-top-inner">
             <a href="./" class="kl-brand"><span class="kl-logo">&lt;/&gt;</span>KodLab</a>
             <span class="kl-spacer"></span>
-            <a href="../" class="btn btn-sm" style="border:0;background:none;color:var(--muted)">yasinyel.com</a>
+            <a href="ogretmen.html" class="btn btn-sm" style="border:0;background:none;color:var(--muted)"><i class="fas fa-chalkboard-user"></i> Öğretmen</a>
+            <button class="btn btn-sm" id="yukle" hidden><i class="fas fa-download"></i> Yükle</button>
             <button class="icon-btn" id="themeBtn" aria-label="Temayı değiştir"><i class="fas fa-circle-half-stroke"></i></button>
         </div>
     </header>
@@ -71,11 +98,12 @@
         <section class="hero">
             <div>
                 <h1>Bilgisayar gibi <em>düşünmeyi</em> oynayarak öğren.</h1>
-                <p>Anasınıfından lise sona kadar Bilişim Teknolojileri dersleri için hazırlanmış, tarayıcıda çalışan etkinlik kütüphanesi. Kademeni seç, sana uygun etkinliklerle başla.</p>
+                <p>Anasınıfından lise sona kadar Bilişim Teknolojileri dersleri için hazırlanmış etkinlik kütüphanesi. Kodu oku, algoritmayı yürüt, devreyi kur, hatayı yakala.</p>
                 <div class="hero-tags">
                     <span><i class="fas fa-check"></i>Üyelik yok</span>
                     <span><i class="fas fa-check"></i>Ücretsiz</span>
-                    <span><i class="fas fa-check"></i>Tablet ve telefonda çalışır</span>
+                    <span><i class="fas fa-check"></i>İnternetsiz çalışır</span>
+                    <span><i class="fas fa-check"></i>Tablet ve akıllı tahta</span>
                     <span><i class="fas fa-check"></i>Tamamen Türkçe</span>
                 </div>
             </div>
@@ -87,23 +115,33 @@
     <span class="f">asagi</span>()</div>
         </section>
 
-        <div class="filters" id="filters" role="tablist" aria-label="Kademe"></div>
+        <section class="card karsilama" id="karsilama"></section>
+
+        <div class="filters" id="filters" role="tablist" aria-label="Kademe" style="margin-top:28px"></div>
         <section class="acts" id="acts"></section>
 
         <h2 class="section-title">Öğretmenler için</h2>
-        <div class="teacher">
-            <div class="card">
-                <h3><i class="fas fa-user-slash"></i> Hesap gerekmez</h3>
-                <p>Öğrenciler linke girip hemen başlar. İlerleme her cihazın kendi tarayıcısında saklanır; hiçbir kişisel veri toplanmaz.</p>
+        <section class="card ogretmen-band">
+            <div>
+                <h2>Sınıfınızı sunucusuz takip edin</h2>
+                <p>Görev hazırlayın, QR kodla tahtadan dağıtın. Öğrenciler bitirince ilerleme kodlarını size gönderir ya da QR'ı gösterir; panel bunları sınıf tablosuna çevirir ve Excel'e aktarır. Öğrenci verisi hiçbir sunucuya gitmez.</p>
+                <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
+                    <a class="btn btn-primary" href="ogretmen.html"><i class="fas fa-chalkboard-user"></i> Öğretmen paneli</a>
+                    <a class="btn" href="ogretmen.html#sinif"><i class="fas fa-users"></i> Sınıfım</a>
+                </div>
             </div>
-            <div class="card">
-                <h3><i class="fas fa-unlock"></i> Öğretmen modu</h3>
-                <p>Bölümler sırayla açılır. Tahtada istediğiniz bölümü göstermek için adresin sonuna <code>?ogretmen</code> ekleyin: tüm bölümler açılır.</p>
-            </div>
-            <div class="card">
-                <h3><i class="fas fa-share-nodes"></i> Kendi bulmacanız</h3>
-                <p>Piksel Kodlama'da bir resim çizip bulmaca linki oluşturun. Öğrenciler resmi değil, sadece kodunu görür.</p>
-            </div>
+            <ul>
+                <li><i class="fas fa-circle-check"></i><span><b>Görev linki ve QR:</b> istediğiniz etkinlikleri seçip tek tıkla dağıtın.</span></li>
+                <li><i class="fas fa-circle-check"></i><span><b>Kamerayla okutma:</b> öğrencinin ekranındaki QR'ı okutun, tabloya eklensin.</span></li>
+                <li><i class="fas fa-circle-check"></i><span><b>KVKK dostu:</b> hesap yok, veri sizin tarayıcınızda kalır.</span></li>
+                <li><i class="fas fa-circle-check"></i><span><b>Başarı belgesi:</b> öğrenciler rozetleriyle birlikte yazdırabilir.</span></li>
+            </ul>
+        </section>
+        <div class="teacher" style="margin-top:16px">
+            <div class="card"><h3><i class="fas fa-unlock"></i> Öğretmen modu</h3><p>Adresin sonuna <code>?ogretmen</code> ekleyin: tahtada istediğiniz bölümü gösterebilmeniz için bütün bölümler açılır.</p></div>
+            <div class="card"><h3><i class="fas fa-wifi"></i> İnternetsiz</h3><p>KodLab bir kez açıldıktan sonra internet kesilse de çalışır. Tablete uygulama gibi yüklenebilir.</p></div>
+            <div class="card"><h3><i class="fas fa-infinity"></i> Kopyaya kapalı</h3><p>Sorular her seferinde yeni sayılarla üretilir; yan sıradakinin cevabı işe yaramaz.</p></div>
+            <div class="card"><h3><i class="fas fa-share-nodes"></i> Kendi bulmacanız</h3><p>Piksel Kodlama'da resim çizip öğrencilere bulmaca linki olarak gönderin.</p></div>
         </div>
 
         <h2 class="section-title">Hangi etkinlik, hangi konu?</h2>
@@ -121,36 +159,13 @@
     </main>
 
     <script src="ortak.js"></script>
+    <script src="katalog.js"></script>
     <script>
         (function () {
-            // Etkinlik kütüphanesi. Yeni etkinlik eklemek için bu listeye bir nesne eklemek yeterli.
-            // sinif: [en küçük, en büyük]; 0 = anasınıfı
-            const ETKINLIKLER = [
-                { id: 'sensin', ad: 'Bilgisayar Sensin', url: 'sensin.html', ikon: 'fa-arrows-up-down-left-right', renk: '#0ea5e9', sinif: [0, 12],
-                  aciklama: 'Kodu oku, bilgisayarın yerine sen çalıştır: karakteri yön tuşlarıyla kodun söylediği gibi hareket ettir. Her kademeye ayrı kod dili.',
-                  etiket: ['Kod okuma', 'Algoritma', 'Döngü', 'Koşul', 'Fonksiyon'], kavram: 'Okla (okul öncesi), blokla (ilkokul), Türkçe kodla (ortaokul) ve Python ile (lise) kod izleme', sure: 'Bölüm başı 2–5 dk',
-                  ilerleme: () => { const k = KL.oku('sensin', {}); let n = 0; ['okuloncesi', 'ilkokul', 'ortaokul', 'lise'].forEach(x => Object.values(k[x] || {}).forEach(v => n += v)); return [n, 43 * 3, 'yıldız']; } },
-                { id: 'oruntu', ad: 'Örüntü Bul', url: 'oruntu.html', ikon: 'fa-shapes', renk: '#f59e0b', sinif: [0, 2],
-                  aciklama: 'Sıradaki ne? Tekrar eden kalıbı bul, soru işaretinin yerine geleni seç. Okuma bilmeye gerek yok.',
-                  etiket: ['Örüntü', 'Dikkat', 'Okuma gerekmez'], kavram: 'Örüntü tanıma, tekrar eden kalıplar (algoritmik düşünmenin temeli)', sure: '10 dk',
-                  ilerleme: () => [Object.values(KL.oku('oruntu', { yildiz: {} }).yildiz).reduce((a, b) => a + b, 0), 8 * 3, 'yıldız'] },
-                { id: 'piksel', ad: 'Piksel Kodlama', url: 'piksel.html', ikon: 'fa-border-all', renk: '#f97316', sinif: [2, 8],
-                  aciklama: 'Satır kodlarını çöz, gizli resmi boya. Kendi resmini tasarla ve arkadaşlarına bulmaca olarak gönder.',
-                  etiket: ['Resim kodlama', 'Sıkıştırma', 'Tasarım'], kavram: 'Resimlerin sayısal temsili, piksel, sıkıştırma (RLE)', sure: '15–25 dk',
-                  ilerleme: () => [Object.keys(KL.oku('piksel', { tamam: {} }).tamam).length, 8, 'resim çözüldü'] },
-                { id: 'robot', ad: 'Robot Kodla', url: 'robot.html', ikon: 'fa-robot', renk: '#1d5fd6', sinif: [3, 8],
-                  aciklama: 'Robotu Türkçe komutlarla programla, bütün yıldızları topla. Ne kadar kısa kod, o kadar çok yıldız!',
-                  etiket: ['Sıralama', 'Döngüler', 'Koşullar', 'Fonksiyonlar'], kavram: 'Kod yazma: sıralı komut, parametre, döngü, koşul, fonksiyon, labirent algoritması', sure: '15–30 dk',
-                  ilerleme: () => [Object.values(KL.oku('robot', { yildiz: {} }).yildiz).reduce((a, b) => a + b, 0), 14 * 3, 'yıldız'] },
-                { id: 'ikilik', ad: 'İkilik Kartlar', url: 'ikilik.html', ikon: 'fa-toggle-on', renk: '#16a36a', sinif: [4, 10],
-                  aciklama: 'Kartları çevirerek sayıları 0 ve 1\'lerle göster. Bilgisayarın dilini keşfet: bit, bayt ve ikilik sayı sistemi.',
-                  etiket: ['Veri temsili', 'İkilik sistem', 'Bit / Bayt'], kavram: 'İkilik sayı sistemi, bit, bayt, veri temsili', sure: '15–20 dk',
-                  ilerleme: () => [Object.values(KL.oku('ikilik', { yildiz: {} }).yildiz).reduce((a, b) => a + b, 0), 5 * 3, 'yıldız'] },
-                { id: 'tahmin', ad: 'Ne Yazar?', url: 'tahmin.html', ikon: 'fa-terminal', renk: '#8b5cf6', sinif: [8, 12],
-                  aciklama: 'Python kodunu bilgisayar gibi oku ve ekrana ne yazacağını tahmin et. Sorular her seferinde farklı sayılarla gelir.',
-                  etiket: ['Python', 'Değişkenler', 'Kod okuma'], kavram: 'Değişken, operatör, metin, if/else, for/while, liste, fonksiyon (Python)', sure: 'Seviye başı 5–10 dk',
-                  ilerleme: () => [Object.values(KL.oku('tahmin', { yildiz: {} }).yildiz).reduce((a, b) => a + b, 0), 5 * 3, 'yıldız'] }
-            ];
+            const K = window.Katalog;
+            const $ = (id) => document.getElementById(id);
+            const kacis = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+            const YENI = ['algoritma', 'mantik', 'hata'];
             const KADEMELER = [
                 { id: 'hepsi', ad: 'Tümü', aralik: [0, 12] },
                 { id: 'okuloncesi', ad: 'Okul Öncesi', not: 'Anasınıfı', aralik: [0, 0] },
@@ -158,43 +173,76 @@
                 { id: 'ortaokul', ad: 'Ortaokul', not: '5–8', aralik: [5, 8] },
                 { id: 'lise', ad: 'Lise', not: '9–12', aralik: [9, 12] }
             ];
-            // Bilgisayar Sensin'in hangi kod dilinin açılacağı
-            const SENSIN_KADEME = { okuloncesi: 'okuloncesi', ilkokul: 'ilkokul', ortaokul: 'ortaokul', lise: 'lise' };
             const sinifYaz = (n) => n === 0 ? 'Anasınıfı' : n + '. sınıf';
             const aralikYaz = ([a, b]) => a === b ? sinifYaz(a) : `${sinifYaz(a)} – ${b}. sınıf`;
+            const ilerleme = (e) => {
+                let n = 0, t = 0;
+                e.parcalar.forEach(p => { n += p.yildiz().reduce((a, b) => a + b, 0); t += p.seviye * 3; });
+                return [n, t];
+            };
+
+            // Karşılama: profil, unvan, görevler
+            const profil = KL.oku('profil', {});
+            const toplam = K.PARCALAR.reduce((t, p) => t + p.yildiz().reduce((a, b) => a + b, 0), 0);
+            const u = K.unvan(toplam);
+            const gorevler = KL.oku('gorevler', []);
+            $('karsilama').innerHTML = `
+                <span class="avatar">${profil.ad ? kacis(profil.ad.trim()[0].toLocaleUpperCase('tr')) : '<i class="fas fa-user"></i>'}</span>
+                <div class="bilgi">
+                    <b>${profil.ad ? 'Merhaba ' + kacis(profil.ad.split(' ')[0]) + '!' : 'Merhaba! Profilini oluştur, rozet topla.'}</b>
+                    <small>${u.ad} · ${toplam} yıldız${u.sonraki ? ` · "${u.sonraki.ad}" için ${u.sonraki.kalan} yıldız` : ''}</small>
+                    <div class="ybar"><div style="width:${u.sonraki ? Math.round(u.sonraki.oran * 100) : 100}%"></div></div>
+                    ${gorevler.length ? `<div class="gorevler">${gorevler.slice(0, 3).map(g => {
+                        const ps = g.p.map(K.parca).filter(Boolean);
+                        const b = ps.reduce((t, p) => t + p.yildiz().filter(x => x > 0).length, 0), tt = ps.reduce((t, p) => t + p.seviye, 0);
+                        return `<a href="gorev.html#g=${g.kod}"><i class="fas fa-clipboard-list" style="color:var(--accent)"></i> ${kacis(g.b)} <small>${b}/${tt}</small></a>`;
+                    }).join('')}</div>` : ''}
+                </div>
+                <a class="btn ${profil.ad ? '' : 'btn-primary'}" href="profil.html"><i class="fas fa-medal"></i> ${profil.ad ? 'Profilim ve rozetlerim' : 'Profil oluştur'}</a>`;
 
             let secili = KL.oku('kademe', 'hepsi');
             function ciz() {
                 const kd = KADEMELER.find(k => k.id === secili) || KADEMELER[0];
-                document.getElementById('filters').innerHTML = KADEMELER.map(k =>
+                $('filters').innerHTML = KADEMELER.map(k =>
                     `<button class="${k.id === kd.id ? 'sel' : ''}" data-k="${k.id}" role="tab" aria-selected="${k.id === kd.id}">${k.ad}${k.not ? `<small>${k.not}</small>` : ''}</button>`).join('');
-                const liste = ETKINLIKLER.filter(e => e.sinif[0] <= kd.aralik[1] && e.sinif[1] >= kd.aralik[0]);
-                document.getElementById('acts').innerHTML = liste.map(e => {
-                    const [n, t, birim] = e.ilerleme();
-                    const url = e.id === 'sensin' && SENSIN_KADEME[kd.id] ? `${e.url}?kademe=${SENSIN_KADEME[kd.id]}` : e.url;
+                const liste = K.ETKINLIKLER.filter(e => e.sinif[0] <= kd.aralik[1] && e.sinif[1] >= kd.aralik[0]);
+                $('acts').innerHTML = liste.map(e => {
+                    const [n, t] = ilerleme(e);
+                    const url = e.id === 'sensin' && kd.id !== 'hepsi' ? `${e.url}?kademe=${kd.id}`
+                        : e.id === 'hata' && ['ilkokul', 'ortaokul', 'lise'].includes(kd.id) ? `${e.url}?kademe=${kd.id}` : e.url;
                     return `<a class="card act" href="${url}">
-                        <i class="fas fa-arrow-right go"></i>
+                        <i class="fas fa-arrow-right go"></i>${YENI.includes(e.id) ? '<span class="yeni">YENİ</span>' : ''}
                         <div class="act-icon" style="background:${e.renk}"><i class="fas ${e.ikon}"></i></div>
                         <span class="grade">${aralikYaz(e.sinif)}</span>
                         <h2>${e.ad}</h2><p>${e.aciklama}</p>
                         <div class="act-meta">${e.etiket.map(x => `<span>${x}</span>`).join('')}</div>
                         <div class="progress"><div style="width:${Math.round(n / t * 100)}%"></div></div>
-                        <div class="progress-label">${n ? `${n} / ${t} ${birim}` : 'Henüz başlamadın'}</div>
+                        <div class="progress-label">${n ? `${n} / ${t} yıldız` : 'Henüz başlamadın'}</div>
                     </a>`;
                 }).join('');
             }
-            document.getElementById('filters').addEventListener('click', (e) => {
+            $('filters').addEventListener('click', (e) => {
                 const b = e.target.closest('button');
                 if (!b) return;
                 secili = b.dataset.k; KL.yaz('kademe', secili); ciz();
             });
-            document.getElementById('tablo').innerHTML = ETKINLIKLER.map(e =>
+            $('tablo').innerHTML = K.ETKINLIKLER.map(e =>
                 `<tr><td><b>${e.ad}</b></td><td>${e.kavram}</td><td>${aralikYaz(e.sinif)}</td><td>${e.sure}</td></tr>`).join('');
             ciz();
 
-            document.getElementById('sifirla').addEventListener('click', () => {
-                if (!confirm('Bu cihazdaki tüm KodLab ilerlemesi silinsin mi?')) return;
-                ['robot', 'tahmin', 'ikilik', 'piksel', 'sensin', 'oruntu'].forEach(KL.sil);
+            // Uygulama olarak yükleme
+            let yuklemeIstegi = null;
+            window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); yuklemeIstegi = e; $('yukle').hidden = false; });
+            $('yukle').addEventListener('click', async () => {
+                if (!yuklemeIstegi) return;
+                yuklemeIstegi.prompt();
+                await yuklemeIstegi.userChoice;
+                yuklemeIstegi = null; $('yukle').hidden = true;
+            });
+
+            $('sifirla').addEventListener('click', () => {
+                if (!confirm('Bu cihazdaki tüm KodLab ilerlemesi, profil ve görevler silinsin mi?')) return;
+                ['robot', 'tahmin', 'ikilik', 'piksel', 'sensin', 'oruntu', 'algoritma', 'mantik', 'hata', 'profil', 'gorevler'].forEach(KL.sil);
                 location.reload();
             });
         })();

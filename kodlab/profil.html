@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#1d5fd6">
+    <link rel="icon" href="ikon/ikon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="ikon/ikon-192.png">
+    <title>Profilim — KodLab</title>
+    <meta name="description" content="Yıldızların, rozetlerin, görevlerin ve öğretmenine göndereceğin ilerleme kodu.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="ortak.css">
+    <style>
+        main { padding: 28px 0 60px; display: flex; flex-direction: column; gap: 18px; }
+        .card { padding: 22px; }
+        h2.t { font-size: 1.2rem; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+        h2.t i { color: var(--accent); }
+        .hero { display: grid; grid-template-columns: auto 1fr auto; gap: 22px; align-items: center; }
+        .avatar { width: 84px; height: 84px; border-radius: 24px; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 2.4rem; }
+        .hero h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); }
+        .hero .unvan { color: var(--accent); font-weight: 700; }
+        .hero .sinif { color: var(--muted); }
+        .bar { height: 10px; background: var(--bg-alt); border-radius: 99px; overflow: hidden; margin-top: 10px; max-width: 420px; }
+        .bar div { height: 100%; background: linear-gradient(90deg, var(--accent), #8b5cf6); border-radius: 99px; transition: width .6s; }
+        .hero small { color: var(--muted); }
+        .bigstat { text-align: center; }
+        .bigstat b { display: block; font-family: var(--display); font-size: 2.6rem; color: var(--gold); line-height: 1; }
+        .bigstat span { color: var(--muted); font-size: .85rem; font-weight: 600; }
+        form.profil { display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 10px; align-items: end; }
+        form.profil label { display: flex; flex-direction: column; gap: 4px; font-size: .85rem; font-weight: 600; color: var(--muted); }
+        input.in { padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); font-size: 1rem; }
+        input.in:focus { outline: 2px solid var(--accent); border-color: transparent; }
+        .rozetler { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
+        .rozet { text-align: center; padding: 14px 8px; border-radius: 14px; border: 1px solid var(--line); background: var(--bg); }
+        .rozet .ik { width: 54px; height: 54px; margin: 0 auto 8px; border-radius: 50%; display: grid; place-items: center; font-size: 1.4rem; background: var(--bg-alt); color: var(--muted); }
+        .rozet.var .ik { background: linear-gradient(135deg, #f5b400, #f97316); color: #fff; box-shadow: 0 6px 16px rgba(245, 180, 0, .35); }
+        .rozet b { display: block; font-size: .9rem; }
+        .rozet small { color: var(--muted); font-size: .75rem; line-height: 1.3; display: block; margin-top: 2px; }
+        .rozet:not(.var) { opacity: .55; }
+        .parcalar { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
+        .parca { display: flex; gap: 12px; align-items: center; padding: 12px; border-radius: 12px; border: 1px solid var(--line); text-decoration: none; color: var(--ink); }
+        .parca:hover { border-color: var(--accent); }
+        .parca .ik { width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; color: #fff; flex: 0 0 auto; }
+        .parca .bilgi { flex: 1; min-width: 0; }
+        .parca b { font-size: .92rem; display: block; }
+        .mini { height: 6px; background: var(--bg-alt); border-radius: 99px; overflow: hidden; margin-top: 6px; }
+        .mini div { height: 100%; background: var(--ok); }
+        .parca small { color: var(--muted); font-size: .78rem; }
+        .rapor { display: grid; grid-template-columns: auto 1fr; gap: 22px; align-items: center; }
+        .rapor .qr { background: #fff; padding: 8px; border-radius: 12px; border: 1px solid var(--line); line-height: 0; }
+        .rapor textarea { width: 100%; font-family: var(--mono); font-size: .8rem; padding: 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); resize: none; height: 86px; word-break: break-all; }
+        .rapor .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+        .rapor p { color: var(--muted); font-size: .92rem; margin-bottom: 10px; }
+        .gorev { border: 1px solid var(--line); border-radius: 14px; padding: 16px; margin-bottom: 10px; }
+        .gorev h3 { font-size: 1.05rem; display: flex; justify-content: space-between; gap: 8px; }
+        .gorev .done { color: var(--ok); }
+        .bos { color: var(--muted); }
+
+        /* Başarı belgesi (yalnızca yazdırırken) */
+        #belge { display: none; }
+        @media print {
+            @page { size: A4 landscape; margin: 0; }
+            body { background: #fff !important; }
+            body > *:not(#belge) { display: none !important; }
+            #belge { display: flex !important; }
+        }
+        #belge { width: 297mm; height: 210mm; padding: 14mm; box-sizing: border-box; font-family: var(--body); color: #111827; }
+        #belge .cerceve { flex: 1; border: 3mm solid #1d5fd6; outline: 1mm solid #f5b400; outline-offset: -6mm; border-radius: 6mm; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 12mm; position: relative; }
+        #belge .logo { font-family: var(--mono); font-weight: 800; color: #fff; background: #1d5fd6; border-radius: 4mm; padding: 3mm 6mm; font-size: 16pt; }
+        #belge h1 { font-family: var(--display); font-size: 40pt; margin: 8mm 0 2mm; letter-spacing: 1px; }
+        #belge .ad { font-family: var(--display); font-size: 34pt; color: #1d5fd6; border-bottom: 1px solid #cbd5e1; padding: 0 16mm 2mm; margin: 6mm 0; }
+        #belge p { font-size: 14pt; max-width: 200mm; line-height: 1.5; }
+        #belge .rozetsatir { display: flex; gap: 4mm; flex-wrap: wrap; justify-content: center; margin-top: 6mm; max-width: 230mm; }
+        #belge .rozetsatir span { font-size: 10pt; border: 1px solid #f5b400; color: #92400e; background: #fffbeb; border-radius: 99px; padding: 1mm 4mm; }
+        #belge .alt { position: absolute; bottom: 12mm; left: 16mm; right: 16mm; display: flex; justify-content: space-between; font-size: 11pt; color: #475569; }
+
+        @media (max-width: 760px) {
+            .hero { grid-template-columns: auto 1fr; } .bigstat { grid-column: 1 / -1; }
+            form.profil { grid-template-columns: 1fr 1fr; } form.profil label:first-child { grid-column: 1 / -1; }
+            .rapor { grid-template-columns: 1fr; justify-items: center; }
+        }
+    </style>
+</head>
+<body>
+    <header class="kl-top">
+        <div class="wrap kl-top-inner">
+            <a href="./" class="kl-brand"><span class="kl-logo">&lt;/&gt;</span>KodLab</a>
+            <span class="kl-crumb"><i class="fas fa-chevron-right" style="font-size:.7em"></i><span>Profilim</span></span>
+            <span class="kl-spacer"></span>
+            <button class="icon-btn" id="themeBtn" aria-label="Temayı değiştir"><i class="fas fa-circle-half-stroke"></i></button>
+        </div>
+    </header>
+
+    <main class="wrap">
+        <section class="card hero">
+            <div class="avatar" id="avatar">?</div>
+            <div>
+                <h1 id="adBaslik">Merhaba!</h1>
+                <div><span class="unvan" id="unvan"></span> <span class="sinif" id="sinifYazi"></span></div>
+                <div class="bar"><div id="unvanBar"></div></div>
+                <small id="unvanSonraki"></small>
+            </div>
+            <div class="bigstat"><b id="toplamYildiz">0</b><span>yıldız</span></div>
+        </section>
+
+        <section class="card">
+            <h2 class="t"><i class="fas fa-id-card"></i> Bilgilerim</h2>
+            <form class="profil" id="form">
+                <label>Adın ve soyadın <input class="in" id="ad" required maxlength="40" autocomplete="name"></label>
+                <label>Sınıf / şube <input class="in" id="sinif" placeholder="7-B" maxlength="10"></label>
+                <label>Okul no <input class="in" id="no" inputmode="numeric" maxlength="8"></label>
+                <button class="btn btn-primary">Kaydet</button>
+            </form>
+            <p style="color:var(--muted);font-size:.85rem;margin-top:10px"><i class="fas fa-lock"></i> Bu bilgiler yalnızca bu cihazda saklanır. Hiçbir sunucuya gönderilmez.</p>
+        </section>
+
+        <section class="card" id="gorevKart" hidden>
+            <h2 class="t"><i class="fas fa-clipboard-list"></i> Görevlerim</h2>
+            <div id="gorevler"></div>
+        </section>
+
+        <section class="card">
+            <h2 class="t"><i class="fas fa-paper-plane"></i> Öğretmenime gönder</h2>
+            <div class="rapor">
+                <div class="qr" id="qr"></div>
+                <div>
+                    <p>Öğretmenin bu QR kodu okutabilir ya da aşağıdaki kodu ona gönderebilirsin (EBA, Classroom, WhatsApp…). Kod bütün yıldızlarını içerir.</p>
+                    <textarea id="kod" readonly aria-label="İlerleme kodu"></textarea>
+                    <div class="actions">
+                        <button class="btn btn-primary btn-sm" id="kopyala"><i class="fas fa-copy"></i> Kodu kopyala</button>
+                        <button class="btn btn-sm" id="paylas" hidden><i class="fas fa-share-nodes"></i> Paylaş</button>
+                        <button class="btn btn-sm" id="belgeBtn"><i class="fas fa-award"></i> Başarı belgemi yazdır</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="t"><i class="fas fa-medal"></i> Rozetlerim <small id="rozetSay" style="color:var(--muted);font-weight:600;font-size:.9rem"></small></h2>
+            <div class="rozetler" id="rozetler"></div>
+        </section>
+
+        <section class="card">
+            <h2 class="t"><i class="fas fa-chart-simple"></i> Etkinliklerim</h2>
+            <div class="parcalar" id="parcalar"></div>
+        </section>
+    </main>
+
+    <div id="belge"><div class="cerceve">
+        <span class="logo">&lt;/&gt; KodLab</span>
+        <h1>BAŞARI BELGESİ</h1>
+        <div class="ad" id="bAd"></div>
+        <p id="bMetin"></p>
+        <div class="rozetsatir" id="bRozet"></div>
+        <div class="alt"><span id="bTarih"></span><span>yasinyel.com/kodlab</span><span>Bilişim Teknolojileri Öğretmeni</span></div>
+    </div></div>
+
+    <script src="ortak.js"></script>
+    <script src="qr.js"></script>
+    <script src="katalog.js"></script>
+    <script src="profil.js"></script>
+</body>
+</html>

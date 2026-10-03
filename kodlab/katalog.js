@@ -1,0 +1,141 @@
+// KodLab — etkinlik kataloğu
+// Ana sayfa, profil, öğretmen paneli ve görevler bu tek listeyi kullanır.
+// Yeni etkinlik eklemek için ETKINLIKLER'e bir nesne eklemek yeterli.
+// sinif: [en küçük, en büyük]; 0 = anasınıfı.
+// parcalar: öğretmenin görev olarak verebileceği ve ilerlemesini izleyebileceği bölümler.
+//   seviye: bölüm sayısı, yildiz(): her bölüm için 0–3 yıldız dizisi (bu cihazdaki kayıttan)
+(function (root) {
+    'use strict';
+    const oku = (k, v) => root.KL ? root.KL.oku(k, v) : v;
+    const dizi = (n, f) => Array.from({ length: n }, (_, i) => f(i) || 0);
+
+    const ETKINLIKLER = [
+        {
+            id: 'sensin', ad: 'Bilgisayar Sensin', url: 'sensin.html', ikon: 'fa-arrows-up-down-left-right', renk: '#0ea5e9', sinif: [0, 12],
+            aciklama: 'Kodu oku, bilgisayarın yerine sen çalıştır: karakteri yön tuşlarıyla kodun söylediği gibi hareket ettir. Her kademeye ayrı kod dili.',
+            etiket: ['Kod okuma', 'Algoritma', 'Döngü', 'Koşul', 'Fonksiyon'], kavram: 'Okla (okul öncesi), blokla (ilkokul), Türkçe kodla (ortaokul) ve Python ile (lise) kod izleme', sure: 'Bölüm başı 2–5 dk',
+            parcalar: [
+                { id: 'sensin.okuloncesi', ad: 'Okul Öncesi (oklar)', url: 'sensin.html?kademe=okuloncesi', sinif: [0, 1], seviye: 10, yildiz: () => { const k = oku('sensin', {}).okuloncesi || {}; return dizi(10, i => k[i]); } },
+                { id: 'sensin.ilkokul', ad: 'İlkokul (bloklar)', url: 'sensin.html?kademe=ilkokul', sinif: [2, 4], seviye: 10, yildiz: () => { const k = oku('sensin', {}).ilkokul || {}; return dizi(10, i => k[i]); } },
+                { id: 'sensin.ortaokul', ad: 'Ortaokul (Türkçe kod)', url: 'sensin.html?kademe=ortaokul', sinif: [5, 8], seviye: 11, yildiz: () => { const k = oku('sensin', {}).ortaokul || {}; return dizi(11, i => k[i]); } },
+                { id: 'sensin.lise', ad: 'Lise (Python)', url: 'sensin.html?kademe=lise', sinif: [9, 12], seviye: 12, yildiz: () => { const k = oku('sensin', {}).lise || {}; return dizi(12, i => k[i]); } }
+            ]
+        },
+        {
+            id: 'oruntu', ad: 'Örüntü Bul', url: 'oruntu.html', ikon: 'fa-shapes', renk: '#f59e0b', sinif: [0, 2],
+            aciklama: 'Sıradaki ne? Tekrar eden kalıbı bul, soru işaretinin yerine geleni seç. Okuma bilmeye gerek yok.',
+            etiket: ['Örüntü', 'Dikkat', 'Okuma gerekmez'], kavram: 'Örüntü tanıma, tekrar eden kalıplar (algoritmik düşünmenin temeli)', sure: '10 dk',
+            parcalar: [{ id: 'oruntu', ad: 'Örüntü Bul', url: 'oruntu.html', seviye: 8, yildiz: () => { const k = oku('oruntu', { yildiz: {} }).yildiz; return dizi(8, i => k[i]); } }]
+        },
+        {
+            id: 'piksel', ad: 'Piksel Kodlama', url: 'piksel.html', ikon: 'fa-border-all', renk: '#f97316', sinif: [2, 8],
+            aciklama: 'Satır kodlarını çöz, gizli resmi boya. Kendi resmini tasarla ve arkadaşlarına bulmaca olarak gönder.',
+            etiket: ['Resim kodlama', 'Sıkıştırma', 'Tasarım'], kavram: 'Resimlerin sayısal temsili, piksel, sıkıştırma (RLE)', sure: '15–25 dk',
+            parcalar: [{ id: 'piksel', ad: 'Piksel Kodlama', url: 'piksel.html', seviye: 8, yildiz: () => { const k = oku('piksel', { tamam: {} }).tamam; return dizi(8, i => (k[i] ? 3 : 0)); } }]
+        },
+        {
+            id: 'robot', ad: 'Robot Kodla', url: 'robot.html', ikon: 'fa-robot', renk: '#1d5fd6', sinif: [3, 8],
+            aciklama: 'Robotu Türkçe komutlarla programla, bütün yıldızları topla. Ne kadar kısa kod, o kadar çok yıldız!',
+            etiket: ['Sıralama', 'Döngüler', 'Koşullar', 'Fonksiyonlar'], kavram: 'Kod yazma: sıralı komut, parametre, döngü, koşul, fonksiyon, labirent algoritması', sure: '15–30 dk',
+            parcalar: [{ id: 'robot', ad: 'Robot Kodla', url: 'robot.html', seviye: 14, yildiz: () => { const k = oku('robot', { yildiz: {} }).yildiz; return dizi(14, i => k[i]); } }]
+        },
+        {
+            id: 'hata', ad: 'Hata Avcısı', url: 'hata.html', ikon: 'fa-bug', renk: '#e5484d', sinif: [3, 12],
+            aciklama: 'Robot yanlış yere gitti! Gitmesi gereken yolla gittiği yolu karşılaştır, koddaki hatayı bul ve düzelt. Hatalar her seferinde yeniden üretilir.',
+            etiket: ['Hata ayıklama', 'Debugging', 'Sonsuz soru'], kavram: 'Hata ayıklama: beklenen ve gerçekleşen davranışı karşılaştırma, sınır değerleri, operatörler', sure: 'Tur başı 5–10 dk',
+            parcalar: [{ id: 'hata', ad: 'Hata Avcısı', url: 'hata.html', seviye: 3, yildiz: () => { const k = oku('hata', {}); return ['ilkokul', 'ortaokul', 'lise'].map(x => k[x] || 0); } }]
+        },
+        {
+            id: 'ikilik', ad: 'İkilik Kartlar', url: 'ikilik.html', ikon: 'fa-toggle-on', renk: '#16a36a', sinif: [4, 10],
+            aciklama: 'Kartları çevirerek sayıları 0 ve 1\'lerle göster. Bilgisayarın dilini keşfet: bit, bayt ve ikilik sayı sistemi.',
+            etiket: ['Veri temsili', 'İkilik sistem', 'Bit / Bayt'], kavram: 'İkilik sayı sistemi, bit, bayt, veri temsili', sure: '15–20 dk',
+            parcalar: [{ id: 'ikilik', ad: 'İkilik Kartlar', url: 'ikilik.html', seviye: 5, yildiz: () => { const k = oku('ikilik', { yildiz: {} }).yildiz; return dizi(5, i => k[i]); } }]
+        },
+        {
+            id: 'algoritma', ad: 'Algoritma Sensin', url: 'algoritma.html', ikon: 'fa-arrow-down-wide-short', renk: '#8b5cf6', sinif: [3, 12],
+            aciklama: 'Arama ve sıralama algoritmalarını işlemci gibi adım adım kendin yürüt. Sonunda kaç adımda bitirdiğini karşılaştır.',
+            etiket: ['Arama', 'Sıralama', 'Verimlilik'], kavram: 'En büyüğü bulma, doğrusal ve ikili arama, kabarcık, seçmeli ve eklemeli sıralama', sure: 'Algoritma başı 3–6 dk',
+            parcalar: [{ id: 'algoritma', ad: 'Algoritma Sensin', url: 'algoritma.html', seviye: 6, yildiz: () => { const k = oku('algoritma', {}); return ['enbuyuk', 'dogrusal', 'ikili', 'kabarcik', 'secmeli', 'eklemeli'].map(x => k[x] || 0); } }]
+        },
+        {
+            id: 'mantik', ad: 'Mantık Kapıları', url: 'mantik.html', ikon: 'fa-microchip', renk: '#0891b2', sinif: [5, 12],
+            aciklama: 'VE, VEYA, DEĞİL kapılarıyla devre kur, doğruluk tablosunu doldur. Sonunda bilgisayarın toplama devresini kendin inşa et.',
+            etiket: ['Mantık', 'Doğruluk tablosu', 'Donanım'], kavram: 'Mantık kapıları, doğruluk tablosu, XOR, yarım ve tam toplayıcı', sure: '20–30 dk',
+            parcalar: [{ id: 'mantik', ad: 'Mantık Kapıları', url: 'mantik.html', seviye: 11, yildiz: () => { const k = oku('mantik', {}); return dizi(11, i => k[i]); } }]
+        },
+        {
+            id: 'tahmin', ad: 'Ne Yazar?', url: 'tahmin.html', ikon: 'fa-terminal', renk: '#7c3aed', sinif: [8, 12],
+            aciklama: 'Python kodunu bilgisayar gibi oku ve ekrana ne yazacağını tahmin et. Sorular her seferinde farklı sayılarla gelir.',
+            etiket: ['Python', 'Değişkenler', 'Kod okuma'], kavram: 'Değişken, operatör, metin, if/else, for/while, liste, fonksiyon (Python)', sure: 'Seviye başı 5–10 dk',
+            parcalar: [{ id: 'tahmin', ad: 'Ne Yazar?', url: 'tahmin.html', seviye: 5, yildiz: () => { const k = oku('tahmin', { yildiz: {} }).yildiz; return dizi(5, i => k[i]); } }]
+        }
+    ];
+
+    const PARCALAR = ETKINLIKLER.flatMap(e => e.parcalar.map(p => ({ ...p, etkinlik: e, sinif: p.sinif || e.sinif })));
+    const parca = (id) => PARCALAR.find(p => p.id === id);
+
+    // ---------- Rozetler ----------
+    const toplam = (id) => parca(id).yildiz().reduce((a, b) => a + b, 0);
+    const tamam = (id) => parca(id).yildiz().every(x => x > 0);
+    const ROZETLER = [
+        { id: 'ilk', ad: 'İlk Adım', ikon: 'fa-shoe-prints', aciklama: 'Herhangi bir etkinlikte ilk yıldızını kazan', kosul: () => PARCALAR.some(p => p.yildiz().some(x => x > 0)) },
+        { id: 'oklar', ad: 'Yön Ustası', ikon: 'fa-arrows-up-down-left-right', aciklama: 'Bilgisayar Sensin okul öncesi bölümlerini bitir', kosul: () => tamam('sensin.okuloncesi') },
+        { id: 'blok', ad: 'Blok Ustası', ikon: 'fa-puzzle-piece', aciklama: 'Bilgisayar Sensin ilkokul bölümlerini bitir', kosul: () => tamam('sensin.ilkokul') },
+        { id: 'kodokur', ad: 'Kod Okuru', ikon: 'fa-code', aciklama: 'Bilgisayar Sensin ortaokul bölümlerini bitir', kosul: () => tamam('sensin.ortaokul') },
+        { id: 'python', ad: 'Pythoncu', ikon: 'fa-terminal', aciklama: 'Bilgisayar Sensin lise bölümlerini bitir', kosul: () => tamam('sensin.lise') },
+        { id: 'oruntu', ad: 'Örüntü Dedektifi', ikon: 'fa-shapes', aciklama: 'Örüntü Bul\'un bütün seviyelerini bitir', kosul: () => tamam('oruntu') },
+        { id: 'robot', ad: 'Robot Mühendisi', ikon: 'fa-robot', aciklama: 'Robot Kodla\'nın 14 bölümünü bitir', kosul: () => tamam('robot') },
+        { id: 'labirent', ad: 'Labirent Kaşifi', ikon: 'fa-route', aciklama: 'Robot Kodla labirent bölümünü 3 yıldızla geç', kosul: () => parca('robot').yildiz()[13] === 3 },
+        { id: 'hata', ad: 'Hata Avcısı', ikon: 'fa-bug', aciklama: 'Hata Avcısı\'nda bir turu kusursuz bitir', kosul: () => parca('hata').yildiz().some(x => x === 3) },
+        { id: 'bit', ad: 'Bit Bilgini', ikon: 'fa-toggle-on', aciklama: 'İkilik Kartlar\'da 1 bayt seviyesini geç', kosul: () => parca('ikilik').yildiz()[3] > 0 },
+        { id: 'piksel', ad: 'Piksel Sanatçısı', ikon: 'fa-palette', aciklama: '8 piksel resminin hepsini çöz', kosul: () => tamam('piksel') },
+        { id: 'arama', ad: 'Arama Motoru', ikon: 'fa-magnifying-glass', aciklama: 'İkili aramayı 3 yıldızla tamamla', kosul: () => parca('algoritma').yildiz()[2] === 3 },
+        { id: 'siralama', ad: 'Sıralama Makinesi', ikon: 'fa-arrow-down-wide-short', aciklama: 'Üç sıralama algoritmasının hepsini tamamla', kosul: () => parca('algoritma').yildiz().slice(3).every(x => x > 0) },
+        { id: 'devre', ad: 'Devre Tasarımcısı', ikon: 'fa-microchip', aciklama: 'Tam toplayıcı devresini kur', kosul: () => parca('mantik').yildiz()[10] > 0 },
+        { id: 'python2', ad: 'Python Yorumlayıcısı', ikon: 'fa-laptop-code', aciklama: 'Ne Yazar?\'ın bütün seviyelerini bitir', kosul: () => tamam('tahmin') },
+        { id: 'yuz', ad: 'Yüz Yıldız', ikon: 'fa-star', aciklama: 'Toplam 100 yıldız topla', kosul: () => PARCALAR.reduce((t, p) => t + toplam(p.id), 0) >= 100 }
+    ];
+
+    // Toplam yıldıza göre unvan
+    const UNVANLAR = [[0, 'Yeni Başlayan'], [10, 'Kod Çırağı'], [30, 'Algoritma Kaşifi'], [60, 'Genç Programcı'], [100, 'Kod Ustası'], [160, 'Bilgisayar Bilimci'], [240, 'KodLab Efsanesi']];
+    function unvan(yildiz) {
+        let u = UNVANLAR[0];
+        for (const x of UNVANLAR) if (yildiz >= x[0]) u = x;
+        const i = UNVANLAR.indexOf(u), sonraki = UNVANLAR[i + 1];
+        return { ad: u[1], sonraki: sonraki ? { ad: sonraki[1], kalan: sonraki[0] - yildiz, oran: (yildiz - u[0]) / (sonraki[0] - u[0]) } : null };
+    }
+
+    // ---------- Rapor kodu ----------
+    // Öğrencinin ilerlemesi kısa bir metne (ve QR koda) çevrilir; öğretmen paneli bunu okur.
+    // Sunucu ya da hesap gerekmez. Biçim: KL1.<base64url(JSON)>.<sağlama>
+    const b64 = (s) => btoa(String.fromCharCode(...new TextEncoder().encode(s))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    const b64coz = (s) => new TextDecoder().decode(Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0)));
+    function saglama(s) { let h = 7; for (const c of s) h = (h * 31 + c.charCodeAt(0)) % 1679616; return h.toString(36).padStart(4, '0'); }
+
+    function raporOlustur(profil, gorevId) {
+        const p = {};
+        for (const x of PARCALAR) { const y = x.yildiz(); if (y.some(v => v > 0)) p[x.id] = y.join(''); }
+        const veri = { v: 1, a: profil.ad || '', s: profil.sinif || '', n: profil.no || '', t: Math.floor(Date.now() / 1000), p };
+        if (gorevId) veri.g = gorevId;
+        const govde = b64(JSON.stringify(veri));
+        return `KL1.${govde}.${saglama(govde)}`;
+    }
+
+    function raporOku(kod) {
+        const m = String(kod).trim().match(/KL1\.([A-Za-z0-9_-]+)\.([0-9a-z]{4})/);
+        if (!m) return null;
+        if (saglama(m[1]) !== m[2]) return { hata: 'Kod eksik ya da hatalı kopyalanmış' };
+        try {
+            const v = JSON.parse(b64coz(m[1]));
+            return { ad: v.a, sinif: v.s, no: v.n, zaman: v.t * 1000, gorev: v.g || null, ilerleme: v.p || {} };
+        } catch (e) { return { hata: 'Kod okunamadı' }; }
+    }
+
+    // ---------- Görev ----------
+    function gorevKodla(g) { return b64(JSON.stringify(g)); }
+    function gorevCoz(s) { try { return JSON.parse(b64coz(s)); } catch (e) { return null; } }
+
+    const api = { ETKINLIKLER, PARCALAR, parca, ROZETLER, unvan, raporOlustur, raporOku, gorevKodla, gorevCoz, b64, b64coz };
+    if (typeof module !== 'undefined' && module.exports) module.exports = api;
+    else root.Katalog = api;
+})(typeof window !== 'undefined' ? window : globalThis);

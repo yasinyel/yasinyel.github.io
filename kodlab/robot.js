@@ -288,13 +288,14 @@
             robotKonum(o.x, o.y);
             if (o.toplandi) {
                 const g = document.querySelector(`#h${o.x}_${o.y} .gem`);
-                if (g) setTimeout(() => g.classList.add('taken'), bekleme() * 0.6);
+                if (g) setTimeout(() => { g.classList.add('taken'); KL.ses('dogru'); }, bekleme() * 0.6);
             }
         } else if (o.tur === 'donus') {
             donus += o.yon === 'saga' ? 90 : -90;
             robotKonum(o.x, o.y);
         } else if (o.tur === 'carpma') {
             robot.classList.remove('crash'); robot.offsetWidth; robot.classList.add('crash');
+            KL.ses('yanlis');
         }
         return o.tur === 'satir' ? 'satir' : 'devam';
     }
