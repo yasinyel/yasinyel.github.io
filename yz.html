@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#1d5fd6">
+    <link rel="icon" href="ikon/ikon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="ikon/ikon-192.png">
+    <title>Makineye Öğret — KodLab</title>
+    <meta name="description" content="Örneklerle bir yapay zekâ modeli eğit, önyargıyı keşfet, aşırı öğrenmeyi gör.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="ortak.css">
+    <style>
+        main { padding: 28px 0 60px; }
+        .intro h1 { font-size: clamp(1.8rem, 4vw, 2.4rem); }
+        .intro p { color: var(--muted); margin-top: 6px; max-width: 740px; }
+        .bol-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; margin-top: 24px; }
+        .bol { padding: 20px; text-align: left; cursor: pointer; display: flex; flex-direction: column; gap: 6px; transition: transform .15s, border-color .15s; }
+        .bol:hover { transform: translateY(-2px); border-color: var(--accent); }
+        .bol .ik { width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center; color: #fff; font-size: 1.2rem; }
+        .bol h3 { font-size: 1.2rem; } .bol p { color: var(--muted); font-size: .9rem; flex: 1; } .bol small { color: var(--accent); font-weight: 700; }
+        .game-top { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+        .game-top h2 { font-size: 1.25rem; flex: 1; }
+        .lesson { padding: 14px 18px; margin-bottom: 16px; color: var(--muted); }
+        .lesson b { color: var(--ink); }
+        .panel { padding: 20px; }
+        .iki { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+        .buyuk { display: grid; place-items: center; background: linear-gradient(#bae6fd, #38bdf8); border-radius: 16px; height: 230px; }
+        .buyuk svg { width: 200px; height: 200px; }
+        .etiketle { display: flex; gap: 12px; margin-top: 14px; }
+        .etiketle .btn { flex: 1; padding: 16px; font-size: 1.1rem; }
+        .sayac { display: flex; gap: 16px; margin-top: 12px; color: var(--muted); font-weight: 600; flex-wrap: wrap; }
+        .sayac b { color: var(--ink); font-family: var(--mono); }
+        .mini-izgara { display: grid; grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: 6px; }
+        .mini { position: relative; border-radius: 10px; overflow: hidden; background: var(--bg-alt); aspect-ratio: 1; display: grid; place-items: center; border: 2px solid transparent; }
+        .mini svg { width: 100%; height: 100%; }
+        .mini .et { position: absolute; bottom: 2px; left: 2px; right: 2px; font-size: .62rem; font-weight: 800; text-align: center; border-radius: 6px; padding: 1px 2px; color: #fff; }
+        .mini.dogru { border-color: var(--ok); } .mini.yanlis { border-color: var(--bad); }
+        .mini .isaret { position: absolute; top: 2px; right: 4px; font-weight: 900; font-size: .9rem; }
+        .mini.secilebilir { cursor: pointer; } .mini.secilebilir:hover { border-color: var(--accent); }
+        .mini.eklendi { opacity: .35; pointer-events: none; }
+        .okyanus { background: linear-gradient(#7dd3fc, #0369a1); border-radius: 16px; padding: 12px; }
+        .okyanus .mini { background: rgba(255,255,255,.15); }
+        .sonuc-bant { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 14px; margin: 12px 0; font-weight: 700; flex-wrap: wrap; }
+        .sonuc-bant b { font-family: var(--display); font-size: 1.8rem; }
+        .sonuc-bant.iyi { background: var(--ok-soft); color: var(--ok); } .sonuc-bant.kotu { background: var(--bad-soft); color: var(--bad); }
+        .onem { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+        .onem div { display: grid; grid-template-columns: 90px 1fr 40px; gap: 8px; align-items: center; font-size: .88rem; }
+        .onem span.cubuk { height: 10px; background: var(--bg-alt); border-radius: 99px; overflow: hidden; }
+        .onem span.cubuk i { display: block; height: 100%; background: var(--accent); border-radius: 99px; }
+        .secenekler { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+        .secenekler button { text-align: left; padding: 12px 14px; border-radius: 12px; border: 2px solid var(--line); background: var(--surface); cursor: pointer; font-weight: 600; }
+        .secenekler button:hover { border-color: var(--accent); }
+        .secenekler button.dogru { border-color: var(--ok); background: var(--ok-soft); } .secenekler button.yanlis { border-color: var(--bad); background: var(--bad-soft); opacity: .7; }
+        .fb { font-weight: 600; min-height: 1.4em; margin-top: 8px; } .fb.ok { color: var(--ok); } .fb.bad { color: var(--bad); }
+        .kural-in { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
+        .kural-in input { padding: 8px 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); font-weight: 700; width: 160px; }
+        .gruplar { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .grup { border: 2px dashed var(--line); border-radius: 14px; padding: 10px; }
+        .grup h4 { font-size: .95rem; margin-bottom: 8px; }
+        canvas.harita { width: 100%; max-width: 460px; aspect-ratio: 1; border-radius: 14px; border: 1px solid var(--line); display: block; margin: 0 auto; cursor: crosshair; }
+        .k-satir { display: flex; align-items: center; gap: 12px; margin: 14px 0 6px; font-weight: 700; }
+        .k-satir input { flex: 1; accent-color: var(--accent); }
+        .k-satir b { font-family: var(--mono); font-size: 1.3rem; color: var(--accent); min-width: 2.5ch; }
+        .olcum { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0; }
+        .olcum div { background: var(--bg-alt); border-radius: 12px; padding: 10px 12px; }
+        .olcum b { display: block; font-family: var(--display); font-size: 1.6rem; }
+        .olcum span { color: var(--muted); font-size: .82rem; font-weight: 600; }
+        .gorevler { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+        .gorevler li { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
+        .gorevler li.tamam { border-color: var(--ok); background: var(--ok-soft); }
+        .sonuc { text-align: center; padding: 36px 22px; max-width: 560px; margin: 0 auto; }
+        .sonuc .big-stars { font-size: 2.6rem; margin: 12px 0; }
+        .sonuc .actions { display: flex; gap: 10px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
+        @media (max-width: 900px) { .iki { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <header class="kl-top">
+        <div class="wrap kl-top-inner">
+            <a href="./" class="kl-brand"><span class="kl-logo">&lt;/&gt;</span>KodLab</a>
+            <span class="kl-crumb"><i class="fas fa-chevron-right" style="font-size:.7em"></i><span>Makineye Öğret</span></span>
+            <span class="kl-spacer"></span>
+            <button class="icon-btn" id="themeBtn" aria-label="Temayı değiştir"><i class="fas fa-circle-half-stroke"></i></button>
+        </div>
+    </header>
+    <main class="wrap">
+        <section id="liste">
+            <div class="intro">
+                <h1>Makineye Öğret</h1>
+                <p>Yapay zekâ sihir değildir: bilgisayar, gösterdiğimiz örneklerden kalıplar çıkarır. İyi örnek gösterirsen iyi öğrenir, kötü ya da tek taraflı örnek gösterirsen yanlış öğrenir. Burada gerçek bir öğrenen model eğiteceksin!</p>
+            </div>
+            <div class="bol-grid" id="bolumler"></div>
+        </section>
+        <section id="oyun" hidden>
+            <div class="game-top">
+                <button class="icon-btn" id="geri" aria-label="Geri"><i class="fas fa-arrow-left"></i></button>
+                <h2 id="baslik"></h2>
+            </div>
+            <div class="card lesson" id="anlatim"></div>
+            <div id="icerik"></div>
+        </section>
+        <section id="sonuc" hidden>
+            <div class="card sonuc">
+                <h2 id="sBaslik"></h2>
+                <div class="big-stars" id="sYildiz"></div>
+                <p id="sMetin" style="color:var(--muted)"></p>
+                <div class="actions">
+                    <button class="btn" id="sListe">Bölümler</button>
+                    <button class="btn btn-primary" id="sTekrar"><i class="fas fa-rotate-left"></i> Yeniden</button>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script src="ortak.js"></script>
+    <script src="yz-motor.js"></script>
+    <script src="yz.js"></script>
+</body>
+</html>
