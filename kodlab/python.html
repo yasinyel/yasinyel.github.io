@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#1d5fd6">
+    <link rel="icon" href="ikon/ikon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="ikon/ikon-192.png">
+    <title>Python Laboratuvarı — KodLab</title>
+    <meta name="description" content="Tarayıcıda gerçek Python yaz, çalıştır ve otomatik değerlendirilen görevleri çöz. Kurulum gerekmez, hatalar Türkçe açıklanır.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="ortak.css">
+    <style>
+        main { padding: 14px 0 50px; }
+        .duzen { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 16px; align-items: start; }
+        .yan { padding: 10px; position: sticky; top: 76px; max-height: calc(100vh - 96px); overflow-y: auto; }
+        .yan h3 { font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-family: var(--body); margin: 12px 6px 6px; display: flex; gap: 6px; align-items: center; }
+        .yan h3:first-child { margin-top: 2px; }
+        .yan h3 small { margin-left: auto; font-weight: 500; letter-spacing: 0; text-transform: none; }
+        .yan button { display: flex; width: 100%; text-align: left; align-items: center; gap: 8px; border: 0; background: none; padding: 7px 8px; border-radius: 8px; cursor: pointer; font-size: .9rem; color: var(--ink); }
+        .yan button:hover { background: var(--bg-alt); }
+        .yan button.sel { background: var(--accent-soft); color: var(--accent); font-weight: 700; }
+        .yan button .d { width: 18px; text-align: center; color: var(--muted); font-size: .8rem; }
+        .yan button.ok .d { color: var(--ok); }
+        .yan button .stars { margin-left: auto; font-size: 8px; }
+        .gorev-sec { display: none; width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); font: inherit; font-weight: 700; margin-bottom: 10px; }
+        .gorev-bas h1 { font-size: 1.45rem; }
+        .gorev-bas .ust { color: var(--muted); font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+        .anlatim { margin-top: 6px; color: var(--muted); max-width: 860px; line-height: 1.6; }
+        .anlatim b { color: var(--ink); }
+        .anlatim pre { background: var(--bg-alt); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; margin: 8px 0; color: var(--ink); font-family: var(--mono); font-size: .86rem; white-space: pre-wrap; }
+        .ornek { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+        .ornek div { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; font-size: .82rem; min-width: 140px; }
+        .ornek div b { display: block; color: var(--muted); font-size: .7rem; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 2px; }
+        .ornek pre { font-family: var(--mono); font-size: .86rem; margin: 0; white-space: pre-wrap; }
+        .ipucu { margin-top: 10px; padding: 10px 12px; border-radius: 10px; background: rgba(255, 209, 102, .18); border: 1px solid #f0c75e; font-size: .9rem; }
+        .ipucu pre { font-family: var(--mono); font-size: .86rem; margin-top: 4px; white-space: pre-wrap; }
+        .calisma { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 14px; margin-top: 14px; align-items: start; }
+        .editor-kart { overflow: hidden; }
+        .arac { display: flex; gap: 6px; padding: 8px 10px; border-bottom: 1px solid var(--line); align-items: center; flex-wrap: wrap; }
+        .arac .bos { flex: 1; }
+        .arac .durum { font-size: .78rem; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+        .kod { position: relative; height: 420px; background: var(--code-bg); font-family: var(--mono); font-size: 14.5px; line-height: 22px; overflow: hidden; }
+        .kod pre, .kod textarea { position: absolute; inset: 0; margin: 0; padding: 14px 14px 14px 52px; white-space: pre; overflow: auto; font: inherit; line-height: inherit; tab-size: 4; }
+        .kod pre { color: var(--code-ink); pointer-events: none; overflow: hidden; }
+        .kod textarea { background: transparent; color: transparent; caret-color: #ffd166; border: 0; outline: 0; resize: none; }
+        .kod textarea::selection { background: rgba(110, 164, 255, .35); }
+        .kod .no { position: absolute; left: 0; top: 0; bottom: 0; width: 40px; padding-top: 14px; text-align: right; color: #4a5875; overflow: hidden; pointer-events: none; }
+        .kod .no div.h { color: #ff8a8a; font-weight: 700; }
+        .kod .hata-cizgi { position: absolute; left: 0; right: 0; height: 22px; background: rgba(248, 113, 113, .18); border-left: 3px solid #f87171; pointer-events: none; }
+        .p-an { color: #c792ea; } .p-yer { color: #82aaff; } .p-met { color: #c3e88d; } .p-say { color: #f78c6c; } .p-yor { color: #697098; font-style: italic; } .p-fn { color: #ffcb6b; }
+        .sag { display: flex; flex-direction: column; gap: 14px; }
+        .konsol-kart { overflow: hidden; }
+        .konsol-bas { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--bg-alt); border-bottom: 1px solid var(--line); font-size: .8rem; color: var(--muted); font-weight: 700; }
+        .konsol-bas .bos { flex: 1; }
+        .konsol { background: var(--code-bg); color: var(--code-ink); font-family: var(--mono); font-size: 14px; line-height: 21px; padding: 12px 14px; height: 230px; overflow: auto; white-space: pre-wrap; word-break: break-word; }
+        .konsol .soluk { color: #697098; font-style: italic; }
+        .konsol input { background: transparent; border: 0; border-bottom: 2px solid #ffd166; color: #ffd166; font: inherit; outline: 0; width: 200px; max-width: 70%; }
+        .konsol .h { color: #fca5a5; }
+        .hata-kutu { margin-top: 8px; padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(248, 113, 113, .6); background: rgba(248, 113, 113, .1); color: #fecaca; white-space: normal; font-family: var(--body); font-size: .88rem; line-height: 1.5; }
+        .hata-kutu b { color: #fff; }
+        .hata-kutu small { display: block; color: #94a3b8; font-family: var(--mono); margin-top: 4px; }
+        .sonuc-kart { padding: 14px; }
+        .sonuc-kart h3 { font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-family: var(--body); margin-bottom: 8px; }
+        .testler { display: flex; gap: 6px; flex-wrap: wrap; }
+        .test { width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; font-weight: 700; font-size: .8rem; border: 1px solid var(--line); background: var(--bg-alt); color: var(--muted); }
+        .test.ok { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); }
+        .test.no { background: var(--bad-soft); border-color: var(--bad); color: var(--bad); cursor: pointer; }
+        .test.sel { outline: 2px solid var(--bad); outline-offset: 2px; }
+        .fark { margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .fark div { border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; font-size: .78rem; min-width: 0; }
+        .fark div.tam { grid-column: 1 / -1; }
+        .fark b { color: var(--muted); font-size: .7rem; text-transform: uppercase; letter-spacing: .05em; }
+        .fark pre { font-family: var(--mono); font-size: .84rem; margin-top: 2px; white-space: pre-wrap; word-break: break-word; }
+        .fark .bosluk { color: var(--muted); font-style: italic; font-family: var(--body); }
+        .yukleniyor { display: inline-block; width: 12px; height: 12px; border: 2px solid var(--line); border-top-color: var(--accent); border-radius: 50%; animation: don 0.8s linear infinite; }
+        @keyframes don { to { transform: rotate(360deg); } }
+        @media (max-width: 1150px) { .calisma { grid-template-columns: 1fr; } }
+        @media (max-width: 860px) { .duzen { grid-template-columns: 1fr; } .yan { display: none; } .gorev-sec { display: block; } .kod { height: 340px; } }
+    </style>
+</head>
+<body>
+    <header class="kl-top">
+        <div class="wrap kl-top-inner">
+            <a href="./" class="kl-brand"><span class="kl-logo">&lt;/&gt;</span>KodLab</a>
+            <span class="kl-crumb"><i class="fas fa-chevron-right" style="font-size:.7em"></i><span>Python Laboratuvarı</span></span>
+            <span class="kl-spacer"></span>
+            <button class="icon-btn" id="themeBtn" aria-label="Temayı değiştir"><i class="fas fa-circle-half-stroke"></i></button>
+        </div>
+    </header>
+    <main class="wrap">
+        <div class="duzen">
+            <nav class="card yan" id="yan" aria-label="Görevler"></nav>
+            <div>
+                <select class="gorev-sec" id="gorevSec" aria-label="Görev seç"></select>
+                <div class="gorev-bas"><div class="ust" id="ust"></div><h1 id="baslik"></h1></div>
+                <div class="anlatim" id="anlatim"></div>
+                <div class="ornek" id="ornek"></div>
+                <div id="ipucuAlan"></div>
+                <div class="calisma">
+                    <section class="card editor-kart">
+                        <div class="arac">
+                            <button class="btn btn-primary btn-sm" id="calistir" disabled><i class="fas fa-play"></i> Çalıştır</button>
+                            <button class="btn btn-sm" id="denetle" disabled><i class="fas fa-clipboard-check"></i> Kontrol et</button>
+                            <span class="bos"></span>
+                            <span class="durum" id="durum"><span class="yukleniyor"></span> Python hazırlanıyor…</span>
+                            <button class="icon-btn" id="ipucuBtn" title="İpucu" aria-label="İpucu"><i class="fas fa-lightbulb"></i></button>
+                            <button class="icon-btn" id="sifirla" title="Başlangıç koduna dön" aria-label="Başlangıç koduna dön"><i class="fas fa-rotate-left"></i></button>
+                            <button class="icon-btn" id="cozum" title="Örnek çözüm (öğretmen)" aria-label="Örnek çözüm" hidden><i class="fas fa-key"></i></button>
+                        </div>
+                        <div class="kod" id="kodKutu"><div class="no" id="no"></div><pre id="renkli" aria-hidden="true"></pre><textarea id="kod" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" aria-label="Python kodu" wrap="off"></textarea></div>
+                    </section>
+                    <div class="sag">
+                        <section class="card konsol-kart">
+                            <div class="konsol-bas"><i class="fas fa-terminal"></i> Çıktı <span class="bos"></span><span style="font-weight:500">Ctrl + Enter: çalıştır</span></div>
+                            <div class="konsol" id="konsol" aria-live="polite"><span class="soluk">Kodunu yaz ve Çalıştır'a bas.</span></div>
+                        </section>
+                        <section class="card sonuc-kart" id="sonucKart" hidden>
+                            <h3>Test sonuçları</h3>
+                            <div class="testler" id="testler"></div>
+                            <div id="fark"></div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <dialog class="kl-dialog" id="kazandi">
+        <h2 id="kBaslik"></h2>
+        <div class="big-stars" id="kYildiz"></div>
+        <p id="kMetin"></p>
+        <div class="actions"><button class="btn" id="kKal">Burada kal</button><button class="btn btn-primary" id="kSonraki">Sonraki görev <i class="fas fa-arrow-right"></i></button></div>
+    </dialog>
+    <script src="ortak.js"></script>
+    <script src="python-motor.js"></script>
+    <script src="python.js"></script>
+</body>
+</html>

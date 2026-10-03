@@ -46,5 +46,12 @@ test('Rozet ve unvan', () => {
     assert.strictEqual(K.unvan(0).ad, 'Yeni Başlayan');
     assert.strictEqual(K.unvan(35).ad, 'Algoritma Kaşifi');
 });
+test('Python görev listesi motorla aynı', () => {
+    const M = require('../python-motor.js');
+    assert.strictEqual(K.parca('python').yildiz().length, M.GOREVLER.length);
+    assert.strictEqual(M.GOREVLER.findIndex(g => g.unite === 'fonk'), 25);
+    const src = require('fs').readFileSync(require('path').join(__dirname, '../katalog.js'), 'utf8');
+    assert.deepStrictEqual(JSON.parse(src.match(/PYTHON_IDLER = (\[.*?\]);/)[1].replace(/'/g, '"')), M.GOREVLER.map(g => g.id));
+});
 console.log(hata ? `${hata} hata` : 'Katalog doğrulandı');
 process.exit(hata ? 1 : 0);
