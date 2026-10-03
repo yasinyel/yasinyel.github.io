@@ -1,7 +1,7 @@
 // KodLab — çevrimdışı çalışma (service worker)
 // Bütün KodLab sayfaları ilk ziyarette önbelleğe alınır; internet kesilse de etkinlikler açılır.
 // Dosya eklendiğinde DOSYALAR listesine eklenmeli ve SURUM artırılmalı (test/sw.test.js denetler).
-const SURUM = 'kodlab-v7';
+const SURUM = 'kodlab-v8';
 const DOSYALAR = [
         './',
         'ag-motor.js',
@@ -15,6 +15,8 @@ const DOSYALAR = [
         'cizim-motor.js',
         'cizim.html',
         'cizim.js',
+        'dersler-veri.js',
+        'dersler.html',
         'devre-motor.js',
         'devre.html',
         'devre.js',
@@ -31,6 +33,9 @@ const DOSYALAR = [
         'ikilik.html',
         'ikilik.js',
         'index.html',
+        'kagit-motor.js',
+        'kagitlar.html',
+        'kagitlar.js',
         'katalog.js',
         'manifest.webmanifest',
         'mantik-motor.js',
