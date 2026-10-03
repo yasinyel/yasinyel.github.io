@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#1d5fd6">
+    <link rel="icon" href="ikon/ikon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="ikon/ikon-192.png">
+    <title>Paket Yolculuğu — KodLab</title>
+    <meta name="description" content="İnternet nasıl çalışır? Paketleri birleştir, yönlendirici ol, DNS'i keşfet, IP adreslerini çöz.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="ortak.css">
+    <style>
+        main { padding: 28px 0 60px; }
+        .intro h1 { font-size: clamp(1.8rem, 4vw, 2.4rem); }
+        .intro p { color: var(--muted); margin-top: 6px; max-width: 740px; }
+        .bol-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; margin-top: 24px; }
+        .bol { padding: 20px; text-align: left; cursor: pointer; display: flex; flex-direction: column; gap: 6px; transition: transform .15s, border-color .15s; }
+        .bol:hover { transform: translateY(-2px); border-color: var(--accent); }
+        .bol .ik { width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center; color: #fff; font-size: 1.2rem; }
+        .bol h3 { font-size: 1.2rem; } .bol p { color: var(--muted); font-size: .9rem; flex: 1; } .bol small { color: var(--accent); font-weight: 700; }
+        .game-top { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+        .game-top h2 { font-size: 1.25rem; flex: 1; }
+        .dots { display: flex; gap: 6px; }
+        .dots span { width: 12px; height: 12px; border-radius: 50%; background: var(--line); }
+        .dots span.ok { background: var(--ok); } .dots span.cur { background: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+        .lesson { padding: 14px 18px; margin-bottom: 16px; color: var(--muted); }
+        .lesson b { color: var(--ink); }
+        .panel { padding: 20px; }
+        .iki { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+        .fb { font-weight: 600; min-height: 1.4em; margin-top: 10px; } .fb.ok { color: var(--ok); } .fb.bad { color: var(--bad); }
+
+        /* Paketler */
+        .yuvalar { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+        .yuva { min-width: 92px; min-height: 54px; border: 2px dashed var(--line); border-radius: 10px; display: grid; place-items: center; font-family: var(--mono); font-weight: 700; padding: 6px; color: var(--muted); font-size: .85rem; }
+        .yuva.dolu { border-style: solid; border-color: var(--ok); background: var(--ok-soft); color: var(--ink); font-size: 1rem; }
+        .paketler { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; }
+        .paket { border: 2px solid var(--line); border-radius: 12px; overflow: hidden; cursor: pointer; background: var(--surface); text-align: left; padding: 0; font: inherit; color: inherit; transition: transform .15s; }
+        .paket:hover { transform: translateY(-2px); border-color: var(--accent); }
+        .paket .ust { background: var(--bg-alt); padding: 6px 10px; font-family: var(--mono); font-size: .72rem; color: var(--muted); line-height: 1.5; }
+        .paket .ust b { color: var(--accent); font-size: .85rem; }
+        .paket .veri { padding: 10px; font-family: var(--mono); font-weight: 700; letter-spacing: 1px; white-space: pre; }
+        .paket.hata { animation: titre .35s; border-color: var(--bad); }
+        .paket.kullanildi { display: none; }
+        @keyframes titre { 0%,100% { translate: 0 } 25% { translate: -5px 0 } 75% { translate: 5px 0 } }
+        .mesaj-sonuc { font-family: var(--mono); font-size: 1.15rem; background: var(--code-bg); color: #ffd166; padding: 14px; border-radius: 12px; letter-spacing: 1px; margin-top: 12px; }
+
+        /* Yönlendirme */
+        .ag-sec { display: flex; gap: 6px; flex-wrap: wrap; }
+        .ag-sec button { border: 1px solid var(--line); background: var(--surface); border-radius: 99px; padding: 6px 14px; font-weight: 700; cursor: pointer; }
+        .ag-sec button.sel { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+        .ag-sec button.bitti { border-color: var(--ok); }
+        svg.ag { width: 100%; height: auto; background: var(--bg-alt); border-radius: 14px; }
+        svg.ag .kenar { stroke: #94a3b8; stroke-width: .9; }
+        svg.ag .kenar.yol { stroke: var(--accent); stroke-width: 1.6; }
+        svg.ag .kenar.kopuk { stroke: var(--bad); stroke-dasharray: 2 1.5; }
+        svg.ag .etiket { font-size: 3.2px; fill: var(--muted); font-family: var(--mono); text-anchor: middle; font-weight: 700; }
+        svg.ag .etiket-arka { fill: var(--bg-alt); }
+        svg.ag .dugum circle { fill: var(--surface); stroke: #64748b; stroke-width: .8; }
+        svg.ag .dugum text { font-size: 3.6px; text-anchor: middle; dominant-baseline: central; font-weight: 800; fill: var(--ink); }
+        svg.ag .dugum.simdi circle { fill: var(--accent); stroke: var(--accent); } svg.ag .dugum.simdi text { fill: #fff; }
+        svg.ag .dugum.secilir { cursor: pointer; } svg.ag .dugum.secilir circle { stroke: #f5b400; stroke-width: 1.4; animation: nabiz 1s infinite; }
+        svg.ag .dugum.uc circle { fill: #16a36a; stroke: #16a36a; } svg.ag .dugum.uc text { fill: #fff; }
+        @keyframes nabiz { 50% { stroke-width: 2.6; } }
+        .baslik-kutu { font-family: var(--mono); font-size: .85rem; background: var(--code-bg); color: var(--code-ink); border-radius: 12px; padding: 12px 14px; line-height: 1.7; }
+        .baslik-kutu b { color: #ffd166; }
+        .olcu { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 0; }
+        .olcu div { background: var(--bg-alt); border-radius: 12px; padding: 10px 12px; }
+        .olcu b { display: block; font-family: var(--display); font-size: 1.5rem; }
+        .olcu span { color: var(--muted); font-size: .8rem; font-weight: 600; }
+
+        /* DNS */
+        .dns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .sunucu { border: 2px solid var(--line); border-radius: 12px; padding: 12px; text-align: center; cursor: pointer; background: var(--surface); font-weight: 700; display: flex; flex-direction: column; gap: 6px; align-items: center; font: inherit; color: inherit; }
+        .sunucu i { font-size: 1.4rem; color: var(--accent); }
+        .sunucu:hover { border-color: var(--accent); }
+        .sunucu.soruldu { border-color: var(--ok); background: var(--ok-soft); }
+        .sunucu.hata { border-color: var(--bad); animation: titre .35s; }
+        .konusma { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+        .konusma div { padding: 10px 14px; border-radius: 14px; max-width: 90%; font-size: .95rem; }
+        .konusma .ben { background: var(--accent); color: var(--accent-ink); align-self: flex-end; border-bottom-right-radius: 4px; }
+        .konusma .o { background: var(--bg-alt); align-self: flex-start; border-bottom-left-radius: 4px; }
+        .tarayici { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin-top: 14px; }
+        .tarayici .adres { background: var(--bg-alt); padding: 8px 12px; font-family: var(--mono); font-size: .9rem; }
+        .tarayici .sayfa { padding: 24px; text-align: center; color: var(--muted); }
+
+        /* IP */
+        .ip-kart { max-width: 640px; margin: 0 auto; text-align: center; }
+        .ip-kart .ip { font-family: var(--mono); font-size: clamp(1.8rem, 6vw, 2.8rem); font-weight: 700; margin: 18px 0; letter-spacing: 2px; }
+        .ip-kart .karar { display: flex; gap: 12px; } .ip-kart .karar .btn { flex: 1; padding: 16px; font-size: 1.05rem; }
+        .sonuc { text-align: center; padding: 36px 22px; max-width: 560px; margin: 0 auto; }
+        .sonuc .big-stars { font-size: 2.6rem; margin: 12px 0; }
+        .sonuc .actions { display: flex; gap: 10px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
+        @media (max-width: 900px) { .iki { grid-template-columns: 1fr; } .dns { grid-template-columns: repeat(2, 1fr); } }
+    </style>
+</head>
+<body>
+    <header class="kl-top">
+        <div class="wrap kl-top-inner">
+            <a href="./" class="kl-brand"><span class="kl-logo">&lt;/&gt;</span>KodLab</a>
+            <span class="kl-crumb"><i class="fas fa-chevron-right" style="font-size:.7em"></i><span>Paket Yolculuğu</span></span>
+            <span class="kl-spacer"></span>
+            <button class="icon-btn" id="themeBtn" aria-label="Temayı değiştir"><i class="fas fa-circle-half-stroke"></i></button>
+        </div>
+    </header>
+    <main class="wrap">
+        <section id="liste">
+            <div class="intro">
+                <h1>Paket Yolculuğu</h1>
+                <p>Bir mesaj gönderdiğinde ya da bir site açtığında ne olur? Verin küçük paketlere bölünür, yönlendiricilerden geçerek dünyanın öbür ucuna gider ve orada yeniden birleştirilir. Bu yolculuğu adım adım sen yöneteceksin!</p>
+            </div>
+            <div class="bol-grid" id="bolumler"></div>
+        </section>
+        <section id="oyun" hidden>
+            <div class="game-top">
+                <button class="icon-btn" id="geri" aria-label="Geri"><i class="fas fa-arrow-left"></i></button>
+                <h2 id="baslik"></h2>
+                <div class="dots" id="dots"></div>
+            </div>
+            <div class="card lesson" id="anlatim"></div>
+            <div id="icerik"></div>
+        </section>
+        <section id="sonuc" hidden>
+            <div class="card sonuc">
+                <h2 id="sBaslik"></h2>
+                <div class="big-stars" id="sYildiz"></div>
+                <p id="sMetin" style="color:var(--muted)"></p>
+                <div class="actions"><button class="btn" id="sListe">Bölümler</button><button class="btn btn-primary" id="sTekrar"><i class="fas fa-rotate-left"></i> Tekrar</button></div>
+            </div>
+        </section>
+    </main>
+    <script src="ortak.js"></script>
+    <script src="ag-motor.js"></script>
+    <script src="ag.js"></script>
+</body>
+</html>
