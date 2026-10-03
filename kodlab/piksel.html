@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piksel Kodlama — KodLab</title>
+    <meta name="description" content="Satır kodlarını çöz, gizli resmi ortaya çıkar. Bilgisayarlar resimleri nasıl saklar?">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="ortak.css">
+    <style>
+        main { padding: 28px 0 60px; }
+        .intro h1 { font-size: clamp(1.8rem, 4vw, 2.4rem); }
+        .intro p { color: var(--muted); margin-top: 6px; max-width: 700px; }
+        .pz-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; margin-top: 24px; }
+        .pz-card { padding: 14px; cursor: pointer; text-align: left; display: flex; flex-direction: column; gap: 10px; transition: transform .15s, border-color .15s; }
+        .pz-card:hover { transform: translateY(-2px); border-color: var(--accent); }
+        .pz-card .thumb { aspect-ratio: 1; border-radius: 10px; background: var(--bg-alt); display: grid; place-items: center; font-size: 2rem; color: var(--muted); overflow: hidden; }
+        .pz-card .thumb canvas { width: 70%; image-rendering: pixelated; border-radius: 4px; }
+        .pz-card h3 { font-size: 1rem; display: flex; justify-content: space-between; align-items: center; }
+        .pz-card h3 .done { color: var(--ok); }
+        .pz-card small { color: var(--muted); }
+        .pz-card.design { border-style: dashed; }
+
+        .game-top { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+        .game-top h2 { font-size: 1.25rem; flex: 1; }
+        .play { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 20px; align-items: start; }
+        .board-card { padding: 18px; overflow-x: auto; }
+        .board { display: grid; gap: 0; width: max-content; margin: 0 auto; user-select: none; touch-action: none; }
+        .rc { display: flex; align-items: center; justify-content: flex-end; gap: 4px; padding-right: 10px; font-family: var(--mono); font-size: calc(var(--c) * .42); white-space: nowrap; }
+        .rc .run { display: inline-flex; align-items: center; gap: 2px; }
+        .rc .sw { width: calc(var(--c) * .42); height: calc(var(--c) * .42); border-radius: 3px; border: 1px solid rgba(0,0,0,.25); }
+        .rc.ok { color: var(--ok); }
+        .rc .chk { color: var(--ok); width: 1em; }
+        .px { width: var(--c); height: var(--c); box-shadow: inset 0 0 0 1px rgba(100, 116, 139, .28); cursor: crosshair; }
+        .px.wrong { box-shadow: inset 0 0 0 3px var(--bad); }
+        .side { display: flex; flex-direction: column; gap: 14px; }
+        .side .card { padding: 16px; }
+        .side h3 { font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-family: var(--body); margin-bottom: 10px; }
+        .palette { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+        .palette button { aspect-ratio: 1; border-radius: 10px; border: 2px solid var(--line); cursor: pointer; position: relative; }
+        .palette button.sel { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+        .palette button.sel::after { content: '✓'; position: absolute; inset: 0; display: grid; place-items: center; font-weight: 800; color: #fff; text-shadow: 0 0 3px #000; }
+        .side .btn { width: 100%; }
+        .side p { color: var(--muted); font-size: .9rem; }
+        .stat { font-family: var(--mono); font-size: .9rem; }
+        .stat b { color: var(--accent); }
+        .size { display: flex; gap: 6px; }
+        .size button { flex: 1; }
+        .size button.sel { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+        .share-out { display: flex; gap: 6px; margin-top: 8px; }
+        .share-out input { flex: 1; min-width: 0; font-family: var(--mono); font-size: .75rem; padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); }
+        .info { margin-top: 28px; padding: 20px; }
+        .info h3 { font-size: 1.1rem; margin-bottom: 6px; }
+        .info p { color: var(--muted); }
+        @media (max-width: 860px) { .play { grid-template-columns: 1fr; } .side { order: -1; } .palette { grid-template-columns: repeat(9, 1fr); } }
+    </style>
+</head>
+<body>
+    <header class="kl-top">
+        <div class="wrap kl-top-inner">
+            <a href="./" class="kl-brand"><span class="kl-logo">&lt;/&gt;</span>KodLab</a>
+            <span class="kl-crumb"><i class="fas fa-chevron-right" style="font-size:.7em"></i><span>Piksel Kodlama</span></span>
+            <span class="kl-spacer"></span>
+            <button class="icon-btn" id="themeBtn" aria-label="Temayı değiştir"><i class="fas fa-circle-half-stroke"></i></button>
+        </div>
+    </header>
+
+    <main class="wrap">
+        <section id="liste">
+            <div class="intro">
+                <h1>Piksel Kodlama</h1>
+                <p>Ekrandaki her resim küçük karelerden (<b>piksel</b>) oluşur. Bilgisayar resmi saklarken her rengi tek tek yazmak yerine "3 beyaz, 2 siyah, 3 beyaz" gibi kısaltır. Her satırın yanındaki kodu çöz, kareleri boya, gizli resmi ortaya çıkar!</p>
+            </div>
+            <div class="pz-grid" id="pzGrid"></div>
+            <div class="card info">
+                <h3><i class="fas fa-chalkboard-user" style="color:var(--accent)"></i> Öğretmenler için</h3>
+                <p>"Kendi resmini tasarla" bölümünde bir resim çizip <b>bulmaca linki</b> oluşturabilirsiniz. Linki açan öğrenci resmi göremez, yalnızca satır kodlarını görür ve çözmeye çalışır. Tartışma için: Hangi resimler daha kısa kodla saklanır? Neden?</p>
+            </div>
+        </section>
+
+        <section id="oyun" hidden>
+            <div class="game-top">
+                <button class="icon-btn" id="geri" aria-label="Geri"><i class="fas fa-arrow-left"></i></button>
+                <h2 id="gTitle"></h2>
+            </div>
+            <div class="play">
+                <div class="card board-card"><div class="board" id="board"></div></div>
+                <aside class="side">
+                    <div class="card">
+                        <h3>Renk seç</h3>
+                        <div class="palette" id="palette"></div>
+                    </div>
+                    <div class="card" id="solvePanel">
+                        <p id="solveText">Her satırdaki kodu soldan sağa oku. Örneğin <b>3 ⬜ 2 ⬛</b> "3 beyaz, sonra 2 siyah" demektir. Doğru boyanan satırın yanında ✓ çıkar.</p>
+                        <div style="display:flex;gap:8px;margin-top:12px">
+                            <button class="btn" id="temizle"><i class="fas fa-eraser"></i> Temizle</button>
+                        </div>
+                    </div>
+                    <div class="card" id="designPanel" hidden>
+                        <h3>Boyut</h3>
+                        <div class="size" id="size">
+                            <button class="btn btn-sm" data-s="8">8×8</button>
+                            <button class="btn btn-sm" data-s="10">10×10</button>
+                            <button class="btn btn-sm" data-s="12">12×12</button>
+                        </div>
+                        <h3 style="margin-top:14px">Sıkıştırma</h3>
+                        <p class="stat" id="stat"></p>
+                        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+                            <button class="btn btn-sm" id="dTemizle"><i class="fas fa-eraser"></i> Temizle</button>
+                            <button class="btn btn-sm" id="kodGizle"><i class="fas fa-eye-slash"></i> Kodu gizle</button>
+                        </div>
+                        <button class="btn btn-primary" id="paylas" style="margin-top:12px"><i class="fas fa-link"></i> Bulmaca linki oluştur</button>
+                        <div class="share-out" id="shareOut" hidden>
+                            <input id="shareUrl" readonly aria-label="Bulmaca linki">
+                            <button class="btn btn-sm" id="kopyala" aria-label="Kopyala"><i class="fas fa-copy"></i></button>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </section>
+    </main>
+
+    <script src="ortak.js"></script>
+    <script src="piksel.js"></script>
+</body>
+</html>

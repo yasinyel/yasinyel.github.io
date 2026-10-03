@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robot Kodla — KodLab</title>
+    <meta name="description" content="Robotu Türkçe komutlarla programla: sıralı komutlar, döngüler, koşullar ve fonksiyonlar.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="ortak.css">
+    <style>
+        .levels { display: flex; gap: 6px; overflow-x: auto; padding: 14px 0 6px; scrollbar-width: thin; }
+        .lvl { flex: 0 0 auto; min-width: 46px; height: 46px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); cursor: pointer; display: grid; place-items: center; font-weight: 700; position: relative; padding: 0 6px; }
+        .lvl small { position: absolute; bottom: 2px; font-size: 8px; letter-spacing: -1px; }
+        .lvl.done { border-color: var(--ok); }
+        .lvl.active { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+        .lvl.locked { opacity: .45; cursor: not-allowed; }
+        .lvl .stars { font-size: 8px; position: absolute; bottom: 3px; }
+        .lvl.active .stars { color: rgba(255,255,255,.35); }
+        .lvl.active .stars .on { color: #ffe08a; }
+
+        .layout { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 20px; padding: 12px 0 40px; align-items: start; }
+        .panel { padding: 20px; }
+        .lvl-head { display: flex; justify-content: space-between; gap: 12px; align-items: start; }
+        .lvl-head h1 { font-size: 1.7rem; }
+        .topic { display: inline-block; font-size: .78rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--accent); margin-bottom: 4px; }
+        .goal { text-align: right; font-size: .85rem; color: var(--muted); white-space: nowrap; }
+        .goal b { color: var(--ink); font-family: var(--mono); }
+        .lesson { margin-top: 12px; color: var(--muted); }
+        .lesson b { color: var(--ink); }
+        .new-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+        .new-tags span { font-size: .78rem; font-weight: 600; background: var(--ok-soft); color: var(--ok); padding: 3px 9px; border-radius: 99px; }
+        .example { margin-top: 12px; background: var(--code-bg); color: var(--code-ink); font-family: var(--mono); font-size: .85rem; padding: 12px 14px; border-radius: 12px; white-space: pre; overflow-x: auto; }
+
+        .maps { display: flex; gap: 6px; margin: 18px 0 10px; flex-wrap: wrap; }
+        .maps button { border: 1px solid var(--line); background: var(--surface); border-radius: 99px; padding: 4px 12px; font-size: .85rem; font-weight: 600; cursor: pointer; }
+        .maps button.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+        .maps button.ok::after { content: ' ✓'; color: var(--ok); }
+
+        .board-wrap { background: var(--bg-alt); border-radius: 14px; padding: 18px; display: grid; place-items: center; min-height: 240px; overflow: hidden; }
+        .board { position: relative; display: grid; gap: 0; }
+        .cell { position: relative; }
+        .cell.f { background: var(--tile); box-shadow: inset 0 0 0 1px var(--tile-line); }
+        .cell.w { background: var(--wall); border-radius: 4px; box-shadow: inset 0 -4px 0 rgba(0,0,0,.18); }
+        .cell .gem { position: absolute; inset: 22%; color: var(--gold); display: grid; place-items: center; font-size: calc(var(--c) * .42); transition: transform .3s, opacity .3s; filter: drop-shadow(0 2px 2px rgba(0,0,0,.15)); }
+        .cell .gem.taken { transform: scale(1.8); opacity: 0; }
+        .robot { position: absolute; left: 0; top: 0; width: var(--c); height: var(--c); transition: transform var(--hiz, 200ms) ease; z-index: 2; pointer-events: none; }
+        .robot svg { width: 100%; height: 100%; transition: transform var(--hiz, 200ms) ease; }
+        .robot.crash svg { animation: sars .35s; }
+        @keyframes sars { 0%,100% { translate: 0 } 25% { translate: -4px 0 } 75% { translate: 4px 0 } }
+
+        .status { margin-top: 12px; padding: 10px 14px; border-radius: 12px; font-weight: 600; font-size: .95rem; display: none; }
+        .status.show { display: block; }
+        .status.err { background: var(--bad-soft); color: var(--bad); }
+        .status.info { background: var(--accent-soft); color: var(--accent); }
+        .status.ok { background: var(--ok-soft); color: var(--ok); }
+
+        .editor-panel { display: flex; flex-direction: column; gap: 12px; position: sticky; top: 76px; }
+        .editor { position: relative; display: flex; background: var(--code-bg); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; height: 340px; font-family: var(--mono); font-size: 15px; line-height: 24px; }
+        .gutter { padding: 12px 8px 12px 12px; color: #4a5875; text-align: right; user-select: none; min-width: 40px; overflow: hidden; }
+        .gutter div.cur { color: #ffd166; }
+        .gutter div.err { color: #ff6b6b; }
+        .code-area { position: relative; flex: 1; overflow: hidden; }
+        .hl { position: absolute; left: 0; right: 0; height: 24px; background: rgba(255, 209, 102, .14); border-left: 3px solid #ffd166; display: none; pointer-events: none; }
+        .hl.err { background: rgba(255, 107, 107, .16); border-color: #ff6b6b; }
+        textarea#kod { position: absolute; inset: 0; width: 100%; height: 100%; resize: none; border: 0; outline: 0; background: transparent; color: var(--code-ink); padding: 12px 12px 12px 8px; font: inherit; line-height: inherit; tab-size: 4; white-space: pre; overflow: auto; caret-color: #ffd166; }
+        .controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .speed { display: flex; align-items: center; gap: 8px; margin-left: auto; color: var(--muted); font-size: .85rem; }
+        .speed input { width: 90px; accent-color: var(--accent); }
+        .count { font-size: .85rem; color: var(--muted); }
+        .count b { font-family: var(--mono); color: var(--ink); }
+        .palette { padding: 14px; }
+        .palette h3 { font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-family: var(--body); margin-bottom: 8px; }
+        .palette .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+        .chip { font-family: var(--mono); font-size: .82rem; border: 1px solid var(--line); background: var(--bg); border-radius: 8px; padding: 5px 9px; cursor: pointer; color: var(--ink); }
+        .chip:hover { border-color: var(--accent); color: var(--accent); }
+        .chip.cond { color: #8b5cf6; }
+        .chip.flow { color: var(--ok); }
+
+        @media (max-width: 900px) {
+            .layout { grid-template-columns: 1fr; }
+            .editor-panel { position: static; }
+            .editor { height: 260px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="kl-top">
+        <div class="wrap kl-top-inner">
+            <a href="./" class="kl-brand"><span class="kl-logo">&lt;/&gt;</span>KodLab</a>
+            <span class="kl-crumb"><i class="fas fa-chevron-right" style="font-size:.7em"></i><span>Robot Kodla</span></span>
+            <span class="kl-spacer"></span>
+            <button class="icon-btn" id="themeBtn" aria-label="Temayı değiştir"><i class="fas fa-circle-half-stroke"></i></button>
+        </div>
+    </header>
+
+    <main class="wrap">
+        <nav class="levels" id="levels" aria-label="Bölümler"></nav>
+
+        <div class="layout">
+            <section class="card panel">
+                <div class="lvl-head">
+                    <div>
+                        <span class="topic" id="topic"></span>
+                        <h1 id="title"></h1>
+                    </div>
+                    <div class="goal">3 yıldız için<br>en fazla <b id="goal"></b> komut</div>
+                </div>
+                <p class="lesson" id="lesson"></p>
+                <div class="new-tags" id="newTags"></div>
+                <div class="example" id="example" hidden></div>
+
+                <div class="maps" id="maps"></div>
+                <div class="board-wrap" id="boardWrap"><div class="board" id="board"></div></div>
+                <div class="status" id="status" role="status"></div>
+            </section>
+
+            <section class="editor-panel">
+                <div class="editor">
+                    <div class="gutter" id="gutter"></div>
+                    <div class="code-area">
+                        <div class="hl" id="hl"></div>
+                        <textarea id="kod" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Kod"></textarea>
+                    </div>
+                </div>
+                <div class="controls">
+                    <button class="btn btn-primary" id="runBtn"><i class="fas fa-play"></i> Çalıştır</button>
+                    <button class="btn" id="stepBtn" title="Komutları tek tek çalıştır"><i class="fas fa-forward-step"></i> Adım</button>
+                    <button class="btn" id="resetBtn" title="Robotu başa al"><i class="fas fa-rotate-left"></i></button>
+                    <label class="speed"><i class="fas fa-gauge-high"></i><input type="range" id="speed" min="1" max="5" value="3" aria-label="Hız"></label>
+                </div>
+                <div class="count">Komut sayısı: <b id="count">0</b></div>
+                <div class="card palette">
+                    <h3>Komutlar — tıkla, koduna eklensin</h3>
+                    <div class="chips" id="palette"></div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <dialog class="kl-dialog" id="winDialog">
+        <h2 id="winTitle">Harika!</h2>
+        <div class="big-stars" id="winStars"></div>
+        <p id="winText"></p>
+        <div class="actions">
+            <button class="btn" id="winStay">Kodu geliştir</button>
+            <button class="btn btn-primary" id="winNext">Sonraki bölüm <i class="fas fa-arrow-right"></i></button>
+        </div>
+    </dialog>
+
+    <script src="ortak.js"></script>
+    <script src="robot-motor.js"></script>
+    <script src="robot-seviyeler.js"></script>
+    <script src="robot.js"></script>
+</body>
+</html>

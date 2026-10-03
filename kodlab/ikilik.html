@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İkilik Kartlar — KodLab</title>
+    <meta name="description" content="Kartları çevirerek ikilik sayı sistemini keşfet.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="ortak.css">
+    <style>
+        main { padding: 28px 0 60px; }
+        .intro h1 { font-size: clamp(1.8rem, 4vw, 2.4rem); }
+        .intro p { color: var(--muted); margin-top: 6px; max-width: 680px; }
+        .lvl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; margin-top: 24px; }
+        .lvl-card { padding: 18px; text-align: left; cursor: pointer; display: flex; flex-direction: column; gap: 6px; transition: transform .15s, border-color .15s; }
+        .lvl-card:hover:not(:disabled) { transform: translateY(-2px); border-color: var(--accent); }
+        .lvl-card:disabled { opacity: .5; cursor: not-allowed; }
+        .lvl-card .no { font-family: var(--mono); color: var(--accent); font-size: .85rem; }
+        .lvl-card h3 { font-size: 1.2rem; }
+        .lvl-card p { color: var(--muted); font-size: .9rem; flex: 1; }
+        .lvl-card.free { border-style: dashed; }
+
+        .game-top { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+        .game-top h2 { font-size: 1.2rem; flex: 1; }
+        .dots { display: flex; gap: 6px; }
+        .dots span { width: 12px; height: 12px; border-radius: 50%; background: var(--line); }
+        .dots span.ok { background: var(--ok); }
+        .dots span.cur { background: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+
+        .task { padding: 22px; text-align: center; }
+        .task-q { font-size: 1.1rem; color: var(--muted); }
+        .task-q b { display: block; font-family: var(--display); font-size: clamp(2.8rem, 9vw, 4.2rem); color: var(--ink); line-height: 1.1; margin-top: 4px; }
+        .cards { display: flex; justify-content: center; gap: clamp(4px, 1.2vw, 12px); margin: 26px 0 12px; flex-wrap: nowrap; }
+        .bcard { width: clamp(36px, 10vw, 92px); aspect-ratio: 3 / 4.2; perspective: 600px; cursor: pointer; border: 0; background: none; padding: 0; }
+        .bcard[disabled] { cursor: default; }
+        .bcard-in { position: relative; width: 100%; height: 100%; transition: transform .35s; transform-style: preserve-3d; }
+        .bcard.off .bcard-in { transform: rotateY(180deg); }
+        .face, .back { position: absolute; inset: 0; border-radius: 10px; backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 8% 4%; }
+        .face { background: var(--surface); border: 2px solid var(--accent); box-shadow: var(--shadow); }
+        .back { background: repeating-linear-gradient(45deg, var(--accent), var(--accent) 6px, color-mix(in srgb, var(--accent) 80%, #000) 6px, color-mix(in srgb, var(--accent) 80%, #000) 12px); transform: rotateY(180deg); border: 2px solid var(--accent); }
+        .pips { flex: 1; display: grid; align-content: center; justify-content: center; gap: clamp(1px, .4vw, 3px); width: 100%; padding: 2px; }
+        .pips i { width: clamp(3px, 0.9vw, 8px); height: clamp(3px, 0.9vw, 8px); border-radius: 50%; background: var(--ink); }
+        .pips.many { display: flex; text-align: center; font-family: var(--mono); font-size: clamp(.6rem, 1.6vw, .9rem); color: var(--muted); align-items: center; }
+        .val { font-family: var(--display); font-weight: 800; font-size: clamp(.8rem, 2.4vw, 1.4rem); color: var(--accent); }
+        .bits { display: flex; justify-content: center; gap: clamp(4px, 1.2vw, 12px); font-family: var(--mono); font-size: clamp(1.1rem, 3vw, 1.8rem); font-weight: 700; }
+        .bits span { width: clamp(36px, 10vw, 92px); text-align: center; }
+        .bits span.one { color: var(--accent); }
+        .bits span.zero { color: var(--muted); opacity: .6; }
+        .sum { margin-top: 10px; color: var(--muted); min-height: 1.6em; font-family: var(--mono); }
+        .read-in { display: flex; gap: 10px; justify-content: center; margin-top: 10px; }
+        .read-in input { width: 150px; font-size: 1.6rem; text-align: center; font-family: var(--mono); padding: 8px; border-radius: 12px; border: 2px solid var(--line); background: var(--bg); }
+        .read-in input:focus { outline: none; border-color: var(--accent); }
+        .task-actions { margin-top: 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        .opts { display: flex; justify-content: center; margin-top: 14px; gap: 14px; color: var(--muted); font-size: .9rem; }
+        .opts label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+        .shake { animation: sars .35s; }
+        @keyframes sars { 0%,100% { translate: 0 } 25% { translate: -6px 0 } 75% { translate: 6px 0 } }
+        .result { text-align: center; padding: 36px 22px; }
+        .result .big-stars { font-size: 2.6rem; margin: 12px 0; }
+        .result p { color: var(--muted); }
+        .result .actions { display: flex; gap: 10px; justify-content: center; margin-top: 22px; flex-wrap: wrap; }
+        .info { margin-top: 28px; padding: 20px; }
+        .info h3 { font-size: 1.1rem; margin-bottom: 6px; }
+        .info p { color: var(--muted); }
+    </style>
+</head>
+<body>
+    <header class="kl-top">
+        <div class="wrap kl-top-inner">
+            <a href="./" class="kl-brand"><span class="kl-logo">&lt;/&gt;</span>KodLab</a>
+            <span class="kl-crumb"><i class="fas fa-chevron-right" style="font-size:.7em"></i><span>İkilik Kartlar</span></span>
+            <span class="kl-spacer"></span>
+            <button class="icon-btn" id="themeBtn" aria-label="Temayı değiştir"><i class="fas fa-circle-half-stroke"></i></button>
+        </div>
+    </header>
+
+    <main class="wrap">
+        <section id="liste">
+            <div class="intro">
+                <h1>İkilik Kartlar</h1>
+                <p>Bilgisayarlar her şeyi yalnızca 0 ve 1 ile saklar. Her kartın üstündeki nokta sayısı, sağındaki kartın iki katıdır. Açık kart <b>1</b>, kapalı kart <b>0</b> demektir. Kartları çevirerek istenen sayıyı oluştur ya da gösterilen sayıyı oku!</p>
+            </div>
+            <div class="lvl-grid" id="lvlGrid"></div>
+            <div class="card info">
+                <h3><i class="fas fa-lightbulb" style="color:var(--gold)"></i> Sınıfta deneyin</h3>
+                <p>Önce "Serbest keşif" ile kartları açıp kapatın ve şu soruları sorun: Kartlardaki sayıların bir kuralı var mı? 5 kartla en büyük kaç sayısını yapabiliriz? Bir sayıyı yapmanın birden fazla yolu var mı? Bir kart daha eklersek üstünde kaç nokta olur?</p>
+            </div>
+        </section>
+
+        <section id="oyun" hidden>
+            <div class="game-top">
+                <button class="icon-btn" id="geri" aria-label="Seviyelere dön"><i class="fas fa-arrow-left"></i></button>
+                <h2 id="gTitle"></h2>
+                <div class="dots" id="dots"></div>
+            </div>
+            <div class="card task" id="task">
+                <p class="task-q" id="taskQ"></p>
+                <div class="cards" id="cards"></div>
+                <div class="bits" id="bits"></div>
+                <div class="sum" id="sum"></div>
+                <div class="read-in" id="readIn" hidden>
+                    <input id="okuInput" type="number" inputmode="numeric" min="0" aria-label="Onluk sayı">
+                </div>
+                <div class="task-actions">
+                    <button class="btn btn-primary" id="kontrol">Kontrol et</button>
+                    <button class="btn" id="temizle" title="Tüm kartları kapat"><i class="fas fa-eraser"></i> Kapat</button>
+                </div>
+                <div class="opts" id="opts">
+                    <label><input type="checkbox" id="toplamGoster"> Toplamı göster</label>
+                </div>
+            </div>
+        </section>
+
+        <section id="sonuc" hidden>
+            <div class="card result" style="max-width:640px;margin:0 auto">
+                <h2 id="rTitle"></h2>
+                <div class="big-stars" id="rStars"></div>
+                <p id="rText"></p>
+                <div class="actions">
+                    <button class="btn" id="rList">Seviyeler</button>
+                    <button class="btn" id="rAgain"><i class="fas fa-rotate-left"></i> Yeniden</button>
+                    <button class="btn btn-primary" id="rNext">Sonraki seviye <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="ortak.js"></script>
+    <script src="ikilik.js"></script>
+</body>
+</html>
