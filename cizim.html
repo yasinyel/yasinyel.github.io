@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#1d5fd6">
+    <link rel="icon" href="ikon/ikon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="ikon/ikon-192.png">
+    <title>Çizim Atölyesi — KodLab</title>
+    <meta name="description" content="Blokları sürükle, kaplumbağaya çizim yaptır. Lisede aynı görevleri Python turtle ile yaz.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="ortak.css">
+    <style>
+        main { padding: 14px 0 50px; }
+        .levels { display: flex; gap: 6px; overflow-x: auto; padding: 4px 0 10px; }
+        .lvl { flex: 0 0 auto; min-width: 42px; height: 42px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); cursor: pointer; font-weight: 700; position: relative; padding: 0 8px; }
+        .lvl.active { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+        .lvl.done { border-color: var(--ok); }
+        .lvl.locked { opacity: .45; cursor: not-allowed; }
+        .lvl .stars { position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); font-size: 7px; }
+        .lvl.serbest { font-weight: 600; font-size: .85rem; }
+
+        .head { display: flex; gap: 14px; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; }
+        .head h1 { font-size: 1.5rem; }
+        .head p { color: var(--muted); max-width: 720px; margin-top: 4px; }
+        .head p b { color: var(--ink); }
+        .mod { display: flex; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; flex: 0 0 auto; }
+        .mod button { border: 0; background: var(--surface); padding: 8px 14px; font-weight: 700; cursor: pointer; color: var(--muted); }
+        .mod button.sel { background: var(--ink); color: var(--bg); }
+
+        .studio { display: grid; grid-template-columns: 430px minmax(0, 1fr); gap: 16px; align-items: start; }
+        .sahne { padding: 14px; display: flex; flex-direction: column; gap: 10px; position: sticky; top: 72px; }
+        .tuval-wrap { position: relative; width: 100%; aspect-ratio: 1; border-radius: 12px; overflow: hidden; background: #fff; border: 1px solid var(--line); }
+        .tuval-wrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+        .kontroller { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .hiz { display: flex; align-items: center; gap: 6px; margin-left: auto; color: var(--muted); font-size: .85rem; }
+        .hiz input { width: 80px; accent-color: var(--accent); }
+        .durum { min-height: 1.5em; font-weight: 600; font-size: .95rem; }
+        .durum.bad { color: var(--bad); } .durum.ok { color: var(--ok); }
+        .sayac { font-size: .85rem; color: var(--muted); }
+        .sayac b { font-family: var(--mono); color: var(--ink); }
+
+        .editor { display: grid; grid-template-columns: 236px minmax(0, 1fr); min-height: 520px; overflow: hidden; }
+        .kutu { background: var(--bg-alt); padding: 12px; display: flex; flex-direction: column; gap: 8px; border-right: 1px solid var(--line); overflow-y: auto; }
+        .kutu h3 { font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-family: var(--body); }
+        .kutu.silinecek { background: var(--bad-soft); outline: 2px dashed var(--bad); outline-offset: -6px; }
+        .alan { position: relative; padding: 16px; overflow: auto; background-image: radial-gradient(var(--line) 1px, transparent 1px); background-size: 18px 18px; }
+        .sekmeler { display: flex; gap: 4px; padding: 8px 10px 0; border-bottom: 1px solid var(--line); background: var(--surface); }
+        .sekmeler button { border: 0; background: none; padding: 8px 12px; font-weight: 700; color: var(--muted); cursor: pointer; border-bottom: 3px solid transparent; }
+        .sekmeler button.sel { color: var(--ink); border-bottom-color: var(--accent); }
+        .editor-kart { padding: 0; overflow: hidden; }
+
+        /* Bloklar */
+        .blk { --b: #1d5fd6; display: inline-flex; flex-direction: column; color: #fff; font-weight: 700; font-size: .9rem; border-radius: 8px; user-select: none; touch-action: none; position: relative; }
+        .blk > .ust { display: flex; align-items: center; gap: 6px; padding: 7px 10px; background: var(--b); border-radius: 8px; box-shadow: inset 0 -3px 0 rgba(0,0,0,.18); cursor: grab; white-space: nowrap; }
+        .blk.c > .ust { border-radius: 8px 8px 0 0; }
+        .blk.c > .ic { display: flex; }
+        .blk.c > .ic::before { content: ''; width: 16px; background: var(--b); flex: 0 0 auto; }
+        .blk.c > .ic > .liste { min-height: 30px; padding: 4px 0 4px 6px; flex: 1; }
+        .blk.c > .alt { height: 14px; background: var(--b); border-radius: 0 0 8px 8px; width: 90px; box-shadow: inset 0 -3px 0 rgba(0,0,0,.18); }
+        .blk input, .blk select { font: inherit; font-family: var(--mono); font-size: .85rem; border: 0; border-radius: 6px; padding: 2px 6px; background: #fff; color: #111827; width: 52px; text-align: center; }
+        .blk input.ad { width: 80px; text-align: left; font-family: var(--body); }
+        .blk select { width: auto; max-width: 110px; text-align: left; }
+        .blk input.hata { outline: 3px solid #ffd166; }
+        .blk .rk { width: 14px; height: 14px; border-radius: 50%; border: 2px solid #fff; display: inline-block; }
+        .liste { display: flex; flex-direction: column; gap: 3px; align-items: flex-start; }
+        .kok { min-height: 200px; padding-bottom: 60px; }
+        .sapka { display: inline-flex; align-items: center; gap: 8px; background: #f59e0b; color: #fff; font-weight: 800; padding: 9px 14px; border-radius: 16px 16px 8px 8px; margin-bottom: 3px; box-shadow: inset 0 -3px 0 rgba(0,0,0,.15); }
+        .kutu .blk { pointer-events: auto; }
+        .kutu .blk .ust { cursor: grab; }
+        .kutu .blk input, .kutu .blk select { pointer-events: none; }
+        .hayalet { position: fixed; z-index: 1000; pointer-events: none; opacity: .9; filter: drop-shadow(0 10px 16px rgba(0,0,0,.25)); }
+        .imlec { position: absolute; height: 4px; background: #ffd166; border-radius: 4px; pointer-events: none; z-index: 5; box-shadow: 0 0 0 2px rgba(0,0,0,.15); width: 140px; }
+        .blk.calisiyor > .ust { outline: 3px solid #ffd166; outline-offset: 1px; }
+        .ipucu-alan { color: var(--muted); font-size: .9rem; position: absolute; left: 30px; top: 74px; pointer-events: none; }
+
+        textarea.py { width: 100%; min-height: 520px; border: 0; padding: 16px; font-family: var(--mono); font-size: 15px; line-height: 1.6; background: var(--code-bg); color: var(--code-ink); resize: vertical; tab-size: 4; outline: none; }
+        pre.pyonizle { margin: 0; min-height: 520px; padding: 16px; font-family: var(--mono); font-size: 14px; line-height: 1.6; background: var(--code-bg); color: var(--code-ink); white-space: pre; overflow: auto; }
+        .k { color: #c792ea; } .f { color: #82aaff; } .n { color: #f78c6c; } .s { color: #c3e88d; }
+
+        @media (max-width: 1060px) { .studio { grid-template-columns: 1fr; } .sahne { position: static; max-width: 520px; margin: 0 auto; width: 100%; } }
+        @media (max-width: 560px) { .editor { grid-template-columns: 1fr; } .kutu { flex-direction: row; flex-wrap: wrap; border-right: 0; border-bottom: 1px solid var(--line); } .kutu h3 { width: 100%; } }
+    </style>
+</head>
+<body>
+    <header class="kl-top">
+        <div class="wrap kl-top-inner">
+            <a href="./" class="kl-brand"><span class="kl-logo">&lt;/&gt;</span>KodLab</a>
+            <span class="kl-crumb"><i class="fas fa-chevron-right" style="font-size:.7em"></i><span>Çizim Atölyesi</span></span>
+            <span class="kl-spacer"></span>
+            <button class="icon-btn" id="themeBtn" aria-label="Temayı değiştir"><i class="fas fa-circle-half-stroke"></i></button>
+        </div>
+    </header>
+
+    <main class="wrap">
+        <nav class="levels" id="levels" aria-label="Bölümler"></nav>
+        <div class="head">
+            <div><h1 id="baslik"></h1><p id="anlatim"></p></div>
+            <div class="mod" role="tablist" aria-label="Kodlama modu">
+                <button data-m="blok" class="sel"><i class="fas fa-puzzle-piece"></i> Bloklar</button>
+                <button data-m="python"><i class="fab fa-python"></i> Python</button>
+            </div>
+        </div>
+        <div class="studio">
+            <section class="card sahne">
+                <div class="tuval-wrap"><canvas id="hedef" width="800" height="800"></canvas><canvas id="tuval" width="800" height="800"></canvas><canvas id="kaplumbaga" width="800" height="800"></canvas></div>
+                <div class="kontroller">
+                    <button class="btn btn-primary" id="calistir"><i class="fas fa-play"></i> Çalıştır</button>
+                    <button class="btn" id="sifirla" title="Baştan"><i class="fas fa-rotate-left"></i></button>
+                    <label class="hiz"><i class="fas fa-gauge-high"></i><input type="range" id="hiz" min="1" max="5" value="3" aria-label="Hız"></label>
+                </div>
+                <div class="sayac" id="sayac"></div>
+                <div class="durum" id="durum" role="status"></div>
+            </section>
+            <section class="card editor-kart">
+                <div class="sekmeler" id="sekmeler">
+                    <button data-s="bloklar" class="sel">Çalışma alanı</button>
+                    <button data-s="onizle"><i class="fab fa-python"></i> Python karşılığı</button>
+                </div>
+                <div class="editor" id="blokEditor">
+                    <div class="kutu" id="kutu" aria-label="Bloklar"></div>
+                    <div class="alan" id="alan"></div>
+                </div>
+                <pre class="pyonizle" id="onizle" hidden></pre>
+                <textarea class="py" id="py" spellcheck="false" hidden aria-label="Python kodu"></textarea>
+            </section>
+        </div>
+    </main>
+
+    <dialog class="kl-dialog" id="kazandi">
+        <h2 id="kBaslik"></h2>
+        <div class="big-stars" id="kYildiz"></div>
+        <p id="kMetin"></p>
+        <div class="actions">
+            <button class="btn" id="kKal">Kodu geliştir</button>
+            <button class="btn btn-primary" id="kSonraki">Sonraki bölüm <i class="fas fa-arrow-right"></i></button>
+        </div>
+    </dialog>
+
+    <script src="ortak.js"></script>
+    <script src="cizim-motor.js"></script>
+    <script src="cizim.js"></script>
+</body>
+</html>
