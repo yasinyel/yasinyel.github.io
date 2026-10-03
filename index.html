@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KodLab — Bilişim Etkinlikleri</title>
+    <meta name="description" content="Bilişim Teknolojileri dersleri için ücretsiz, tarayıcıda çalışan kodlama ve bilgisayar bilimi etkinlikleri.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="ortak.css">
+    <style>
+        .hero { padding: 56px 0 30px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center; }
+        .hero h1 { font-size: clamp(2.2rem, 5.5vw, 3.6rem); font-weight: 800; }
+        .hero h1 em { font-style: normal; color: var(--accent); }
+        .hero p { color: var(--muted); font-size: 1.1rem; margin-top: 14px; max-width: 560px; }
+        .hero-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 20px; }
+        .hero-tags span { font-size: .85rem; font-weight: 600; padding: 6px 12px; border-radius: 99px; background: var(--surface); border: 1px solid var(--line); color: var(--muted); }
+        .hero-tags i { color: var(--ok); margin-right: 4px; }
+        .hero-code { background: var(--code-bg); color: var(--code-ink); border-radius: 18px; padding: 22px 24px; font-family: var(--mono); font-size: 15px; line-height: 1.75; box-shadow: var(--shadow); white-space: pre; overflow: hidden; }
+        .hero-code .k { color: #c792ea; } .hero-code .f { color: #82aaff; } .hero-code .c { color: #697098; } .hero-code .n { color: #f78c6c; }
+
+        .acts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; padding: 20px 0 10px; }
+        .act { display: flex; flex-direction: column; padding: 24px; text-decoration: none; color: var(--ink); transition: transform .15s, border-color .15s; position: relative; overflow: hidden; }
+        .act:hover { transform: translateY(-3px); border-color: var(--accent); }
+        .act-icon { width: 54px; height: 54px; border-radius: 14px; display: grid; place-items: center; font-size: 1.4rem; color: #fff; margin-bottom: 16px; }
+        .act h2 { font-size: 1.45rem; }
+        .act p { color: var(--muted); margin-top: 6px; flex: 1; }
+        .act-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; align-items: center; }
+        .act-meta span { font-size: .78rem; font-weight: 600; padding: 3px 10px; border-radius: 99px; background: var(--bg-alt); color: var(--muted); }
+        .progress { margin-top: 16px; height: 8px; border-radius: 99px; background: var(--bg-alt); overflow: hidden; }
+        .progress div { height: 100%; background: var(--ok); border-radius: 99px; transition: width .4s; }
+        .progress-label { font-size: .82rem; color: var(--muted); margin-top: 6px; }
+        .act .go { position: absolute; top: 24px; right: 24px; color: var(--muted); }
+
+        .section-title { font-size: 1.5rem; margin: 46px 0 14px; }
+        .teacher { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .teacher .card { padding: 20px; }
+        .teacher h3 { font-size: 1.05rem; margin-bottom: 6px; display: flex; gap: 8px; align-items: center; }
+        .teacher h3 i { color: var(--accent); }
+        .teacher p { color: var(--muted); font-size: .93rem; }
+        .curr { width: 100%; border-collapse: collapse; font-size: .93rem; }
+        .curr th, .curr td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+        .curr th { color: var(--muted); font-weight: 600; font-size: .8rem; text-transform: uppercase; letter-spacing: .05em; }
+        .curr-wrap { overflow-x: auto; padding: 6px; }
+        footer { padding: 40px 0; color: var(--muted); font-size: .9rem; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; border-top: 1px solid var(--line); margin-top: 50px; }
+        footer button { background: none; border: 0; color: var(--muted); text-decoration: underline; cursor: pointer; font-size: .9rem; }
+        @media (max-width: 860px) {
+            .hero { grid-template-columns: 1fr; padding-top: 32px; }
+            .acts, .teacher { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="kl-top">
+        <div class="wrap kl-top-inner">
+            <a href="./" class="kl-brand"><span class="kl-logo">&lt;/&gt;</span>KodLab</a>
+            <span class="kl-spacer"></span>
+            <a href="../" class="btn btn-sm" style="border:0;background:none;color:var(--muted)">yasinyel.com</a>
+            <button class="icon-btn" id="themeBtn" aria-label="Temayı değiştir"><i class="fas fa-circle-half-stroke"></i></button>
+        </div>
+    </header>
+
+    <main class="wrap">
+        <section class="hero">
+            <div>
+                <h1>Bilgisayar gibi <em>düşünmeyi</em> oynayarak öğren.</h1>
+                <p>Bilişim Teknolojileri dersleri için hazırlanmış, tarayıcıda çalışan etkinlikler. Robotu kodla, Python çıktısını tahmin et, ikilik sayıları keşfet, piksellerle resim çöz.</p>
+                <div class="hero-tags">
+                    <span><i class="fas fa-check"></i>Üyelik yok</span>
+                    <span><i class="fas fa-check"></i>Ücretsiz</span>
+                    <span><i class="fas fa-check"></i>Tablet ve telefonda çalışır</span>
+                    <span><i class="fas fa-check"></i>Tamamen Türkçe</span>
+                </div>
+            </div>
+            <div class="hero-code" aria-hidden="true"><span class="c"># Robot Kodla, Bölüm 13</span>
+<span class="k">iken</span> yıldız_kaldı {
+    <span class="k">iken</span> önü_boş {
+        <span class="f">ileri</span>()
+    }
+    <span class="f">sağa</span>()
+}</div>
+        </section>
+
+        <section class="acts" id="acts">
+            <a class="card act" href="robot.html">
+                <i class="fas fa-arrow-right go"></i>
+                <div class="act-icon" style="background:#1d5fd6"><i class="fas fa-robot"></i></div>
+                <h2>Robot Kodla</h2>
+                <p>Robotu Türkçe komutlarla programla, bütün yıldızları topla. Ne kadar kısa kod, o kadar çok yıldız!</p>
+                <div class="act-meta"><span>Sıralama</span><span>Döngüler</span><span>Koşullar</span><span>Fonksiyonlar</span></div>
+                <div class="progress"><div data-p="robot"></div></div>
+                <div class="progress-label" data-l="robot"></div>
+            </a>
+            <a class="card act" href="tahmin.html">
+                <i class="fas fa-arrow-right go"></i>
+                <div class="act-icon" style="background:#8b5cf6"><i class="fas fa-terminal"></i></div>
+                <h2>Ne Yazar?</h2>
+                <p>Python kodunu bilgisayar gibi oku ve ekrana ne yazacağını tahmin et. Sorular her seferinde farklı sayılarla gelir.</p>
+                <div class="act-meta"><span>Python</span><span>Değişkenler</span><span>Kod okuma</span><span>Hata ayıklama</span></div>
+                <div class="progress"><div data-p="tahmin"></div></div>
+                <div class="progress-label" data-l="tahmin"></div>
+            </a>
+            <a class="card act" href="ikilik.html">
+                <i class="fas fa-arrow-right go"></i>
+                <div class="act-icon" style="background:#16a36a"><span style="font-family:var(--mono);font-size:1rem;font-weight:700">01</span></div>
+                <h2>İkilik Kartlar</h2>
+                <p>Kartları çevirerek sayıları 0 ve 1'lerle göster. Bilgisayarın dilini keşfet: bit, bayt ve ikilik sayı sistemi.</p>
+                <div class="act-meta"><span>Veri temsili</span><span>İkilik sistem</span><span>Bit / Bayt</span></div>
+                <div class="progress"><div data-p="ikilik"></div></div>
+                <div class="progress-label" data-l="ikilik"></div>
+            </a>
+            <a class="card act" href="piksel.html">
+                <i class="fas fa-arrow-right go"></i>
+                <div class="act-icon" style="background:#f97316"><i class="fas fa-border-all"></i></div>
+                <h2>Piksel Kodlama</h2>
+                <p>Satır kodlarını çöz, gizli resmi boya. Kendi resmini tasarla ve arkadaşlarına bulmaca olarak gönder.</p>
+                <div class="act-meta"><span>Resim kodlama</span><span>Sıkıştırma</span><span>Tasarım</span></div>
+                <div class="progress"><div data-p="piksel"></div></div>
+                <div class="progress-label" data-l="piksel"></div>
+            </a>
+        </section>
+
+        <h2 class="section-title">Öğretmenler için</h2>
+        <div class="teacher">
+            <div class="card">
+                <h3><i class="fas fa-user-slash"></i> Hesap gerekmez</h3>
+                <p>Öğrenciler linke girip hemen başlar. İlerleme her cihazın kendi tarayıcısında saklanır; hiçbir kişisel veri toplanmaz.</p>
+            </div>
+            <div class="card">
+                <h3><i class="fas fa-unlock"></i> Öğretmen modu</h3>
+                <p>Bölümler sırayla açılır. Tahtada istediğiniz bölümü göstermek için adresin sonuna <code>?ogretmen</code> ekleyin: tüm bölümler açılır.</p>
+            </div>
+            <div class="card">
+                <h3><i class="fas fa-share-nodes"></i> Kendi bulmacanız</h3>
+                <p>Piksel Kodlama'da bir resim çizip bulmaca linki oluşturun. Öğrenciler resmi değil, sadece kodunu görür.</p>
+            </div>
+        </div>
+
+        <h2 class="section-title">Hangi etkinlik, hangi konu?</h2>
+        <div class="card curr-wrap">
+            <table class="curr">
+                <thead><tr><th>Etkinlik</th><th>Kavramlar</th><th>Önerilen</th><th>Süre</th></tr></thead>
+                <tbody>
+                    <tr><td><b>Robot Kodla</b> 1–4</td><td>Algoritma, sıralı komutlar, parametre</td><td>5. sınıf ve üstü</td><td>15 dk</td></tr>
+                    <tr><td><b>Robot Kodla</b> 5–8</td><td>Döngüler, iç içe döngüler, örüntü bulma</td><td>5. sınıf ve üstü</td><td>20 dk</td></tr>
+                    <tr><td><b>Robot Kodla</b> 9–14</td><td>Koşullar, koşullu döngü, fonksiyonlar, labirent algoritması</td><td>6. sınıf ve üstü</td><td>30 dk</td></tr>
+                    <tr><td><b>Ne Yazar?</b></td><td>Değişken, operatör, metin, if/else, for/while, liste, fonksiyon (Python)</td><td>7. sınıf ve üstü</td><td>Seviye başı 5–10 dk</td></tr>
+                    <tr><td><b>İkilik Kartlar</b></td><td>İkilik sayı sistemi, bit, bayt, veri temsili</td><td>5. sınıf ve üstü</td><td>15–20 dk</td></tr>
+                    <tr><td><b>Piksel Kodlama</b></td><td>Resimlerin sayısal temsili, piksel, sıkıştırma (RLE)</td><td>5. sınıf ve üstü</td><td>15–25 dk</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <footer>
+            <span>KodLab · <a href="../">Yasin Yel</a> tarafından Bilişim Teknolojileri dersleri için hazırlandı.</span>
+            <button id="sifirla">Bu cihazdaki ilerlemeyi sıfırla</button>
+        </footer>
+    </main>
+
+    <script src="ortak.js"></script>
+    <script src="robot-seviyeler.js"></script>
+    <script>
+        (function () {
+            // Her etkinlikteki toplam yıldız / tamamlanan bölüm
+            const robot = KL.oku('robot', { yildiz: {} });
+            const tahmin = KL.oku('tahmin', { yildiz: {} });
+            const ikilik = KL.oku('ikilik', { yildiz: {} });
+            const piksel = KL.oku('piksel', { tamam: {} });
+            const topla = (o) => Object.values(o).reduce((a, b) => a + b, 0);
+            const veriler = {
+                robot: [topla(robot.yildiz), window.ROBOT_SEVIYELER.length * 3, 'yıldız'],
+                tahmin: [topla(tahmin.yildiz), 5 * 3, 'yıldız'],
+                ikilik: [topla(ikilik.yildiz), 5 * 3, 'yıldız'],
+                piksel: [Object.keys(piksel.tamam).length, 8, 'resim çözüldü']
+            };
+            for (const [k, [n, t, birim]] of Object.entries(veriler)) {
+                document.querySelector(`[data-p="${k}"]`).style.width = Math.round(n / t * 100) + '%';
+                document.querySelector(`[data-l="${k}"]`).textContent = n ? `${n} / ${t} ${birim}` : 'Henüz başlamadın';
+            }
+            document.getElementById('sifirla').addEventListener('click', () => {
+                if (!confirm('Bu cihazdaki tüm KodLab ilerlemesi silinsin mi?')) return;
+                ['robot', 'tahmin', 'ikilik', 'piksel'].forEach(KL.sil);
+                location.reload();
+            });
+        })();
+    </script>
+</body>
+</html>
