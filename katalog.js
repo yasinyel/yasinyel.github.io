@@ -64,6 +64,42 @@
             parcalar: [{ id: 'mantik', ad: 'Mantık Kapıları', url: 'mantik.html', seviye: 11, yildiz: () => { const k = oku('mantik', {}); return dizi(11, i => k[i]); } }]
         },
         {
+            id: 'cizim', ad: 'Çizim Atölyesi', url: 'cizim.html', ikon: 'fa-pen-nib', renk: '#16a36a', sinif: [3, 12],
+            aciklama: 'Blokları sürükle, kaplumbağaya çizim yaptır: kare, yıldız, çiçek, kar tanesi… Lisede aynı görevleri gerçek Python turtle koduyla yaz.',
+            etiket: ['Blok kodlama', 'Döngü', 'Fonksiyon', 'Python turtle'], kavram: 'Sürükle-bırak blok kodlama, açılar, döngüler, iç içe döngü, fonksiyon, sayaç; Python turtle', sure: 'Bölüm başı 3–8 dk',
+            parcalar: [{ id: 'cizim', ad: 'Çizim Atölyesi', url: 'cizim.html', seviye: 16, yildiz: () => { const k = oku('cizim', { yildiz: {} }).yildiz; return dizi(16, i => k[i]); } }]
+        },
+        {
+            id: 'sifre', ad: 'Gizli Mesaj', url: 'sifre.html', ikon: 'fa-user-secret', renk: '#0f766e', sinif: [4, 12],
+            aciklama: 'Sezar çarkıyla şifrele, kaba kuvvetle ve frekans analiziyle şifre kır, Vigenère\'i çöz, modern şifrelemenin neden kırılamadığını hesapla.',
+            etiket: ['Şifreleme', 'Kriptoloji', 'Frekans analizi'], kavram: 'Sezar ve Vigenère şifreleri, kaba kuvvet, frekans analizi, anahtar uzunluğu ve AES', sure: 'Bölüm başı 5–10 dk',
+            parcalar: [{ id: 'sifre', ad: 'Gizli Mesaj', url: 'sifre.html', seviye: 7, yildiz: () => { const k = oku('sifre', {}); return ['sezar1', 'sezar2', 'kaba', 'frekans', 'vig1', 'vig2', 'guc'].map(x => k[x] || 0); } }]
+        },
+        {
+            id: 'guvenlik', ad: 'Şifre Kalesi', url: 'guvenlik.html', ikon: 'fa-shield-halved', renk: '#dc2626', sinif: [3, 12],
+            aciklama: 'Şifrenin gücünü canlı ölç, oltalama e-postalarındaki ipuçlarını yakala, gerçek hayattaki güvenlik durumlarında doğru kararı ver.',
+            etiket: ['Bilgi güvenliği', 'Oltalama', 'Dijital vatandaşlık'], kavram: 'Güçlü şifre, parola cümlesi, oltalama (phishing), iki adımlı doğrulama, kişisel veri, güvenli internet', sure: 'Bölüm başı 5–10 dk',
+            parcalar: [{ id: 'guvenlik', ad: 'Şifre Kalesi', url: 'guvenlik.html', seviye: 4, yildiz: () => { const k = oku('guvenlik', {}); return ['lab', 'cift', 'olta', 'durum'].map(x => k[x] || 0); } }]
+        },
+        {
+            id: 'yz', ad: 'Makineye Öğret', url: 'yz.html', ikon: 'fa-brain', renk: '#c026d3', sinif: [3, 12],
+            aciklama: 'Gerçek bir yapay zekâ modelini örneklerle eğit. Önyargılı verinin modeli nasıl yanılttığını gör, lisede aşırı öğrenmeyi keşfet.',
+            etiket: ['Yapay zekâ', 'Makine öğrenmesi', 'Veri önyargısı'], kavram: 'Eğitim verisi, sınıflandırma, k-en yakın komşu, veri önyargısı, aşırı öğrenme (overfitting)', sure: 'Bölüm başı 8–12 dk',
+            parcalar: [{ id: 'yz', ad: 'Makineye Öğret', url: 'yz.html', seviye: 4, yildiz: () => { const k = oku('yz', {}); return ['okyanus', 'onyargi', 'kural', 'knn'].map(x => k[x] || 0); } }]
+        },
+        {
+            id: 'ag', ad: 'Paket Yolculuğu', url: 'ag.html', ikon: 'fa-network-wired', renk: '#2563eb', sinif: [4, 12],
+            aciklama: 'İnternet nasıl çalışır? Paketleri birleştir, yönlendirici ol ve en hızlı yolu bul, DNS ile bir adresi çöz, IP adreslerini incele.',
+            etiket: ['İnternet', 'Ağlar', 'DNS', 'IP'], kavram: 'Paketler ve TCP, yönlendirme ve en kısa yol, TTL, DNS hiyerarşisi, IPv4 adresleri', sure: 'Bölüm başı 5–10 dk',
+            parcalar: [{ id: 'ag', ad: 'Paket Yolculuğu', url: 'ag.html', seviye: 4, yildiz: () => { const k = oku('ag', {}); return ['paket', 'yonlendir', 'dns', 'ip'].map(x => k[x] || 0); } }]
+        },
+        {
+            id: 'web', ad: 'Web Atölyesi', url: 'web.html', ikon: 'fa-code', renk: '#ea580c', sinif: [5, 12],
+            aciklama: 'HTML ve CSS ile kendi web sayfanı yap. Yazdıkça önizleme anında değişir, görevler kendiliğinden işaretlenir.',
+            etiket: ['HTML', 'CSS', 'Web tasarım'], kavram: 'HTML etiketleri, liste, bağlantı, resim ve alt metni, tablo; CSS renk, sınıf, kutu modeli, flexbox', sure: 'Bölüm başı 5–10 dk',
+            parcalar: [{ id: 'web', ad: 'Web Atölyesi', url: 'web.html', seviye: 10, yildiz: () => { const k = oku('web', { yildiz: {} }).yildiz; return dizi(10, i => k[i]); } }]
+        },
+        {
             id: 'tahmin', ad: 'Ne Yazar?', url: 'tahmin.html', ikon: 'fa-terminal', renk: '#7c3aed', sinif: [8, 12],
             aciklama: 'Python kodunu bilgisayar gibi oku ve ekrana ne yazacağını tahmin et. Sorular her seferinde farklı sayılarla gelir.',
             etiket: ['Python', 'Değişkenler', 'Kod okuma'], kavram: 'Değişken, operatör, metin, if/else, for/while, liste, fonksiyon (Python)', sure: 'Seviye başı 5–10 dk',
@@ -93,11 +129,19 @@
         { id: 'siralama', ad: 'Sıralama Makinesi', ikon: 'fa-arrow-down-wide-short', aciklama: 'Üç sıralama algoritmasının hepsini tamamla', kosul: () => parca('algoritma').yildiz().slice(3).every(x => x > 0) },
         { id: 'devre', ad: 'Devre Tasarımcısı', ikon: 'fa-microchip', aciklama: 'Tam toplayıcı devresini kur', kosul: () => parca('mantik').yildiz()[10] > 0 },
         { id: 'python2', ad: 'Python Yorumlayıcısı', ikon: 'fa-laptop-code', aciklama: 'Ne Yazar?\'ın bütün seviyelerini bitir', kosul: () => tamam('tahmin') },
-        { id: 'yuz', ad: 'Yüz Yıldız', ikon: 'fa-star', aciklama: 'Toplam 100 yıldız topla', kosul: () => PARCALAR.reduce((t, p) => t + toplam(p.id), 0) >= 100 }
+        { id: 'sanatci', ad: 'Kaplumbağa Sanatçısı', ikon: 'fa-pen-nib', aciklama: 'Çizim Atölyesi\'nin 16 bölümünü bitir', kosul: () => tamam('cizim') },
+        { id: 'kriptograf', ad: 'Kod Kırıcı', ikon: 'fa-user-secret', aciklama: 'Frekans analiziyle şifre kır', kosul: () => parca('sifre').yildiz()[3] > 0 },
+        { id: 'kalkan', ad: 'Siber Kalkan', ikon: 'fa-shield-halved', aciklama: 'Şifre Kalesi\'nin dört bölümünü bitir', kosul: () => tamam('guvenlik') },
+        { id: 'oltaci', ad: 'Oltalama Avcısı', ikon: 'fa-fish', aciklama: 'Oltalama Avı\'nı hatasız bitir', kosul: () => parca('guvenlik').yildiz()[2] === 3 },
+        { id: 'yzegitmen', ad: 'Yapay Zekâ Eğitmeni', ikon: 'fa-brain', aciklama: 'Makineye Öğret\'in dört bölümünü bitir', kosul: () => tamam('yz') },
+        { id: 'agmuh', ad: 'Ağ Mühendisi', ikon: 'fa-network-wired', aciklama: 'Paket Yolculuğu\'nun dört bölümünü bitir', kosul: () => tamam('ag') },
+        { id: 'webci', ad: 'Web Tasarımcısı', ikon: 'fa-code', aciklama: 'Web Atölyesi\'nde tanıtım sayfanı yap', kosul: () => parca('web').yildiz()[9] > 0 },
+        { id: 'yuz', ad: 'Yüz Yıldız', ikon: 'fa-star', aciklama: 'Toplam 100 yıldız topla', kosul: () => PARCALAR.reduce((t, p) => t + toplam(p.id), 0) >= 100 },
+        { id: 'ucyuz', ad: 'Üç Yüz Yıldız', ikon: 'fa-crown', aciklama: 'Toplam 300 yıldız topla', kosul: () => PARCALAR.reduce((t, p) => t + toplam(p.id), 0) >= 300 }
     ];
 
     // Toplam yıldıza göre unvan
-    const UNVANLAR = [[0, 'Yeni Başlayan'], [10, 'Kod Çırağı'], [30, 'Algoritma Kaşifi'], [60, 'Genç Programcı'], [100, 'Kod Ustası'], [160, 'Bilgisayar Bilimci'], [240, 'KodLab Efsanesi']];
+    const UNVANLAR = [[0, 'Yeni Başlayan'], [10, 'Kod Çırağı'], [30, 'Algoritma Kaşifi'], [60, 'Genç Programcı'], [100, 'Kod Ustası'], [160, 'Bilgisayar Bilimci'], [250, 'Teknoloji Lideri'], [350, 'KodLab Efsanesi']];
     function unvan(yildiz) {
         let u = UNVANLAR[0];
         for (const x of UNVANLAR) if (yildiz >= x[0]) u = x;

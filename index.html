@@ -98,7 +98,7 @@
         <section class="hero">
             <div>
                 <h1>Bilgisayar gibi <em>düşünmeyi</em> oynayarak öğren.</h1>
-                <p>Anasınıfından lise sona kadar Bilişim Teknolojileri dersleri için hazırlanmış etkinlik kütüphanesi. Kodu oku, algoritmayı yürüt, devreyi kur, hatayı yakala.</p>
+                <p>Anasınıfından lise sona kadar Bilişim Teknolojileri dersleri için hazırlanmış etkinlik kütüphanesi. Blokla çiz, kodu oku, algoritmayı yürüt, şifre kır, yapay zekâ eğit, web sayfası yap.</p>
                 <div class="hero-tags">
                     <span><i class="fas fa-check"></i>Üyelik yok</span>
                     <span><i class="fas fa-check"></i>Ücretsiz</span>
@@ -165,7 +165,7 @@
             const K = window.Katalog;
             const $ = (id) => document.getElementById(id);
             const kacis = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
-            const YENI = ['algoritma', 'mantik', 'hata'];
+            const YENI = ['cizim', 'sifre', 'guvenlik', 'yz', 'ag', 'web'];
             const KADEMELER = [
                 { id: 'hepsi', ad: 'Tümü', aralik: [0, 12] },
                 { id: 'okuloncesi', ad: 'Okul Öncesi', not: 'Anasınıfı', aralik: [0, 0] },
@@ -205,7 +205,7 @@
                 const kd = KADEMELER.find(k => k.id === secili) || KADEMELER[0];
                 $('filters').innerHTML = KADEMELER.map(k =>
                     `<button class="${k.id === kd.id ? 'sel' : ''}" data-k="${k.id}" role="tab" aria-selected="${k.id === kd.id}">${k.ad}${k.not ? `<small>${k.not}</small>` : ''}</button>`).join('');
-                const liste = K.ETKINLIKLER.filter(e => e.sinif[0] <= kd.aralik[1] && e.sinif[1] >= kd.aralik[0]);
+                const liste = K.ETKINLIKLER.filter(e => e.sinif[0] <= kd.aralik[1] && e.sinif[1] >= kd.aralik[0]).sort((a, b) => a.sinif[0] - b.sinif[0]);
                 $('acts').innerHTML = liste.map(e => {
                     const [n, t] = ilerleme(e);
                     const url = e.id === 'sensin' && kd.id !== 'hepsi' ? `${e.url}?kademe=${kd.id}`
@@ -226,7 +226,7 @@
                 if (!b) return;
                 secili = b.dataset.k; KL.yaz('kademe', secili); ciz();
             });
-            $('tablo').innerHTML = K.ETKINLIKLER.map(e =>
+            $('tablo').innerHTML = [...K.ETKINLIKLER].sort((a, b) => a.sinif[0] - b.sinif[0]).map(e =>
                 `<tr><td><b>${e.ad}</b></td><td>${e.kavram}</td><td>${aralikYaz(e.sinif)}</td><td>${e.sure}</td></tr>`).join('');
             ciz();
 
@@ -242,7 +242,7 @@
 
             $('sifirla').addEventListener('click', () => {
                 if (!confirm('Bu cihazdaki tüm KodLab ilerlemesi, profil ve görevler silinsin mi?')) return;
-                ['robot', 'tahmin', 'ikilik', 'piksel', 'sensin', 'oruntu', 'algoritma', 'mantik', 'hata', 'profil', 'gorevler'].forEach(KL.sil);
+                ['robot', 'tahmin', 'ikilik', 'piksel', 'sensin', 'oruntu', 'algoritma', 'mantik', 'hata', 'cizim', 'sifre', 'guvenlik', 'yz', 'ag', 'ag.yonlendir', 'web', 'profil', 'gorevler'].forEach(KL.sil);
                 location.reload();
             });
         })();
