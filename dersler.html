@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#1d5fd6">
+    <link rel="icon" href="ikon/ikon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="ikon/ikon-192.png">
+    <title>Ders Planları — KodLab</title>
+    <meta name="description" content="KodLab etkinlikleri için 40 dakikalık hazır ders planları: hedefler, akış, tartışma soruları, çıkış kartı ve farklılaştırma.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="ortak.css">
+    <style>
+        main { padding: 24px 0 60px; }
+        .intro h1 { font-size: clamp(1.7rem, 4vw, 2.3rem); }
+        .intro p { color: var(--muted); margin-top: 6px; max-width: 760px; }
+        .arac { display: flex; gap: 8px; flex-wrap: wrap; margin: 18px 0; align-items: center; }
+        .chip { border: 1px solid var(--line); background: var(--surface); border-radius: 99px; padding: 7px 14px; font-weight: 600; cursor: pointer; color: var(--ink); }
+        .chip.sel { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+        .planlar { display: flex; flex-direction: column; gap: 14px; }
+        .plan { overflow: hidden; }
+        .plan > summary { list-style: none; cursor: pointer; display: flex; gap: 14px; align-items: center; padding: 16px 18px; }
+        .plan > summary::-webkit-details-marker { display: none; }
+        .plan .ik { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; color: #fff; font-size: 1.15rem; flex: 0 0 auto; }
+        .plan summary h2 { font-size: 1.15rem; }
+        .plan summary small { color: var(--muted); }
+        .plan summary .ok { margin-left: auto; color: var(--muted); transition: transform .2s; }
+        .plan[open] summary .ok { transform: rotate(180deg); }
+        .govde { padding: 0 18px 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .blok { background: var(--bg-alt); border-radius: 12px; padding: 12px 14px; font-size: .93rem; line-height: 1.55; }
+        .blok h3 { font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-family: var(--body); margin-bottom: 6px; }
+        .blok ul, .blok ol { padding-left: 18px; }
+        .blok.tam { grid-column: 1 / -1; }
+        .akis { display: flex; flex-direction: column; gap: 8px; }
+        .akis div { display: grid; grid-template-columns: 150px 1fr; gap: 10px; }
+        .akis b { color: var(--accent); }
+        .baglantilar { display: flex; gap: 8px; flex-wrap: wrap; grid-column: 1 / -1; }
+        @media (max-width: 760px) { .govde { grid-template-columns: 1fr; } .akis div { grid-template-columns: 1fr; gap: 2px; } }
+        @media print {
+            header, .intro, .arac, .baglantilar, .plan summary .ok, .toast { display: none !important; }
+            body { background: #fff !important; color: #000; }
+            .plan { box-shadow: none; border: 1px solid #999; break-inside: avoid; page-break-after: always; }
+            .plan:not([open]), .plan.gizle-yazdir { display: none !important; }
+            .blok { background: #f3f4f6; }
+        }
+    </style>
+</head>
+<body>
+    <header class="kl-top">
+        <div class="wrap kl-top-inner">
+            <a href="./" class="kl-brand"><span class="kl-logo">&lt;/&gt;</span>KodLab</a>
+            <span class="kl-crumb"><i class="fas fa-chevron-right" style="font-size:.7em"></i><span>Ders Planları</span></span>
+            <span class="kl-spacer"></span>
+            <button class="icon-btn" id="themeBtn" aria-label="Temayı değiştir"><i class="fas fa-circle-half-stroke"></i></button>
+        </div>
+    </header>
+    <main class="wrap">
+        <div class="intro">
+            <h1>Ders Planları</h1>
+            <p>Her KodLab etkinliği için 40 dakikalık hazır bir ders akışı: hedefler, bilgisayarsız ısınma, adım adım uygulama, tartışma soruları, çıkış kartı ve farklılaştırma önerileri. Planı açıp yazdırabilir, sınıfınıza göre uyarlayabilirsiniz.</p>
+        </div>
+        <div class="arac" id="arac">
+            <button class="chip sel" data-k="hepsi">Hepsi</button>
+            <button class="chip" data-k="okuloncesi">Okul öncesi</button>
+            <button class="chip" data-k="ilkokul">İlkokul</button>
+            <button class="chip" data-k="ortaokul">Ortaokul</button>
+            <button class="chip" data-k="lise">Lise</button>
+            <span class="kl-spacer" style="flex:1"></span>
+            <a class="btn btn-sm" href="kagitlar.html"><i class="fas fa-file-lines"></i> Çalışma kağıtları</a>
+            <a class="btn btn-sm" href="ogretmen.html"><i class="fas fa-chalkboard-user"></i> Öğretmen paneli</a>
+        </div>
+        <div class="planlar" id="planlar"></div>
+    </main>
+    <script src="ortak.js"></script>
+    <script src="katalog.js"></script>
+    <script src="kagit-motor.js"></script>
+    <script src="dersler-veri.js"></script>
+    <script>
+    (function () {
+        'use strict';
+        const $ = (id) => document.getElementById(id);
+        const KADEME = { hepsi: [0, 12], okuloncesi: [0, 0], ilkokul: [1, 4], ortaokul: [5, 8], lise: [9, 12] };
+        const sinifYaz = (s) => s[0] === 0 ? (s[1] === 0 ? 'Okul öncesi' : `Okul öncesi – ${s[1]}. sınıf`) : `${s[0]}. – ${s[1]}. sınıf`;
+        let kademe = 'hepsi';
+        function ciz() {
+            const [a, b] = KADEME[kademe];
+            const l = Katalog.ETKINLIKLER.filter(e => Dersler.PLANLAR[e.id] && e.sinif[0] <= b && e.sinif[1] >= a).sort((x, y) => x.sinif[0] - y.sinif[0]);
+            $('planlar').innerHTML = l.map(e => {
+                const p = Dersler.PLANLAR[e.id];
+                const kagit = p.kagit && Kagit.KAGITLAR.find(k => k.id === p.kagit);
+                return `<details class="card plan" id="plan-${e.id}"><summary><span class="ik" style="background:${e.renk}"><i class="fas ${e.ikon}"></i></span>
+                    <div><h2>${e.ad}</h2><small>${sinifYaz(e.sinif)} · 40 dakika · ${e.etiket.join(', ')}</small></div><i class="fas fa-chevron-down ok"></i></summary>
+                    <div class="govde">
+                        <div class="blok"><h3>Hedefler</h3><ul>${p.hedefler.map(x => `<li>${x}</li>`).join('')}</ul></div>
+                        <div class="blok"><h3>Kavramlar</h3>${e.kavram}</div>
+                        <div class="blok tam"><h3>Ders akışı</h3><div class="akis">
+                            <div><b>Giriş · 5 dk</b><span>${p.giris}</span></div>
+                            <div><b>Isınma · 8 dk</b><span>${p.isinma}${kagit ? ` <i>(Çalışma kağıdı: ${kagit.ad})</i>` : ''}</span></div>
+                            <div><b>Uygulama · 20 dk</b><ol>${p.adimlar.map(x => `<li>${x}</li>`).join('')}</ol></div>
+                            <div><b>Tartışma · 5 dk</b><ul>${p.tartisma.map(x => `<li>${x}</li>`).join('')}</ul></div>
+                            <div><b>Çıkış kartı · 2 dk</b><span>${p.cikis}</span></div>
+                        </div></div>
+                        <div class="blok"><h3>Desteğe ihtiyaç duyanlar için</h3>${p.destek}</div>
+                        <div class="blok"><h3>Hızlı ilerleyenler için</h3>${p.zenginlestirme}</div>
+                        <div class="baglantilar"><a class="btn btn-primary btn-sm" href="${e.url}"><i class="fas fa-play"></i> Etkinliği aç</a>
+                            ${kagit ? `<a class="btn btn-sm" href="kagitlar.html#${kagit.id}"><i class="fas fa-file-lines"></i> ${kagit.ad} kağıdı</a>` : ''}
+                            <button class="btn btn-sm" data-yazdir="${e.id}"><i class="fas fa-print"></i> Bu planı yazdır</button></div>
+                    </div></details>`;
+            }).join('');
+        }
+        $('arac').onclick = (e) => {
+            const b = e.target.closest('.chip'); if (!b) return;
+            kademe = b.dataset.k;
+            document.querySelectorAll('.chip').forEach(c => c.classList.toggle('sel', c === b));
+            ciz();
+        };
+        $('planlar').onclick = (e) => {
+            const b = e.target.closest('[data-yazdir]'); if (!b) return;
+            document.querySelectorAll('.plan').forEach(p => p.classList.toggle('gizle-yazdir', p.id !== 'plan-' + b.dataset.yazdir));
+            window.print();
+            document.querySelectorAll('.plan').forEach(p => p.classList.remove('gizle-yazdir'));
+        };
+        ciz();
+        const h = location.hash.slice(1);
+        if (h && $('plan-' + h)) { $('plan-' + h).open = true; $('plan-' + h).scrollIntoView(); }
+    })();
+    </script>
+</body>
+</html>
