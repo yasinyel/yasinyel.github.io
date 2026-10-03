@@ -1,4 +1,4 @@
-// KodLab — "Bilgisayar Sensin" motoru
+// Kodlayalım — "Bilgisayar Sensin" motoru
 // Ekranda bir program durur; öğrenci onu kafasında çalıştırır ve karakteri yön tuşlarıyla
 // programın yapacağı şekilde hareket ettirir. Programlar tek bir ağaç yapısıyla tanımlanır ve
 // kademeye göre dört farklı biçimde gösterilir: oklar (okul öncesi), bloklar (ilkokul),

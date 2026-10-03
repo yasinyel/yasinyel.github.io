@@ -2,12 +2,13 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
+    <meta name="author" content="Yasin Yel">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="manifest.webmanifest">
     <meta name="theme-color" content="#1d5fd6">
     <link rel="icon" href="ikon/ikon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="ikon/ikon-192.png">
-    <title>Profilim — KodLab</title>
+    <title>Profilim — Kodlayalım</title>
     <meta name="description" content="Yıldızların, rozetlerin, görevlerin ve öğretmenine göndereceğin ilerleme kodu.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -70,7 +71,9 @@
         }
         #belge { width: 297mm; height: 210mm; padding: 14mm; box-sizing: border-box; font-family: var(--body); color: #111827; }
         #belge .cerceve { flex: 1; border: 3mm solid #1d5fd6; outline: 1mm solid #f5b400; outline-offset: -6mm; border-radius: 6mm; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 12mm; position: relative; }
-        #belge .logo { font-family: var(--mono); font-weight: 800; color: #fff; background: #1d5fd6; border-radius: 4mm; padding: 3mm 6mm; font-size: 16pt; }
+        #belge .logo { font-family: var(--display); font-weight: 800; color: #1d5fd6; font-size: 20pt; display: inline-flex; align-items: center; gap: 3mm; }
+        #belge .logo img { width: 12mm; height: 12mm; }
+        #belge .platform { position: absolute; bottom: 5mm; left: 0; right: 0; font-size: 9pt; color: #64748b; }
         #belge h1 { font-family: var(--display); font-size: 40pt; margin: 8mm 0 2mm; letter-spacing: 1px; }
         #belge .ad { font-family: var(--display); font-size: 34pt; color: #1d5fd6; border-bottom: 1px solid #cbd5e1; padding: 0 16mm 2mm; margin: 6mm 0; }
         #belge p { font-size: 14pt; max-width: 200mm; line-height: 1.5; }
@@ -88,7 +91,7 @@
 <body>
     <header class="kl-top">
         <div class="wrap kl-top-inner">
-            <a href="./" class="kl-brand"><span class="kl-logo">&lt;/&gt;</span>KodLab</a>
+            <a href="./" class="kl-brand"><span class="kl-logo" aria-hidden="true"></span><span class="kl-ad"><b>Kod</b>layalım</span></a>
             <span class="kl-crumb"><i class="fas fa-chevron-right" style="font-size:.7em"></i><span>Profilim</span></span>
             <span class="kl-spacer"></span>
             <button class="icon-btn" id="themeBtn" aria-label="Temayı değiştir"><i class="fas fa-circle-half-stroke"></i></button>
@@ -151,12 +154,13 @@
     </main>
 
     <div id="belge"><div class="cerceve">
-        <span class="logo">&lt;/&gt; KodLab</span>
+        <span class="logo"><img src="ikon/ikon.svg" alt="" width="34" height="34"> Kodlayalım</span>
         <h1>BAŞARI BELGESİ</h1>
         <div class="ad" id="bAd"></div>
         <p id="bMetin"></p>
         <div class="rozetsatir" id="bRozet"></div>
-        <div class="alt"><span id="bTarih"></span><span>yasinyel.com/kodlab</span><span>Bilişim Teknolojileri Öğretmeni</span></div>
+        <div class="alt"><span id="bTarih"></span><span>kodlayalim.com</span><span>Bilişim Teknolojileri Öğretmeni</span></div>
+        <div class="platform">Kodlayalım platformu · Tasarım ve geliştirme: Yasin Yel</div>
     </div></div>
 
     <script src="ortak.js"></script>

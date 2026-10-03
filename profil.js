@@ -1,4 +1,4 @@
-// KodLab — Profilim
+// Kodlayalım — Profilim
 (function () {
     'use strict';
     const K = window.Katalog;
@@ -83,7 +83,7 @@
         $('paylas').hidden = false;
         $('paylas').addEventListener('click', () => {
             if (!profil.ad) { KL.bildir('Önce adını yazıp kaydet.'); return; }
-            navigator.share({ title: 'KodLab ilerlemem', text: `${profil.ad} (${profil.sinif || ''}) KodLab ilerleme kodu:\n${$('kod').value}` }).catch(() => {});
+            navigator.share({ title: 'Kodlayalım ilerlemem', text: `${profil.ad} (${profil.sinif || ''}) Kodlayalım ilerleme kodu:\n${$('kod').value}` }).catch(() => {});
         });
     }
 
@@ -93,7 +93,7 @@
         const kazanilan = K.ROZETLER.filter(r => r.kosul());
         const biten = K.PARCALAR.reduce((t, p) => t + p.yildiz().filter(x => x > 0).length, 0);
         $('bAd').textContent = profil.ad;
-        $('bMetin').innerHTML = `${profil.sinif ? kacis(profil.sinif) + ' sınıfı öğrencisi olarak ' : ''}KodLab etkinliklerinde <b>${biten} bölümü</b> tamamlayıp <b>${y} yıldız</b> toplamış ve <b>"${u.ad}"</b> unvanını kazanmıştır.`;
+        $('bMetin').innerHTML = `${profil.sinif ? kacis(profil.sinif) + ' sınıfı öğrencisi olarak ' : ''}Kodlayalım etkinliklerinde <b>${biten} bölümü</b> tamamlayıp <b>${y} yıldız</b> toplamış ve <b>"${u.ad}"</b> unvanını kazanmıştır.`;
         $('bRozet').innerHTML = kazanilan.map(r => `<span>★ ${r.ad}</span>`).join('');
         $('bTarih').textContent = new Date().toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
         window.print();

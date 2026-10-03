@@ -1,4 +1,4 @@
-// KodLab — Ne Yazar? soru üreticileri
+// Kodlayalım — Ne Yazar? soru üreticileri
 // Her üretici rastgele sayılarla yeni bir Python sorusu üretir: { kod, cevap, aciklama }
 // cevap: ekranda görünecek çıktı (birden çok satır "\n" ile)
 (function (root) {

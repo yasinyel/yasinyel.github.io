@@ -1,4 +1,4 @@
-// KodLab — Mantık Kapıları arayüzü
+// Kodlayalım — Mantık Kapıları arayüzü
 (function () {
     'use strict';
     const M = window.Mantik;

@@ -1,4 +1,4 @@
-// KodLab — Paket Yolculuğu arayüzü
+// Kodlayalım — Paket Yolculuğu arayüzü
 (function () {
     'use strict';
     const A = window.Ag;

@@ -1,4 +1,4 @@
-// KodLab — KodKart: 5×5 LED ekranlı eğitim kartı simülatörü (motor, bloklar, görevler, otomatik denetim)
+// Kodlayalım — KodKart: 5×5 LED ekranlı eğitim kartı simülatörü (motor, bloklar, görevler, otomatik denetim)
 // Ekran koordinatları: x 0…4 (soldan sağa), y 0…4 (yukarıdan aşağı)
 (function (root) {
     'use strict';

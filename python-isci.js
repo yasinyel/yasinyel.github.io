@@ -1,4 +1,4 @@
-// KodLab — Python Laboratuvarı işçisi (modül türünde Web Worker)
+// Kodlayalım — Python Laboratuvarı işçisi (modül türünde Web Worker)
 // Python ayrı bir iş parçacığında çalışır; sonsuz döngüde sayfa donmaz, arayüz işçiyi sonlandırıp yeniden başlatır.
 import { loadPyodide } from './vendor/pyodide/pyodide.mjs';
 import './python-motor.js';

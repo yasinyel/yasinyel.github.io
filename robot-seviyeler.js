@@ -1,4 +1,4 @@
-// KodLab — Robot Kodla bölümleri
+// Kodlayalım — Robot Kodla bölümleri
 // harita(lar): '.' zemin, '*' yıldız, '#' duvar, ' ' boşluk, ^ > v < robot ve baktığı yön
 // hedef: 3 yıldız için en fazla komut sayısı. cozum: örnek çözüm (testlerde doğrulanır).
 // Birden fazla harita varsa, aynı kod hepsinde çalışmalıdır.

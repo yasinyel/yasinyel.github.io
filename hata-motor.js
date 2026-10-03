@@ -1,4 +1,4 @@
-// KodLab — Hata Avcısı motoru
+// Kodlayalım — Hata Avcısı motoru
 // Bilgisayar Sensin programlarından birini alır ve içine tek bir hata yerleştirir.
 // Hata gerçekten robotun yolunu değiştirmeli; değiştirmeyen hatalar elenir.
 (function (root) {

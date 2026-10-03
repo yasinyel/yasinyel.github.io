@@ -1,4 +1,4 @@
-// KodLab — Veri Bilimi Atölyesi motoru: veri setleri, istatistik, soru üreticileri
+// Kodlayalım — Veri Bilimi Atölyesi motoru: veri setleri, istatistik, soru üreticileri
 // Bütün kişi ve veriler hayalidir.
 (function (root) {
     'use strict';

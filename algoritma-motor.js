@@ -1,4 +1,4 @@
-// KodLab — "Algoritma Sensin" motoru
+// Kodlayalım — "Algoritma Sensin" motoru
 // Arama ve sıralama algoritmalarını öğrenci adım adım kendisi yürütür. Motor her algoritma için
 // baştan sona bütün adımları üretir: her adımda ekranın durumu, sorulan soru ve beklenen cevap vardır.
 (function (root) {

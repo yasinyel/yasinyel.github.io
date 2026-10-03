@@ -1,4 +1,4 @@
-// KodLab — Şifre Kalesi arayüzü
+// Kodlayalım — Şifre Kalesi arayüzü
 (function () {
     'use strict';
     const G = window.Guvenlik;

@@ -1,4 +1,4 @@
-// KodLab — Ders planları (40 dakikalık ders için önerilen akış)
+// Kodlayalım — Ders planları (40 dakikalık ders için önerilen akış)
 // Her plan katalogdaki bir etkinliğe bağlıdır; kagit: ilgili bilgisayarsız çalışma kağıdı.
 (function (root) {
     'use strict';

@@ -1,4 +1,4 @@
-// KodLab — Oyun Atölyesi arayüzü
+// Kodlayalım — Oyun Atölyesi arayüzü
 (function () {
     'use strict';
     const M = window.OyunMotor;

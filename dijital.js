@@ -1,4 +1,4 @@
-// KodLab — Dijital Dedektif arayüzü
+// Kodlayalım — Dijital Dedektif arayüzü
 (function () {
     'use strict';
     const D = window.Dijital;

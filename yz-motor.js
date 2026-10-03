@@ -1,4 +1,4 @@
-// KodLab — Makineye Öğret motoru
+// Kodlayalım — Makineye Öğret motoru
 // Gerçek bir makine öğrenmesi modeli (k-en yakın komşu) ve görsellerden çıkarılan özellik vektörleri.
 (function (root) {
     'use strict';

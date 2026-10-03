@@ -1,4 +1,4 @@
-// KodLab — Çizim Atölyesi motoru
+// Kodlayalım — Çizim Atölyesi motoru
 // Kalemli robotla çizim (Logo geleneğindeki "yönlü kalem" grafikleri): program ağacı, çalıştırıcı,
 // çizim karşılaştırma, Python turtle modülü alt kümesi ayrıştırıcısı ve bloklardan Python kodu üretici.
 (function (root) {

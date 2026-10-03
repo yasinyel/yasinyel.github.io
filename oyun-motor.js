@@ -1,4 +1,4 @@
-// KodLab — Oyun Atölyesi motoru: blok tanımları, oyun çalıştırıcı, görevler ve otomatik denetim
+// Kodlayalım — Oyun Atölyesi motoru: blok tanımları, oyun çalıştırıcı, görevler ve otomatik denetim
 // Sahne koordinatları: x −240…240 (sağ +), y −180…180 (yukarı +), merkez (0,0)
 (function (root) {
     'use strict';

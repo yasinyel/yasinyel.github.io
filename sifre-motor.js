@@ -1,4 +1,4 @@
-// KodLab — Gizli Mesaj motoru: Türk alfabesiyle Sezar ve Vigenère şifreleri, frekans analizi
+// Kodlayalım — Gizli Mesaj motoru: Türk alfabesiyle Sezar ve Vigenère şifreleri, frekans analizi
 (function (root) {
     'use strict';
 

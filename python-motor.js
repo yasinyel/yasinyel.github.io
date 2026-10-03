@@ -1,4 +1,4 @@
-// KodLab — Python Laboratuvarı: görevler, değerlendirme düzeneği ve Türkçe hata açıklamaları
+// Kodlayalım — Python Laboratuvarı: görevler, değerlendirme düzeneği ve Türkçe hata açıklamaları
 // Python kodu tarayıcıda Pyodide (WebAssembly) ile çalışır; sunucu gerekmez.
 (function (root) {
     'use strict';
@@ -86,12 +86,12 @@ def _kl_calistir(kod, girdiler, tohum, yaz, istem_yaz, ek=''):
     const GOREVLER = [
         // ---- İlk Adımlar ----
         {
-            id: 'merhaba', unite: 'ilk', ad: 'Merhaba KodLab',
-            anlatim: '<code>print()</code> ekrana yazı yazar. Yazıyı tırnak içine koymayı unutma.<br>Ekrana tam olarak <b>Merhaba KodLab!</b> yazdır.',
+            id: 'merhaba', unite: 'ilk', ad: 'Merhaba Kodlayalım',
+            anlatim: '<code>print()</code> ekrana yazı yazar. Yazıyı tırnak içine koymayı unutma.<br>Ekrana tam olarak <b>Merhaba Kodlayalım!</b> yazdır.',
             baslangic: '# Bu satır bir yorumdur, Python onu çalıştırmaz.\n',
-            ipucu: 'print("Merhaba KodLab!")',
-            cozum: 'print("Merhaba KodLab!")',
-            testler: [{ girdi: [], cikti: 'Merhaba KodLab!' }]
+            ipucu: 'print("Merhaba Kodlayalım!")',
+            cozum: 'print("Merhaba Kodlayalım!")',
+            testler: [{ girdi: [], cikti: 'Merhaba Kodlayalım!' }]
         },
         {
             id: 'parcalar', unite: 'ilk', ad: 'Bilgisayarın Parçaları',
@@ -311,7 +311,7 @@ def _kl_calistir(kod, girdiler, tohum, yaz, istem_yaz, ek=''):
         {
             id: 'sezar', unite: 'fonk', ad: 'Sezar Şifresi',
             anlatim: '<code>sezar(metin, kaydir)</code> fonksiyonu, Türk alfabesindeki her büyük harfi <code>kaydir</code> kadar ileri kaydırsın. Alfabe sonundan başa dönülür. Alfabede olmayan karakterler (boşluk, rakam) aynen kalsın.<br><code>sezar("ABC", 1)</code> → <code>"BCÇ"</code>, <code>sezar("Z", 1)</code> → <code>"A"</code>',
-            baslangic: `ALFABE = "${ALFABE}"\n\ndef sezar(metin, kaydir):\n    sonuc = ""\n    for harf in metin:\n        if harf in ALFABE:\n            sira = ALFABE.index(harf)\n            # yeni harfi bul ve sonuca ekle\n        else:\n            sonuc += harf\n    return sonuc\n\nprint(sezar("KODLAB", 3))\n`,
+            baslangic: `ALFABE = "${ALFABE}"\n\ndef sezar(metin, kaydir):\n    sonuc = ""\n    for harf in metin:\n        if harf in ALFABE:\n            sira = ALFABE.index(harf)\n            # yeni harfi bul ve sonuca ekle\n        else:\n            sonuc += harf\n    return sonuc\n\nprint(sezar("KODLAYALIM", 3))\n`,
             ipucu: 'sonuc += ALFABE[(sira + kaydir) % len(ALFABE)]',
             cozum: `ALFABE = "${ALFABE}"\n\ndef sezar(metin, kaydir):\n    sonuc = ""\n    for harf in metin:\n        if harf in ALFABE:\n            sira = ALFABE.index(harf)\n            sonuc += ALFABE[(sira + kaydir) % len(ALFABE)]\n        else:\n            sonuc += harf\n    return sonuc`,
             testler: [{ kod: 'print(sezar("ABC", 1))', cikti: 'BCÇ' }, { kod: 'print(sezar("Z", 1))', cikti: 'A' }, { kod: 'print(sezar("GİZLİ MESAJ 2", 3))', cikti: 'ILCOL ÖĞUÇM 2' }, { kod: 'print(sezar(sezar("ŞİFRE", 5), -5))', cikti: 'ŞİFRE' }],

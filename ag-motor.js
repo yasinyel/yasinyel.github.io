@@ -1,4 +1,4 @@
-// KodLab — Paket Yolculuğu motoru: paketleme, yönlendirme (en kısa yol), DNS, IP adresleri
+// Kodlayalım — Paket Yolculuğu motoru: paketleme, yönlendirme (en kısa yol), DNS, IP adresleri
 (function (root) {
     'use strict';
     const r = (a, b) => a + Math.floor(Math.random() * (b - a + 1));

@@ -1,4 +1,4 @@
-// KodLab — bağımsız QR kod üretici (bayt kipi, hata düzeltme M, sürüm 1–40)
+// Kodlayalım — bağımsız QR kod üretici (bayt kipi, hata düzeltme M, sürüm 1–40)
 // Dış kütüphane gerektirmez; böylece çevrimdışı da çalışır.
 (function (root) {
     'use strict';

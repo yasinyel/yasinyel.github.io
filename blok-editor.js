@@ -1,4 +1,4 @@
-// KodLab — genel blok editörü (olay tabanlı)
+// Kodlayalım — genel blok editörü (olay tabanlı)
 // Çalışma alanı, her biri bir olay (şapka) bloğuyla başlayan betiklerden oluşur.
 // Fare, dokunmatik ekran ve akıllı tahtada çalışır (Pointer Events).
 //

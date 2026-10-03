@@ -1,4 +1,4 @@
-// KodLab — KodKart Simülatörü arayüzü
+// Kodlayalım — KodKart Simülatörü arayüzü
 (function () {
     'use strict';
     const D = window.Devre;
