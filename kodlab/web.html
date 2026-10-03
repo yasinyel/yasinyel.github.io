@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#1d5fd6">
+    <link rel="icon" href="ikon/ikon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="ikon/ikon-192.png">
+    <title>Web Atölyesi — KodLab</title>
+    <meta name="description" content="HTML ve CSS ile kendi web sayfanı yap, görevleri canlı önizlemeyle tamamla.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="ortak.css">
+    <style>
+        main { padding: 14px 0 50px; }
+        .levels { display: flex; gap: 6px; overflow-x: auto; padding: 4px 0 10px; }
+        .lvl { flex: 0 0 auto; min-width: 42px; height: 42px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); cursor: pointer; font-weight: 700; position: relative; padding: 0 8px; }
+        .lvl.active { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+        .lvl.done { border-color: var(--ok); }
+        .lvl.locked { opacity: .45; cursor: not-allowed; }
+        .lvl .stars { position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); font-size: 7px; }
+        .head h1 { font-size: 1.5rem; }
+        .head p { color: var(--muted); margin-top: 4px; max-width: 900px; }
+        .head p b { color: var(--ink); }
+        .studio { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; margin-top: 14px; align-items: start; }
+        .editor-kart { overflow: hidden; }
+        .sekmeler { display: flex; gap: 4px; padding: 8px 10px 0; border-bottom: 1px solid var(--line); align-items: center; }
+        .sekmeler button { border: 0; background: none; padding: 8px 12px; font-weight: 700; color: var(--muted); cursor: pointer; border-bottom: 3px solid transparent; }
+        .sekmeler button.sel { color: var(--ink); border-bottom-color: var(--accent); }
+        .sekmeler .kl-spacer { flex: 1; }
+        .kod { position: relative; height: 460px; background: var(--code-bg); font-family: var(--mono); font-size: 14.5px; line-height: 22px; }
+        .kod pre, .kod textarea { position: absolute; inset: 0; margin: 0; padding: 14px 14px 14px 52px; white-space: pre-wrap; word-break: break-word; overflow: auto; font: inherit; line-height: inherit; tab-size: 2; }
+        .kod pre { color: var(--code-ink); pointer-events: none; }
+        .kod textarea { background: transparent; color: transparent; caret-color: #ffd166; border: 0; outline: 0; resize: none; }
+        .kod textarea::selection { background: rgba(110, 164, 255, .35); }
+        .kod .no { position: absolute; left: 0; top: 0; bottom: 0; width: 40px; padding-top: 14px; text-align: right; color: #4a5875; overflow: hidden; pointer-events: none; }
+        .t-etiket { color: #82aaff; } .t-ozn { color: #c792ea; } .t-deger { color: #c3e88d; } .t-yorum { color: #697098; font-style: italic; }
+        .t-secici { color: #ffcb6b; } .t-css-ozn { color: #82aaff; } .t-css-deger { color: #f78c6c; }
+        .sag { display: flex; flex-direction: column; gap: 14px; }
+        .onizleme { overflow: hidden; }
+        .onizleme .bar { display: flex; align-items: center; gap: 6px; padding: 8px 12px; background: var(--bg-alt); border-bottom: 1px solid var(--line); font-size: .82rem; color: var(--muted); }
+        .onizleme .bar i.d { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+        .onizleme iframe { width: 100%; height: 300px; border: 0; background: #fff; display: block; }
+        .gorevler { padding: 16px; }
+        .gorevler h3 { font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-family: var(--body); margin-bottom: 10px; }
+        .gorevler ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+        .gorevler li { display: flex; gap: 10px; align-items: flex-start; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--line); transition: background .2s, border-color .2s; }
+        .gorevler li i { margin-top: 3px; color: var(--muted); }
+        .gorevler li.tamam { background: var(--ok-soft); border-color: var(--ok); }
+        .gorevler li.tamam i { color: var(--ok); }
+        .araclar { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+        @media (max-width: 960px) { .studio { grid-template-columns: 1fr; } .kod { height: 340px; } }
+    </style>
+</head>
+<body>
+    <header class="kl-top">
+        <div class="wrap kl-top-inner">
+            <a href="./" class="kl-brand"><span class="kl-logo">&lt;/&gt;</span>KodLab</a>
+            <span class="kl-crumb"><i class="fas fa-chevron-right" style="font-size:.7em"></i><span>Web Atölyesi</span></span>
+            <span class="kl-spacer"></span>
+            <button class="icon-btn" id="themeBtn" aria-label="Temayı değiştir"><i class="fas fa-circle-half-stroke"></i></button>
+        </div>
+    </header>
+    <main class="wrap">
+        <nav class="levels" id="levels" aria-label="Bölümler"></nav>
+        <div class="head"><h1 id="baslik"></h1><p id="anlatim"></p></div>
+        <div class="studio">
+            <section class="card editor-kart">
+                <div class="sekmeler" id="sekmeler">
+                    <button data-s="html" class="sel"><i class="fab fa-html5"></i> HTML</button>
+                    <button data-s="css"><i class="fab fa-css3-alt"></i> CSS</button>
+                    <span class="kl-spacer"></span>
+                </div>
+                <div class="kod"><div class="no" id="no"></div><pre id="renkli" aria-hidden="true"></pre><textarea id="kod" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Kod"></textarea></div>
+            </section>
+            <div class="sag">
+                <section class="card onizleme">
+                    <div class="bar"><i class="d" style="background:#ff5f57"></i><i class="d" style="background:#febc2e"></i><i class="d" style="background:#28c840"></i><span style="margin-left:8px">Önizleme (JavaScript kapalı)</span></div>
+                    <iframe id="onizleme" sandbox="allow-same-origin" title="Önizleme"></iframe>
+                </section>
+                <section class="card gorevler">
+                    <h3>Görevler</h3>
+                    <ul id="gorevler"></ul>
+                    <div class="araclar">
+                        <button class="btn btn-sm" id="sifirla"><i class="fas fa-rotate-left"></i> Baştan başla</button>
+                        <button class="btn btn-sm" id="cozum"><i class="fas fa-key"></i> Örnek çözüm</button>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+    <dialog class="kl-dialog" id="kazandi">
+        <h2 id="kBaslik"></h2>
+        <div class="big-stars" id="kYildiz"></div>
+        <p id="kMetin"></p>
+        <div class="actions"><button class="btn" id="kKal">Sayfamı süsle</button><button class="btn btn-primary" id="kSonraki">Sonraki bölüm <i class="fas fa-arrow-right"></i></button></div>
+    </dialog>
+    <script src="ortak.js"></script>
+    <script src="web-motor.js"></script>
+    <script src="web.js"></script>
+</body>
+</html>
