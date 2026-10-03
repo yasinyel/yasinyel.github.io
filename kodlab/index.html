@@ -34,6 +34,11 @@
         .progress-label { font-size: .82rem; color: var(--muted); margin-top: 6px; }
         .act .go { position: absolute; top: 24px; right: 24px; color: var(--muted); }
 
+        .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+        .filters button { border: 1px solid var(--line); background: var(--surface); border-radius: 99px; padding: 8px 16px; font-weight: 600; cursor: pointer; color: var(--muted); }
+        .filters button.sel { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+        .filters button small { opacity: .7; font-weight: 500; margin-left: 4px; }
+        .grade { display: inline-block; font-size: .78rem; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
         .section-title { font-size: 1.5rem; margin: 46px 0 14px; }
         .teacher { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
         .teacher .card { padding: 20px; }
@@ -66,7 +71,7 @@
         <section class="hero">
             <div>
                 <h1>Bilgisayar gibi <em>düşünmeyi</em> oynayarak öğren.</h1>
-                <p>Bilişim Teknolojileri dersleri için hazırlanmış, tarayıcıda çalışan etkinlikler. Robotu kodla, Python çıktısını tahmin et, ikilik sayıları keşfet, piksellerle resim çöz.</p>
+                <p>Anasınıfından lise sona kadar Bilişim Teknolojileri dersleri için hazırlanmış, tarayıcıda çalışan etkinlik kütüphanesi. Kademeni seç, sana uygun etkinliklerle başla.</p>
                 <div class="hero-tags">
                     <span><i class="fas fa-check"></i>Üyelik yok</span>
                     <span><i class="fas fa-check"></i>Ücretsiz</span>
@@ -74,53 +79,16 @@
                     <span><i class="fas fa-check"></i>Tamamen Türkçe</span>
                 </div>
             </div>
-            <div class="hero-code" aria-hidden="true"><span class="c"># Robot Kodla, Bölüm 13</span>
-<span class="k">iken</span> yıldız_kaldı {
-    <span class="k">iken</span> önü_boş {
-        <span class="f">ileri</span>()
-    }
-    <span class="f">sağa</span>()
-}</div>
+            <div class="hero-code" aria-hidden="true"><span class="c"># Bilgisayar sensin: bu kod çalışınca</span>
+<span class="c"># robot nereye gider?</span>
+<span class="k">for</span> i <span class="k">in</span> <span class="f">range</span>(<span class="n">1</span>, <span class="n">4</span>):
+    <span class="k">for</span> j <span class="k">in</span> <span class="f">range</span>(i):
+        <span class="f">sag</span>()
+    <span class="f">asagi</span>()</div>
         </section>
 
-        <section class="acts" id="acts">
-            <a class="card act" href="robot.html">
-                <i class="fas fa-arrow-right go"></i>
-                <div class="act-icon" style="background:#1d5fd6"><i class="fas fa-robot"></i></div>
-                <h2>Robot Kodla</h2>
-                <p>Robotu Türkçe komutlarla programla, bütün yıldızları topla. Ne kadar kısa kod, o kadar çok yıldız!</p>
-                <div class="act-meta"><span>Sıralama</span><span>Döngüler</span><span>Koşullar</span><span>Fonksiyonlar</span></div>
-                <div class="progress"><div data-p="robot"></div></div>
-                <div class="progress-label" data-l="robot"></div>
-            </a>
-            <a class="card act" href="tahmin.html">
-                <i class="fas fa-arrow-right go"></i>
-                <div class="act-icon" style="background:#8b5cf6"><i class="fas fa-terminal"></i></div>
-                <h2>Ne Yazar?</h2>
-                <p>Python kodunu bilgisayar gibi oku ve ekrana ne yazacağını tahmin et. Sorular her seferinde farklı sayılarla gelir.</p>
-                <div class="act-meta"><span>Python</span><span>Değişkenler</span><span>Kod okuma</span><span>Hata ayıklama</span></div>
-                <div class="progress"><div data-p="tahmin"></div></div>
-                <div class="progress-label" data-l="tahmin"></div>
-            </a>
-            <a class="card act" href="ikilik.html">
-                <i class="fas fa-arrow-right go"></i>
-                <div class="act-icon" style="background:#16a36a"><span style="font-family:var(--mono);font-size:1rem;font-weight:700">01</span></div>
-                <h2>İkilik Kartlar</h2>
-                <p>Kartları çevirerek sayıları 0 ve 1'lerle göster. Bilgisayarın dilini keşfet: bit, bayt ve ikilik sayı sistemi.</p>
-                <div class="act-meta"><span>Veri temsili</span><span>İkilik sistem</span><span>Bit / Bayt</span></div>
-                <div class="progress"><div data-p="ikilik"></div></div>
-                <div class="progress-label" data-l="ikilik"></div>
-            </a>
-            <a class="card act" href="piksel.html">
-                <i class="fas fa-arrow-right go"></i>
-                <div class="act-icon" style="background:#f97316"><i class="fas fa-border-all"></i></div>
-                <h2>Piksel Kodlama</h2>
-                <p>Satır kodlarını çöz, gizli resmi boya. Kendi resmini tasarla ve arkadaşlarına bulmaca olarak gönder.</p>
-                <div class="act-meta"><span>Resim kodlama</span><span>Sıkıştırma</span><span>Tasarım</span></div>
-                <div class="progress"><div data-p="piksel"></div></div>
-                <div class="progress-label" data-l="piksel"></div>
-            </a>
-        </section>
+        <div class="filters" id="filters" role="tablist" aria-label="Kademe"></div>
+        <section class="acts" id="acts"></section>
 
         <h2 class="section-title">Öğretmenler için</h2>
         <div class="teacher">
@@ -141,15 +109,8 @@
         <h2 class="section-title">Hangi etkinlik, hangi konu?</h2>
         <div class="card curr-wrap">
             <table class="curr">
-                <thead><tr><th>Etkinlik</th><th>Kavramlar</th><th>Önerilen</th><th>Süre</th></tr></thead>
-                <tbody>
-                    <tr><td><b>Robot Kodla</b> 1–4</td><td>Algoritma, sıralı komutlar, parametre</td><td>5. sınıf ve üstü</td><td>15 dk</td></tr>
-                    <tr><td><b>Robot Kodla</b> 5–8</td><td>Döngüler, iç içe döngüler, örüntü bulma</td><td>5. sınıf ve üstü</td><td>20 dk</td></tr>
-                    <tr><td><b>Robot Kodla</b> 9–14</td><td>Koşullar, koşullu döngü, fonksiyonlar, labirent algoritması</td><td>6. sınıf ve üstü</td><td>30 dk</td></tr>
-                    <tr><td><b>Ne Yazar?</b></td><td>Değişken, operatör, metin, if/else, for/while, liste, fonksiyon (Python)</td><td>7. sınıf ve üstü</td><td>Seviye başı 5–10 dk</td></tr>
-                    <tr><td><b>İkilik Kartlar</b></td><td>İkilik sayı sistemi, bit, bayt, veri temsili</td><td>5. sınıf ve üstü</td><td>15–20 dk</td></tr>
-                    <tr><td><b>Piksel Kodlama</b></td><td>Resimlerin sayısal temsili, piksel, sıkıştırma (RLE)</td><td>5. sınıf ve üstü</td><td>15–25 dk</td></tr>
-                </tbody>
+                <thead><tr><th>Etkinlik</th><th>Kavramlar</th><th>Kademe</th><th>Süre</th></tr></thead>
+                <tbody id="tablo"></tbody>
             </table>
         </div>
 
@@ -160,28 +121,80 @@
     </main>
 
     <script src="ortak.js"></script>
-    <script src="robot-seviyeler.js"></script>
     <script>
         (function () {
-            // Her etkinlikteki toplam yıldız / tamamlanan bölüm
-            const robot = KL.oku('robot', { yildiz: {} });
-            const tahmin = KL.oku('tahmin', { yildiz: {} });
-            const ikilik = KL.oku('ikilik', { yildiz: {} });
-            const piksel = KL.oku('piksel', { tamam: {} });
-            const topla = (o) => Object.values(o).reduce((a, b) => a + b, 0);
-            const veriler = {
-                robot: [topla(robot.yildiz), window.ROBOT_SEVIYELER.length * 3, 'yıldız'],
-                tahmin: [topla(tahmin.yildiz), 5 * 3, 'yıldız'],
-                ikilik: [topla(ikilik.yildiz), 5 * 3, 'yıldız'],
-                piksel: [Object.keys(piksel.tamam).length, 8, 'resim çözüldü']
-            };
-            for (const [k, [n, t, birim]] of Object.entries(veriler)) {
-                document.querySelector(`[data-p="${k}"]`).style.width = Math.round(n / t * 100) + '%';
-                document.querySelector(`[data-l="${k}"]`).textContent = n ? `${n} / ${t} ${birim}` : 'Henüz başlamadın';
+            // Etkinlik kütüphanesi. Yeni etkinlik eklemek için bu listeye bir nesne eklemek yeterli.
+            // sinif: [en küçük, en büyük]; 0 = anasınıfı
+            const ETKINLIKLER = [
+                { id: 'sensin', ad: 'Bilgisayar Sensin', url: 'sensin.html', ikon: 'fa-arrows-up-down-left-right', renk: '#0ea5e9', sinif: [0, 12],
+                  aciklama: 'Kodu oku, bilgisayarın yerine sen çalıştır: karakteri yön tuşlarıyla kodun söylediği gibi hareket ettir. Her kademeye ayrı kod dili.',
+                  etiket: ['Kod okuma', 'Algoritma', 'Döngü', 'Koşul', 'Fonksiyon'], kavram: 'Okla (okul öncesi), blokla (ilkokul), Türkçe kodla (ortaokul) ve Python ile (lise) kod izleme', sure: 'Bölüm başı 2–5 dk',
+                  ilerleme: () => { const k = KL.oku('sensin', {}); let n = 0; ['okuloncesi', 'ilkokul', 'ortaokul', 'lise'].forEach(x => Object.values(k[x] || {}).forEach(v => n += v)); return [n, 43 * 3, 'yıldız']; } },
+                { id: 'oruntu', ad: 'Örüntü Bul', url: 'oruntu.html', ikon: 'fa-shapes', renk: '#f59e0b', sinif: [0, 2],
+                  aciklama: 'Sıradaki ne? Tekrar eden kalıbı bul, soru işaretinin yerine geleni seç. Okuma bilmeye gerek yok.',
+                  etiket: ['Örüntü', 'Dikkat', 'Okuma gerekmez'], kavram: 'Örüntü tanıma, tekrar eden kalıplar (algoritmik düşünmenin temeli)', sure: '10 dk',
+                  ilerleme: () => [Object.values(KL.oku('oruntu', { yildiz: {} }).yildiz).reduce((a, b) => a + b, 0), 8 * 3, 'yıldız'] },
+                { id: 'piksel', ad: 'Piksel Kodlama', url: 'piksel.html', ikon: 'fa-border-all', renk: '#f97316', sinif: [2, 8],
+                  aciklama: 'Satır kodlarını çöz, gizli resmi boya. Kendi resmini tasarla ve arkadaşlarına bulmaca olarak gönder.',
+                  etiket: ['Resim kodlama', 'Sıkıştırma', 'Tasarım'], kavram: 'Resimlerin sayısal temsili, piksel, sıkıştırma (RLE)', sure: '15–25 dk',
+                  ilerleme: () => [Object.keys(KL.oku('piksel', { tamam: {} }).tamam).length, 8, 'resim çözüldü'] },
+                { id: 'robot', ad: 'Robot Kodla', url: 'robot.html', ikon: 'fa-robot', renk: '#1d5fd6', sinif: [3, 8],
+                  aciklama: 'Robotu Türkçe komutlarla programla, bütün yıldızları topla. Ne kadar kısa kod, o kadar çok yıldız!',
+                  etiket: ['Sıralama', 'Döngüler', 'Koşullar', 'Fonksiyonlar'], kavram: 'Kod yazma: sıralı komut, parametre, döngü, koşul, fonksiyon, labirent algoritması', sure: '15–30 dk',
+                  ilerleme: () => [Object.values(KL.oku('robot', { yildiz: {} }).yildiz).reduce((a, b) => a + b, 0), 14 * 3, 'yıldız'] },
+                { id: 'ikilik', ad: 'İkilik Kartlar', url: 'ikilik.html', ikon: 'fa-toggle-on', renk: '#16a36a', sinif: [4, 10],
+                  aciklama: 'Kartları çevirerek sayıları 0 ve 1\'lerle göster. Bilgisayarın dilini keşfet: bit, bayt ve ikilik sayı sistemi.',
+                  etiket: ['Veri temsili', 'İkilik sistem', 'Bit / Bayt'], kavram: 'İkilik sayı sistemi, bit, bayt, veri temsili', sure: '15–20 dk',
+                  ilerleme: () => [Object.values(KL.oku('ikilik', { yildiz: {} }).yildiz).reduce((a, b) => a + b, 0), 5 * 3, 'yıldız'] },
+                { id: 'tahmin', ad: 'Ne Yazar?', url: 'tahmin.html', ikon: 'fa-terminal', renk: '#8b5cf6', sinif: [8, 12],
+                  aciklama: 'Python kodunu bilgisayar gibi oku ve ekrana ne yazacağını tahmin et. Sorular her seferinde farklı sayılarla gelir.',
+                  etiket: ['Python', 'Değişkenler', 'Kod okuma'], kavram: 'Değişken, operatör, metin, if/else, for/while, liste, fonksiyon (Python)', sure: 'Seviye başı 5–10 dk',
+                  ilerleme: () => [Object.values(KL.oku('tahmin', { yildiz: {} }).yildiz).reduce((a, b) => a + b, 0), 5 * 3, 'yıldız'] }
+            ];
+            const KADEMELER = [
+                { id: 'hepsi', ad: 'Tümü', aralik: [0, 12] },
+                { id: 'okuloncesi', ad: 'Okul Öncesi', not: 'Anasınıfı', aralik: [0, 0] },
+                { id: 'ilkokul', ad: 'İlkokul', not: '1–4', aralik: [1, 4] },
+                { id: 'ortaokul', ad: 'Ortaokul', not: '5–8', aralik: [5, 8] },
+                { id: 'lise', ad: 'Lise', not: '9–12', aralik: [9, 12] }
+            ];
+            // Bilgisayar Sensin'in hangi kod dilinin açılacağı
+            const SENSIN_KADEME = { okuloncesi: 'okuloncesi', ilkokul: 'ilkokul', ortaokul: 'ortaokul', lise: 'lise' };
+            const sinifYaz = (n) => n === 0 ? 'Anasınıfı' : n + '. sınıf';
+            const aralikYaz = ([a, b]) => a === b ? sinifYaz(a) : `${sinifYaz(a)} – ${b}. sınıf`;
+
+            let secili = KL.oku('kademe', 'hepsi');
+            function ciz() {
+                const kd = KADEMELER.find(k => k.id === secili) || KADEMELER[0];
+                document.getElementById('filters').innerHTML = KADEMELER.map(k =>
+                    `<button class="${k.id === kd.id ? 'sel' : ''}" data-k="${k.id}" role="tab" aria-selected="${k.id === kd.id}">${k.ad}${k.not ? `<small>${k.not}</small>` : ''}</button>`).join('');
+                const liste = ETKINLIKLER.filter(e => e.sinif[0] <= kd.aralik[1] && e.sinif[1] >= kd.aralik[0]);
+                document.getElementById('acts').innerHTML = liste.map(e => {
+                    const [n, t, birim] = e.ilerleme();
+                    const url = e.id === 'sensin' && SENSIN_KADEME[kd.id] ? `${e.url}?kademe=${SENSIN_KADEME[kd.id]}` : e.url;
+                    return `<a class="card act" href="${url}">
+                        <i class="fas fa-arrow-right go"></i>
+                        <div class="act-icon" style="background:${e.renk}"><i class="fas ${e.ikon}"></i></div>
+                        <span class="grade">${aralikYaz(e.sinif)}</span>
+                        <h2>${e.ad}</h2><p>${e.aciklama}</p>
+                        <div class="act-meta">${e.etiket.map(x => `<span>${x}</span>`).join('')}</div>
+                        <div class="progress"><div style="width:${Math.round(n / t * 100)}%"></div></div>
+                        <div class="progress-label">${n ? `${n} / ${t} ${birim}` : 'Henüz başlamadın'}</div>
+                    </a>`;
+                }).join('');
             }
+            document.getElementById('filters').addEventListener('click', (e) => {
+                const b = e.target.closest('button');
+                if (!b) return;
+                secili = b.dataset.k; KL.yaz('kademe', secili); ciz();
+            });
+            document.getElementById('tablo').innerHTML = ETKINLIKLER.map(e =>
+                `<tr><td><b>${e.ad}</b></td><td>${e.kavram}</td><td>${aralikYaz(e.sinif)}</td><td>${e.sure}</td></tr>`).join('');
+            ciz();
+
             document.getElementById('sifirla').addEventListener('click', () => {
                 if (!confirm('Bu cihazdaki tüm KodLab ilerlemesi silinsin mi?')) return;
-                ['robot', 'tahmin', 'ikilik', 'piksel'].forEach(KL.sil);
+                ['robot', 'tahmin', 'ikilik', 'piksel', 'sensin', 'oruntu'].forEach(KL.sil);
                 location.reload();
             });
         })();
