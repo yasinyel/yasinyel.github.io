@@ -1,6 +1,6 @@
 {
-  "name": "KodLab — Bilişim Etkinlikleri",
-  "short_name": "KodLab",
+  "name": "Kodlayalım — Bilişim Etkinlikleri",
+  "short_name": "Kodlayalım",
   "description": "Anasınıfından liseye kodlama ve bilgisayar bilimi etkinlikleri. İnternetsiz de çalışır.",
   "lang": "tr",
   "start_url": "./",

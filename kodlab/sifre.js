@@ -1,4 +1,4 @@
-// KodLab — Gizli Mesaj arayüzü
+// Kodlayalım — Gizli Mesaj arayüzü
 (function () {
     'use strict';
     const S = window.Sifre;

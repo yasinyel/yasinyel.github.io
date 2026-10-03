@@ -1,4 +1,4 @@
-/* KodLab — genel blok editörü */
+/* Kodlayalım — genel blok editörü */
 .be-kutu { background: var(--bg-alt); padding: 12px; display: flex; flex-direction: column; gap: 7px; overflow-y: auto; border-right: 1px solid var(--line); align-items: flex-start; }
 .be-kutu h3 { font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-family: var(--body); margin-top: 6px; }
 .be-kutu.be-sil { background: var(--bad-soft); outline: 2px dashed var(--bad); outline-offset: -6px; }

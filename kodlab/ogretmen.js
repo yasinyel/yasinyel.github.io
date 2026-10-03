@@ -1,4 +1,4 @@
-// KodLab — Öğretmen Paneli
+// Kodlayalım — Öğretmen Paneli
 (function () {
     'use strict';
     const K = window.Katalog;
@@ -37,7 +37,7 @@
 
     $('olustur').addEventListener('click', () => {
         if (!secili.size) { KL.bildir('En az bir etkinlik seçin.'); return; }
-        const g = { i: Date.now().toString(36), b: $('gBaslik').value.trim() || 'KodLab görevi', o: $('gOgretmen').value.trim(), p: [...secili] };
+        const g = { i: Date.now().toString(36), b: $('gBaslik').value.trim() || 'Kodlayalım görevi', o: $('gOgretmen').value.trim(), p: [...secili] };
         if (!g.o) delete g.o;
         const url = `${taban}gorev.html#g=${K.gorevKodla(g)}`;
         const gorevler = KL.oku('ogretmen.gorevler', []);
@@ -184,7 +184,7 @@
         const blob = new Blob(['﻿' + satirlar.join('\r\n')], { type: 'text/csv;charset=utf-8' });
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = `kodlab-sinif-${new Date().toISOString().slice(0, 10)}.csv`;
+        a.download = `kodlayalim-sinif-${new Date().toISOString().slice(0, 10)}.csv`;
         a.click();
         setTimeout(() => URL.revokeObjectURL(a.href), 1000);
     });
@@ -230,7 +230,7 @@
     const anaUrl = taban;
     $('anaQr').innerHTML = QR.svg(anaUrl, 240);
     $('anaUrl').textContent = anaUrl;
-    $('anaTam').addEventListener('click', () => tamEkran('KodLab\'a hoş geldiniz!', anaUrl));
+    $('anaTam').addEventListener('click', () => tamEkran('Kodlayalım\'a hoş geldiniz!', anaUrl));
 
     secimCiz();
     if (location.hash === '#sinif') document.querySelector('[data-p="panelSinif"]').click();

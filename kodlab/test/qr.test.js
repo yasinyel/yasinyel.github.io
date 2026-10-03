@@ -3,8 +3,8 @@
 // (Klasik QRCodeDetector bazı geçerli kodlarda bulma adımında takılabildiği için önce Aruco okuyucu denenir.)
 const { execFileSync } = require('child_process');
 const QR = require('../qr.js');
-const ornekler = ['KL1', 'https://yasinyel.com/kodlab/', 'Merhaba Dünya! Çğıöşü İĞÜŞÖÇ',
-    'https://yasinyel.com/kodlab/gorev.html#g=' + 'x'.repeat(150), 'KL1|Ayşe Yılmaz|7-B|' + 'r1.2.3.3.3.2.1|'.repeat(12),
+const ornekler = ['KL1', 'https://kodlayalim.com/', 'Merhaba Dünya! Çğıöşü İĞÜŞÖÇ',
+    'https://kodlayalim.com/gorev.html#g=' + 'x'.repeat(150), 'KL1|Ayşe Yılmaz|7-B|' + 'r1.2.3.3.3.2.1|'.repeat(12),
     'a'.repeat(600)];
 const matrisler = ornekler.map(o => QR.olustur(o).map(s => s.map(Number)));
 const py = `

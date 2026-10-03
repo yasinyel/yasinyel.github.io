@@ -1,4 +1,4 @@
-// KodLab — Web Atölyesi bölümleri
+// Kodlayalım — Web Atölyesi bölümleri
 // Her görev, önizlemedeki gerçek sayfanın DOM'una ve hesaplanmış stillerine bakan bir denetimdir: d = document, w = window
 (function (root) {
     'use strict';
@@ -57,7 +57,7 @@
                 { ad: 'Resme anlamlı bir <code>alt</code> açıklaması yaz', kontrol: (d) => [...d.querySelectorAll('img')].some(i => (i.getAttribute('alt') || '').trim().length >= 3) },
                 { ad: 'Resmin genişliğini <code>width="100"</code> ile küçült', kontrol: (d) => [...d.querySelectorAll('img')].some(i => i.getAttribute('width') && +i.getAttribute('width') <= 200) }
             ],
-            cozum: { html: '<h1>Bağlantılar</h1>\n<p><a href="https://yasinyel.com/kodlab/">KodLab\'a git</a></p>\n<img src="ikon/ikon.svg" alt="KodLab logosu" width="100">\n', css: '' }
+            cozum: { html: '<h1>Bağlantılar</h1>\n<p><a href="https://kodlayalim.com/">Kodlayalım\'a git</a></p>\n<img src="ikon/ikon.svg" alt="Kodlayalım logosu" width="100">\n', css: '' }
         },
         {
             ad: 'Renkler (CSS)', sinif: [6, 12],
@@ -128,7 +128,7 @@
                 { ad: 'En az 3 CSS kuralı', kontrol: (d) => { const s = d.getElementById('ogrenci-css'); return !!(s && s.sheet && s.sheet.cssRules.length >= 3); } },
                 { ad: 'Bir sınıf kullan (<code>class</code>)', kontrol: (d) => !!d.body.querySelector('[class]') }
             ],
-            cozum: { html: '<h1>Satranç Kulübümüz</h1>\n<img src="ikon/ikon.svg" alt="Kulüp logosu" width="80">\n<p class="giris">Her hafta yeni bir açılış öğreniyoruz.</p>\n<ul>\n  <li>Sicilya Savunması</li>\n  <li>İtalyan Oyunu</li>\n  <li>Vezir Gambiti</li>\n</ul>\n<a href="https://yasinyel.com/kodlab/">Daha fazlası</a>\n', css: 'body { font-family: sans-serif; }\nh1 { color: navy; }\n.giris { font-size: 20px; }\n' }
+            cozum: { html: '<h1>Satranç Kulübümüz</h1>\n<img src="ikon/ikon.svg" alt="Kulüp logosu" width="80">\n<p class="giris">Her hafta yeni bir açılış öğreniyoruz.</p>\n<ul>\n  <li>Sicilya Savunması</li>\n  <li>İtalyan Oyunu</li>\n  <li>Vezir Gambiti</li>\n</ul>\n<a href="https://kodlayalim.com/">Daha fazlası</a>\n', css: 'body { font-family: sans-serif; }\nh1 { color: navy; }\n.giris { font-size: 20px; }\n' }
         }
     ];
 

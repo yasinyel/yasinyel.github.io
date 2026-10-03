@@ -1,4 +1,4 @@
-// KodLab — Robot Kodla arayüzü
+// Kodlayalım — Robot Kodla arayüzü
 (function () {
     'use strict';
     const M = window.RobotMotor;

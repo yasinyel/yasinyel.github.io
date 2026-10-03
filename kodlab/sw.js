@@ -1,7 +1,7 @@
-// KodLab — çevrimdışı çalışma (service worker)
-// Bütün KodLab sayfaları ilk ziyarette önbelleğe alınır; internet kesilse de etkinlikler açılır.
+// Kodlayalım — çevrimdışı çalışma (service worker)
+// Bütün Kodlayalım sayfaları ilk ziyarette önbelleğe alınır; internet kesilse de etkinlikler açılır.
 // Dosya eklendiğinde DOSYALAR listesine eklenmeli ve SURUM artırılmalı (test/sw.test.js denetler).
-const SURUM = 'kodlab-v9';
+const SURUM = 'kodlab-v10';
 const DOSYALAR = [
         './',
         'ag-motor.js',
@@ -84,6 +84,7 @@ const DOSYALAR = [
         'ikon/ikon-192.png',
         'ikon/ikon-512.png',
         'ikon/ikon-maskable-512.png',
+        'ikon/ikon-maskable.svg',
         'ikon/ikon.svg',
 ];
 

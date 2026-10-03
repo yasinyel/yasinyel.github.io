@@ -1,4 +1,4 @@
-// KodLab — Robot Kodla motoru
+// Kodlayalım — Robot Kodla motoru
 // Türkçe komutlu küçük bir dil: ayrıştırıcı + adım adım çalışan yorumlayıcı.
 // Tarayıcıda window.RobotMotor, Node'da module.exports olarak kullanılır.
 (function (root) {

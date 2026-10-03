@@ -1,4 +1,4 @@
-// KodLab — Mantık Kapıları motoru: bölümler ve devre hesaplama
+// Kodlayalım — Mantık Kapıları motoru: bölümler ve devre hesaplama
 (function (root) {
     'use strict';
 

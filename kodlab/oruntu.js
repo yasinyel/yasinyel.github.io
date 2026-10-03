@@ -1,4 +1,4 @@
-// KodLab — Örüntü Bul
+// Kodlayalım — Örüntü Bul
 (function () {
     'use strict';
     const $ = (id) => document.getElementById(id);

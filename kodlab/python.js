@@ -1,4 +1,4 @@
-// KodLab — Python Laboratuvarı arayüzü
+// Kodlayalım — Python Laboratuvarı arayüzü
 (function () {
     'use strict';
     const P = window.PythonMotor;

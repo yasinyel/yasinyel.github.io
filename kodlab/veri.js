@@ -1,4 +1,4 @@
-// KodLab — Veri Bilimi Atölyesi arayüzü
+// Kodlayalım — Veri Bilimi Atölyesi arayüzü
 (function () {
     'use strict';
     const V = window.Veri;

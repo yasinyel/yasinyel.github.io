@@ -1,4 +1,4 @@
-// KodLab — Bilgisayar Sensin arayüzü
+// Kodlayalım — Bilgisayar Sensin arayüzü
 (function () {
     'use strict';
     const S = window.Sensin;

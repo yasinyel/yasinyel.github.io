@@ -1,4 +1,4 @@
-// KodLab — Algoritma Sensin arayüzü
+// Kodlayalım — Algoritma Sensin arayüzü
 (function () {
     'use strict';
     const { ALGORITMALAR } = window.AlgoMotor;

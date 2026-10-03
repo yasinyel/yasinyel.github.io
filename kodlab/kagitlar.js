@@ -1,4 +1,4 @@
-// KodLab — Bilgisayarsız çalışma kağıtları arayüzü
+// Kodlayalım — Bilgisayarsız çalışma kağıtları arayüzü
 (function () {
     'use strict';
     const K = window.Kagit;
@@ -7,10 +7,10 @@
     let secili = K.KAGITLAR[0], tohum = yeniTohum(), kademe = 2;
 
     function yeniTohum() { return 1000 + Math.floor(Math.random() * 899000); }
-    const alt = () => `<div class="alt"><span>KodLab · yasinyel.com/kodlab</span><span>Sürüm: ${secili.id}-${kademe}-${tohum}</span></div>`;
+    const alt = () => `<div class="alt"><span>Kodlayalım · kodlayalim.com · Hazırlayan: Yasin Yel</span><span>Sürüm: ${secili.id}-${kademe}-${tohum}</span></div>`;
     function sayfa(baslik, yonerge, icerik, anahtar) {
         return `<div class="sayfa ${anahtar ? 'anahtar' : 'ogrenci'}">${anahtar ? '<span class="anahtar-etiket">CEVAP ANAHTARI</span>' : ''}
-            <div class="ust"><b>KodLab · Bilgisayarsız Etkinlik</b><span>${secili.sinif[0]}.–${secili.sinif[1]}. sınıf</span></div>
+            <div class="ust"><b>Kodlayalım · Bilgisayarsız Etkinlik</b><span>${secili.sinif[0]}.–${secili.sinif[1]}. sınıf</span></div>
             <h2>${kacis(baslik)}</h2>
             ${anahtar ? '' : '<div class="kimlik"><span>Ad Soyad:</span><span>Sınıf:</span><span>Tarih:</span></div>'}
             ${yonerge ? `<div class="yonerge">${yonerge}</div>` : ''}${icerik}${alt()}</div>`;

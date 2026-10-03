@@ -1,4 +1,4 @@
-// KodLab — Çizim Atölyesi arayüzü: sürükle-bırak blok editörü + kalemli robot sahnesi
+// Kodlayalım — Çizim Atölyesi arayüzü: sürükle-bırak blok editörü + kalemli robot sahnesi
 (function () {
     'use strict';
     const C = window.Cizim;
@@ -306,7 +306,7 @@
         ctx.beginPath(); ctx.moveTo(c.x1 * OLCEK, c.y1 * OLCEK);
         ctx.lineTo((c.x1 + (c.x2 - c.x1) * oran) * OLCEK, (c.y1 + (c.y2 - c.y1) * oran) * OLCEK); ctx.stroke();
     }
-    // KodLab'ın kalemli robotu (baktığı yön yukarı: anten ve gözler önde)
+    // Kodlayalım'ın kalemli robotu (baktığı yön yukarı: anten ve gözler önde)
     function robotCiz(x, y, h) {
         const ctx = $('karakter').getContext('2d');
         ctx.clearRect(0, 0, 800, 800);

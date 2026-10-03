@@ -1,4 +1,4 @@
-// KodLab — Bilgisayarsız (unplugged) çalışma kağıdı üreticileri
+// Kodlayalım — Bilgisayarsız (unplugged) çalışma kağıdı üreticileri
 // Her üretici aynı tohumla aynı kağıdı üretir; böylece öğretmen bir sürümü tekrar yazdırabilir.
 (function (root) {
     'use strict';
@@ -97,7 +97,7 @@
     function sezar(metin, k) {
         return [...metin].map(c => { const i = ALFABE.indexOf(c); return i < 0 ? c : ALFABE[((i + k) % 29 + 29) % 29]; }).join('');
     }
-    const MESAJLAR = ['BİLGİSAYAR', 'ALGORİTMA', 'ŞİFRENİ PAYLAŞMA', 'KOD YAZMAK EĞLENCELİ', 'İNTERNET', 'YAZILIM', 'ROBOT', 'VERİ', 'GÜVENLİ ŞİFRE', 'DÖNGÜ', 'DEĞİŞKEN', 'KODLAB'];
+    const MESAJLAR = ['BİLGİSAYAR', 'ALGORİTMA', 'ŞİFRENİ PAYLAŞMA', 'KOD YAZMAK EĞLENCELİ', 'İNTERNET', 'YAZILIM', 'ROBOT', 'VERİ', 'GÜVENLİ ŞİFRE', 'DÖNGÜ', 'DEĞİŞKEN', 'KODLAYALIM'];
     function sifre(tohum) {
         const r = uretec(tohum), k = r.tam(2, 9), m = r.karistir(MESAJLAR);
         return {

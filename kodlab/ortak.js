@@ -1,4 +1,4 @@
-// KodLab ortak yardımcılar: tema, ilerleme kaydı, bildirim, konfeti, ses, çevrimdışı çalışma
+// Kodlayalım ortak yardımcılar: tema, ilerleme kaydı, bildirim, konfeti, ses, çevrimdışı çalışma
 (function () {
     'use strict';
 
@@ -118,6 +118,13 @@
     };
 
     document.addEventListener('DOMContentLoaded', () => {
+        // Her sayfanın altına imza (sayfa kendi imzasını taşımıyorsa)
+        if (!document.querySelector('.kl-imza') && !document.body.hasAttribute('data-imzasiz')) {
+            const f = document.createElement('footer');
+            f.className = 'kl-imza';
+            f.innerHTML = '<div class="wrap"><span><span class="kl-logo" aria-hidden="true"></span><span><b>Kodlayalım</b> · Bilişim Teknolojileri için ücretsiz etkinlikler</span></span><span>Tasarım ve geliştirme: <a href="https://yasinyel.com" rel="author">Yasin Yel</a></span></div>';
+            document.body.appendChild(f);
+        }
         const b = document.getElementById('themeBtn');
         if (b) {
             b.addEventListener('click', KL.temaDegistir);

@@ -2,13 +2,14 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
+    <meta name="author" content="Yasin Yel">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="manifest.webmanifest">
     <meta name="theme-color" content="#1d5fd6">
     <link rel="icon" href="ikon/ikon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="ikon/ikon-192.png">
-    <title>Ders Planları — KodLab</title>
-    <meta name="description" content="KodLab etkinlikleri için 40 dakikalık hazır ders planları: hedefler, akış, tartışma soruları, çıkış kartı ve farklılaştırma.">
+    <title>Ders Planları — Kodlayalım</title>
+    <meta name="description" content="Kodlayalım etkinlikleri için 40 dakikalık hazır ders planları: hedefler, akış, tartışma soruları, çıkış kartı ve farklılaştırma.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
@@ -40,7 +41,9 @@
         .akis b { color: var(--accent); }
         .baglantilar { display: flex; gap: 8px; flex-wrap: wrap; grid-column: 1 / -1; }
         @media (max-width: 760px) { .govde { grid-template-columns: 1fr; } .akis div { grid-template-columns: 1fr; gap: 2px; } }
+        .baski-imza { display: none; }
         @media print {
+            .baski-imza { display: block; grid-column: 1 / -1; font-size: 11px; color: #555; border-top: 1px solid #ccc; padding-top: 6px; }
             header, .intro, .arac, .baglantilar, .plan summary .ok, .toast { display: none !important; }
             body { background: #fff !important; color: #000; }
             .plan { box-shadow: none; border: 1px solid #999; break-inside: avoid; page-break-after: always; }
@@ -52,7 +55,7 @@
 <body>
     <header class="kl-top">
         <div class="wrap kl-top-inner">
-            <a href="./" class="kl-brand"><span class="kl-logo">&lt;/&gt;</span>KodLab</a>
+            <a href="./" class="kl-brand"><span class="kl-logo" aria-hidden="true"></span><span class="kl-ad"><b>Kod</b>layalım</span></a>
             <span class="kl-crumb"><i class="fas fa-chevron-right" style="font-size:.7em"></i><span>Ders Planları</span></span>
             <span class="kl-spacer"></span>
             <button class="icon-btn" id="themeBtn" aria-label="Temayı değiştir"><i class="fas fa-circle-half-stroke"></i></button>
@@ -61,7 +64,7 @@
     <main class="wrap">
         <div class="intro">
             <h1>Ders Planları</h1>
-            <p>Her KodLab etkinliği için 40 dakikalık hazır bir ders akışı: hedefler, bilgisayarsız ısınma, adım adım uygulama, tartışma soruları, çıkış kartı ve farklılaştırma önerileri. Planı açıp yazdırabilir, sınıfınıza göre uyarlayabilirsiniz.</p>
+            <p>Her Kodlayalım etkinliği için 40 dakikalık hazır bir ders akışı: hedefler, bilgisayarsız ısınma, adım adım uygulama, tartışma soruları, çıkış kartı ve farklılaştırma önerileri. Planı açıp yazdırabilir, sınıfınıza göre uyarlayabilirsiniz.</p>
         </div>
         <div class="arac" id="arac">
             <button class="chip sel" data-k="hepsi">Hepsi</button>
@@ -109,6 +112,7 @@
                         <div class="baglantilar"><a class="btn btn-primary btn-sm" href="${e.url}"><i class="fas fa-play"></i> Etkinliği aç</a>
                             ${kagit ? `<a class="btn btn-sm" href="kagitlar.html#${kagit.id}"><i class="fas fa-file-lines"></i> ${kagit.ad} kağıdı</a>` : ''}
                             <button class="btn btn-sm" data-yazdir="${e.id}"><i class="fas fa-print"></i> Bu planı yazdır</button></div>
+                        <p class="baski-imza">Kodlayalım · kodlayalim.com · Tasarım ve geliştirme: Yasin Yel</p>
                     </div></details>`;
             }).join('');
         }

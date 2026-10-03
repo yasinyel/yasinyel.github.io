@@ -1,4 +1,4 @@
-// KodLab — Web Atölyesi arayüzü
+// Kodlayalım — Web Atölyesi arayüzü
 (function () {
     'use strict';
     const W = window.Web;

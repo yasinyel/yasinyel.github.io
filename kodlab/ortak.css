@@ -1,4 +1,4 @@
-/* ===== KodLab ortak stiller ===== */
+/* ===== Kodlayalım ortak stiller ===== */
 :root {
     --bg: #f5f7fa;
     --bg-alt: #eaeef4;
@@ -64,7 +64,9 @@ h1, h2, h3 { font-family: var(--display); line-height: 1.15; letter-spacing: -0.
 .kl-top { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 85%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
 .kl-top-inner { display: flex; align-items: center; gap: 12px; height: 60px; }
 .kl-brand { display: flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 800; font-size: 1.2rem; color: var(--ink); text-decoration: none; }
-.kl-logo { width: 32px; height: 32px; border-radius: 9px; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; font-family: var(--mono); font-size: 0.85rem; }
+.kl-logo { width: 36px; height: 36px; border-radius: 10px; background: url(ikon/ikon.svg) center / contain no-repeat; flex: 0 0 auto; box-shadow: 0 4px 12px rgba(79, 70, 229, .25); }
+.kl-ad { letter-spacing: -0.02em; }
+.kl-ad b { color: var(--accent); font-weight: 800; }
 .kl-crumb { color: var(--muted); font-weight: 500; display: flex; align-items: center; gap: 8px; min-width: 0; }
 .kl-crumb span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .kl-spacer { flex: 1; }
@@ -111,3 +113,19 @@ dialog.kl-dialog::backdrop { background: rgba(10, 15, 25, 0.5); }
 .kl-menu button, .kl-menu label { display: flex; gap: 10px; align-items: center; padding: 9px 10px; border-radius: 8px; border: 0; background: none; font: inherit; font-size: .9rem; color: var(--ink); cursor: pointer; text-align: left; }
 .kl-menu button:hover, .kl-menu label:hover { background: var(--bg-alt); }
 .kl-menu i { color: var(--accent); width: 16px; }
+
+/* İmza (her sayfanın altı) */
+.kl-imza { border-top: 1px solid var(--line); margin-top: 48px; padding: 22px 0 28px; color: var(--muted); font-size: .88rem; }
+.kl-imza .wrap { display: flex; justify-content: space-between; align-items: center; gap: 10px 20px; flex-wrap: wrap; }
+.kl-imza .wrap > span { display: flex; align-items: center; gap: 10px; }
+.kl-imza .kl-logo { width: 26px; height: 26px; border-radius: 8px; box-shadow: none; }
+.kl-imza b { color: var(--ink); }
+.kl-imza a { color: var(--ink); font-weight: 700; text-decoration: none; border-bottom: 2px solid var(--accent); }
+@media print { .kl-imza { display: none; } }
+
+@media (max-width: 480px) {
+    .kl-top .icon-btn { width: 36px; height: 36px; border-radius: 10px; }
+    .kl-top-inner { gap: 8px; }
+    .kl-brand { font-size: 1.1rem; gap: 8px; }
+    .kl-logo { width: 32px; height: 32px; }
+}

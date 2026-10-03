@@ -1,4 +1,4 @@
-// KodLab — Şifre Kalesi motoru: şifre gücü tahmini, oltalama senaryoları, güvenlik durumları
+// Kodlayalım — Şifre Kalesi motoru: şifre gücü tahmini, oltalama senaryoları, güvenlik durumları
 // Not: Şifre analizi tamamen tarayıcıda yapılır; hiçbir şey hiçbir yere gönderilmez.
 (function (root) {
     'use strict';

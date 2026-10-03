@@ -1,4 +1,4 @@
-// KodLab — etkinlik kataloğu
+// Kodlayalım — etkinlik kataloğu
 // Ana sayfa, profil, öğretmen paneli ve görevler bu tek listeyi kullanır.
 // Yeni etkinlik eklemek için ETKINLIKLER'e bir nesne eklemek yeterli.
 // sinif: [en küçük, en büyük]; 0 = anasınıfı.
@@ -179,7 +179,7 @@
     ];
 
     // Toplam yıldıza göre unvan
-    const UNVANLAR = [[0, 'Yeni Başlayan'], [10, 'Kod Çırağı'], [30, 'Algoritma Kaşifi'], [60, 'Genç Programcı'], [100, 'Kod Ustası'], [160, 'Bilgisayar Bilimci'], [250, 'Teknoloji Lideri'], [350, 'KodLab Efsanesi']];
+    const UNVANLAR = [[0, 'Yeni Başlayan'], [10, 'Kod Çırağı'], [30, 'Algoritma Kaşifi'], [60, 'Genç Programcı'], [100, 'Kod Ustası'], [160, 'Bilgisayar Bilimci'], [250, 'Teknoloji Lideri'], [350, 'Kodlayalım Efsanesi']];
     function unvan(yildiz) {
         let u = UNVANLAR[0];
         for (const x of UNVANLAR) if (yildiz >= x[0]) u = x;

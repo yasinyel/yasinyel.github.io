@@ -1,4 +1,4 @@
-// KodLab — Ne Yazar? arayüzü
+// Kodlayalım — Ne Yazar? arayüzü
 (function () {
     'use strict';
     const { SEVIYELER, kontrol } = window.TahminSorular;

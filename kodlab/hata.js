@@ -1,4 +1,4 @@
-// KodLab — Hata Avcısı arayüzü
+// Kodlayalım — Hata Avcısı arayüzü
 (function () {
     'use strict';
     const S = window.Sensin, H = window.HataMotor;

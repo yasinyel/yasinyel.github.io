@@ -2,12 +2,13 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
+    <meta name="author" content="Yasin Yel">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="manifest.webmanifest">
     <meta name="theme-color" content="#1d5fd6">
     <link rel="icon" href="ikon/ikon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="ikon/ikon-192.png">
-    <title>KodLab — Bilişim Etkinlikleri</title>
+    <title>Kodlayalım — Bilişim Etkinlikleri</title>
     <meta name="description" content="Anasınıfından liseye Bilişim Teknolojileri dersleri için ücretsiz, Türkçe, internetsiz de çalışan kodlama ve bilgisayar bilimi etkinlikleri. Öğretmen paneli ve sunucusuz sınıf takibi.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,20 +16,43 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="ortak.css">
     <style>
-        .hero { padding: 56px 0 30px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center; }
-        .hero h1 { font-size: clamp(2.2rem, 5.5vw, 3.6rem); font-weight: 800; }
-        .hero h1 em { font-style: normal; color: var(--accent); }
-        .hero p { color: var(--muted); font-size: 1.1rem; margin-top: 14px; max-width: 560px; }
-        .hero-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 20px; }
-        .hero-tags span { font-size: .85rem; font-weight: 600; padding: 6px 12px; border-radius: 99px; background: var(--surface); border: 1px solid var(--line); color: var(--muted); }
-        .hero-tags i { color: var(--ok); margin-right: 4px; }
-        .hero-code { background: var(--code-bg); color: var(--code-ink); border-radius: 18px; padding: 22px 24px; font-family: var(--mono); font-size: 15px; line-height: 1.75; box-shadow: var(--shadow); white-space: pre; overflow: hidden; }
+        body { overflow-x: clip; }
+        .hero { padding: 56px 0 34px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; align-items: center; position: relative; }
+        .hero::before { content: ''; position: absolute; inset: -40px -10vw auto; height: 560px; z-index: -1; pointer-events: none;
+            background: radial-gradient(600px 300px at 80% 40%, color-mix(in srgb, #7c3aed 16%, transparent), transparent 70%), radial-gradient(500px 280px at 15% 20%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 70%); }
+        .ust-etiket { display: inline-flex; align-items: center; gap: 8px; font-size: .85rem; font-weight: 700; color: var(--accent); background: var(--accent-soft); padding: 6px 14px; border-radius: 99px; }
+        .ust-etiket .nokta { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 4px color-mix(in srgb, var(--ok) 25%, transparent); }
+        .hero h1 { font-size: clamp(2.6rem, 7vw, 4.6rem); font-weight: 800; margin-top: 16px; letter-spacing: -0.03em; }
+        .hero h1 em { font-style: normal; background: linear-gradient(90deg, #2563eb, #7c3aed); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .hero .lead { color: var(--muted); font-size: 1.15rem; margin-top: 14px; max-width: 560px; }
+        .hero-dugmeler { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 24px; }
+        .btn-buyuk { padding: 14px 22px; font-size: 1.02rem; border-radius: 14px; }
+        .btn-primary.btn-buyuk { box-shadow: 0 10px 24px color-mix(in srgb, var(--accent) 35%, transparent); }
+        .istat { display: flex; gap: 26px; flex-wrap: wrap; margin-top: 28px; }
+        .istat div b { display: block; font-family: var(--display); font-size: 1.7rem; line-height: 1; }
+        .istat div span { font-size: .85rem; color: var(--muted); }
+        .hero-gorsel { position: relative; min-height: 400px; display: grid; place-items: center; color: var(--ink); }
+        .hero-code { position: absolute; top: 10px; left: 0; width: 72%; transform: rotate(-4deg); background: var(--code-bg); color: var(--code-ink); border-radius: 18px; padding: 20px 22px; font-family: var(--mono); font-size: 14px; line-height: 1.75; box-shadow: var(--shadow); white-space: pre; overflow: hidden; }
         .hero-code .k { color: #c792ea; } .hero-code .f { color: #82aaff; } .hero-code .c { color: #697098; } .hero-code .n { color: #f78c6c; }
+        .maskot { position: relative; width: 270px; margin: 90px 0 0 140px; filter: drop-shadow(0 18px 30px rgba(30, 41, 99, .18)); animation: suzul 4s ease-in-out infinite; }
+        .maskot .kol { transform-origin: 227px 266px; animation: salla 2.4s ease-in-out infinite; }
+        .maskot .goz { animation: kirp 5s infinite; transform-box: fill-box; transform-origin: center; }
+        .yuzen { position: absolute; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); border-radius: 99px; padding: 8px 14px; font-weight: 700; font-size: .9rem; white-space: nowrap; animation: suzul 5s ease-in-out infinite; }
+        .yuzen.y1 { top: 30px; right: 0; animation-delay: -1s; }
+        .yuzen.y2 { bottom: 70px; left: 6%; animation-delay: -2.5s; }
+        .yuzen.y3 { bottom: 10px; right: 4%; animation-delay: -3.5s; }
+        @keyframes suzul { 0%, 100% { translate: 0 0; } 50% { translate: 0 -10px; } }
+        @keyframes salla { 0%, 100% { rotate: 0deg; } 50% { rotate: -14deg; } }
+        @keyframes kirp { 0%, 92%, 100% { scale: 1 1; } 95% { scale: 1 .1; } }
+        @media (prefers-reduced-motion: reduce) { .maskot, .maskot .kol, .maskot .goz, .yuzen { animation: none; } }
 
         .acts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; padding: 20px 0 10px; }
-        .act { display: flex; flex-direction: column; padding: 24px; text-decoration: none; color: var(--ink); transition: transform .15s, border-color .15s; position: relative; overflow: hidden; }
-        .act:hover { transform: translateY(-3px); border-color: var(--accent); }
-        .act-icon { width: 54px; height: 54px; border-radius: 14px; display: grid; place-items: center; font-size: 1.4rem; color: #fff; margin-bottom: 16px; }
+        .act { display: flex; flex-direction: column; padding: 24px; text-decoration: none; color: var(--ink); transition: transform .18s, border-color .18s, box-shadow .18s; position: relative; overflow: hidden;
+            background: linear-gradient(180deg, color-mix(in srgb, var(--c) 9%, var(--surface)) 0, var(--surface) 130px); }
+        .act::after { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 4px; background: var(--c); opacity: .85; }
+        .act:hover { transform: translateY(-4px); border-color: color-mix(in srgb, var(--c) 60%, var(--line)); box-shadow: 0 16px 36px color-mix(in srgb, var(--c) 18%, transparent); }
+        .act:hover .act-icon { transform: rotate(-6deg) scale(1.05); }
+        .act-icon { width: 54px; height: 54px; border-radius: 16px; display: grid; place-items: center; font-size: 1.4rem; color: #fff; margin-bottom: 16px; transition: transform .2s; box-shadow: 0 8px 18px color-mix(in srgb, var(--c) 35%, transparent); }
         .act h2 { font-size: 1.45rem; }
         .act p { color: var(--muted); margin-top: 6px; flex: 1; }
         .act-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; align-items: center; }
@@ -53,10 +77,16 @@
         .curr th, .curr td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
         .curr th { color: var(--muted); font-weight: 600; font-size: .8rem; text-transform: uppercase; letter-spacing: .05em; }
         .curr-wrap { overflow-x: auto; padding: 6px; }
-        footer { padding: 40px 0; color: var(--muted); font-size: .9rem; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; border-top: 1px solid var(--line); margin-top: 50px; }
-        footer button { background: none; border: 0; color: var(--muted); text-decoration: underline; cursor: pointer; font-size: .9rem; }
+        .sifirla { background: none; border: 0; color: var(--muted); text-decoration: underline; cursor: pointer; font-size: .85rem; }
         @media (max-width: 860px) {
-            .hero { grid-template-columns: 1fr; padding-top: 32px; }
+            .hero { grid-template-columns: 1fr; padding-top: 28px; gap: 10px; }
+            .hero-gorsel { min-height: 330px; }
+            .hero-code { width: 82%; font-size: 12.5px; }
+            .maskot { width: 200px; margin: 110px 0 0 110px; }
+            .yuzen { font-size: .8rem; padding: 6px 11px; }
+            .hero-dugmeler .btn { flex: 1 1 0; padding: 13px 10px; font-size: .95rem; }
+            .istat { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+            .ust-etiket { font-size: .78rem; }
             .acts, .teacher { grid-template-columns: 1fr; }
         }
         .acts { grid-template-columns: repeat(3, 1fr); }
@@ -78,17 +108,18 @@
         .ogretmen-band ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
         .ogretmen-band li { display: flex; gap: 10px; align-items: flex-start; }
         .ogretmen-band li i { color: var(--ok); margin-top: 4px; }
-        .teacher { grid-template-columns: repeat(4, 1fr); }
-        @media (max-width: 1060px) { .acts { grid-template-columns: repeat(2, 1fr); } .teacher { grid-template-columns: repeat(2, 1fr); } }
+        .teacher { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+        @media (max-width: 1060px) { .acts { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 480px) { .kl-top .gizle-tel { display: none; } .kl-top .icon-btn { width: 36px; height: 36px; } .kl-top-inner { gap: 8px; } }
         @media (max-width: 860px) { .acts, .teacher, .ogretmen-band { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
     <header class="kl-top">
         <div class="wrap kl-top-inner">
-            <a href="./" class="kl-brand"><span class="kl-logo">&lt;/&gt;</span>KodLab</a>
+            <a href="./" class="kl-brand"><span class="kl-logo" aria-hidden="true"></span><span class="kl-ad"><b>Kod</b>layalım</span></a>
             <span class="kl-spacer"></span>
-            <a href="ogretmen.html" class="btn btn-sm" style="border:0;background:none;color:var(--muted)"><i class="fas fa-chalkboard-user"></i> Öğretmen</a>
+            <a href="ogretmen.html" class="btn btn-sm gizle-tel" style="border:0;background:none;color:var(--muted)"><i class="fas fa-chalkboard-user"></i> Öğretmen</a>
             <button class="btn btn-sm" id="yukle" hidden><i class="fas fa-download"></i> Yükle</button>
             <button class="icon-btn" id="themeBtn" aria-label="Temayı değiştir"><i class="fas fa-circle-half-stroke"></i></button>
         </div>
@@ -96,31 +127,57 @@
 
     <main class="wrap">
         <section class="hero">
-            <div>
-                <h1>Bilgisayar gibi <em>düşünmeyi</em> oynayarak öğren.</h1>
-                <p>Anasınıfından lise sona kadar Bilişim Teknolojileri dersleri için hazırlanmış etkinlik kütüphanesi. Blokla çiz, kodu oku, algoritmayı yürüt, şifre kır, yapay zekâ eğit, web sayfası yap.</p>
-                <div class="hero-tags">
-                    <span><i class="fas fa-check"></i>Üyelik yok</span>
-                    <span><i class="fas fa-check"></i>Ücretsiz</span>
-                    <span><i class="fas fa-check"></i>İnternetsiz çalışır</span>
-                    <span><i class="fas fa-check"></i>Tablet ve akıllı tahta</span>
-                    <span><i class="fas fa-check"></i>Tamamen Türkçe</span>
+            <div class="hero-yazi">
+                <span class="ust-etiket"><span class="nokta"></span> Bilişim Teknolojileri · Anasınıfından liseye</span>
+                <h1>Hadi, <em>kodlayalım!</em></h1>
+                <p class="lead">Bilgisayar gibi düşünmeyi oynayarak öğren. Blokla çiz, kodu oku, algoritmayı yürüt, şifre kır, yapay zekâ eğit, kendi oyununu yap.</p>
+                <div class="hero-dugmeler">
+                    <a class="btn btn-primary btn-buyuk" href="#etkinlikler"><i class="fas fa-play"></i> Etkinliklere başla</a>
+                    <a class="btn btn-buyuk" href="#ogretmenler"><i class="fas fa-chalkboard-user"></i> Öğretmenler için</a>
                 </div>
+                <div class="istat" id="istat"></div>
             </div>
-            <div class="hero-code" aria-hidden="true"><span class="c"># Bilgisayar sensin: bu kod çalışınca</span>
+            <div class="hero-gorsel" aria-hidden="true">
+                <div class="hero-code"><span class="c"># Bilgisayar sensin:</span>
 <span class="c"># robot nereye gider?</span>
 <span class="k">for</span> i <span class="k">in</span> <span class="f">range</span>(<span class="n">1</span>, <span class="n">4</span>):
     <span class="k">for</span> j <span class="k">in</span> <span class="f">range</span>(i):
         <span class="f">sag</span>()
     <span class="f">asagi</span>()</div>
+                <svg class="maskot" viewBox="0 0 300 380">
+                    <ellipse cx="150" cy="366" rx="92" ry="10" fill="currentColor" opacity=".12"/>
+                    <path d="M150 62 V34" stroke="#94a3b8" stroke-width="8" stroke-linecap="round"/>
+                    <circle cx="150" cy="28" r="15" fill="#ffd166"/>
+                    <rect x="42" y="110" width="22" height="50" rx="10" fill="#ffd166"/>
+                    <rect x="236" y="110" width="22" height="50" rx="10" fill="#ffd166"/>
+                    <rect x="58" y="60" width="184" height="150" rx="48" fill="#fff" stroke="#e2e8f0" stroke-width="3"/>
+                    <rect x="80" y="82" width="140" height="106" rx="34" fill="#13204a"/>
+                    <rect class="goz" x="112" y="110" width="20" height="32" rx="10" fill="#7dd3fc"/>
+                    <rect class="goz" x="168" y="110" width="20" height="32" rx="10" fill="#7dd3fc"/>
+                    <path d="M126 160 Q150 176 174 160" fill="none" stroke="#7dd3fc" stroke-width="8" stroke-linecap="round"/>
+                    <rect x="132" y="208" width="36" height="14" rx="5" fill="#cbd5e1"/>
+                    <rect x="78" y="218" width="144" height="112" rx="34" fill="#fff" stroke="#e2e8f0" stroke-width="3"/>
+                    <rect x="104" y="244" width="92" height="56" rx="14" fill="#2563eb"/>
+                    <text x="150" y="281" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700" font-size="24" fill="#fff">&lt;/&gt;</text>
+                    <g class="kol"><rect x="216" y="196" width="22" height="78" rx="11" fill="#fff" stroke="#e2e8f0" stroke-width="3" transform="rotate(-38 227 266)"/><circle cx="262" cy="202" r="15" fill="#ffd166"/></g>
+                    <rect x="62" y="232" width="22" height="70" rx="11" fill="#fff" stroke="#e2e8f0" stroke-width="3"/>
+                    <circle cx="73" cy="306" r="13" fill="#ffd166"/>
+                    <rect x="104" y="326" width="30" height="34" rx="12" fill="#94a3b8"/>
+                    <rect x="166" y="326" width="30" height="34" rx="12" fill="#94a3b8"/>
+                </svg>
+                <span class="yuzen y1">⭐ 3 yıldız!</span>
+                <span class="yuzen y2">✔ Testler geçti</span>
+                <span class="yuzen y3">🔓 Şifre çözüldü</span>
+            </div>
         </section>
 
         <section class="card karsilama" id="karsilama"></section>
 
-        <div class="filters" id="filters" role="tablist" aria-label="Kademe" style="margin-top:28px"></div>
+        <h2 class="section-title" id="etkinlikler" style="scroll-margin-top:80px">Etkinlikler</h2>
+        <div class="filters" id="filters" role="tablist" aria-label="Kademe"></div>
         <section class="acts" id="acts"></section>
 
-        <h2 class="section-title">Öğretmenler için</h2>
+        <h2 class="section-title" id="ogretmenler" style="scroll-margin-top:80px">Öğretmenler için</h2>
         <section class="card ogretmen-band">
             <div>
                 <h2>Sınıfınızı sunucusuz takip edin</h2>
@@ -142,7 +199,7 @@
         </section>
         <div class="teacher" style="margin-top:16px">
             <div class="card"><h3><i class="fas fa-unlock"></i> Öğretmen modu</h3><p>Adresin sonuna <code>?ogretmen</code> ekleyin: tahtada istediğiniz bölümü gösterebilmeniz için bütün bölümler açılır.</p></div>
-            <div class="card"><h3><i class="fas fa-wifi"></i> İnternetsiz</h3><p>KodLab bir kez açıldıktan sonra internet kesilse de çalışır. Tablete uygulama gibi yüklenebilir.</p></div>
+            <div class="card"><h3><i class="fas fa-wifi"></i> İnternetsiz</h3><p>Kodlayalım bir kez açıldıktan sonra internet kesilse de çalışır. Tablete uygulama gibi yüklenebilir.</p></div>
             <div class="card"><h3><i class="fas fa-infinity"></i> Kopyaya kapalı</h3><p>Sorular her seferinde yeni sayılarla üretilir; yan sıradakinin cevabı işe yaramaz.</p></div>
             <div class="card"><h3><i class="fas fa-ear-listen"></i> Sesli yönerge</h3><p>Üst bardaki kulak simgesi yönergeyi Türkçe okur. Okuma bilmeyen küçükler için "kendiliğinden oku" seçeneğini açın.</p></div>
             <div class="card"><h3><i class="fas fa-share-nodes"></i> Kendi bulmacanız</h3><p>Piksel Kodlama'da resim çizip öğrencilere bulmaca linki olarak gönderin.</p></div>
@@ -156,10 +213,7 @@
             </table>
         </div>
 
-        <footer>
-            <span>KodLab · <a href="../">Yasin Yel</a> tarafından Bilişim Teknolojileri dersleri için hazırlandı.</span>
-            <button id="sifirla">Bu cihazdaki ilerlemeyi sıfırla</button>
-        </footer>
+        <p style="margin-top:28px;text-align:right"><button id="sifirla" class="sifirla">Bu cihazdaki ilerlemeyi sıfırla</button></p>
     </main>
 
     <script src="ortak.js"></script>
@@ -204,6 +258,9 @@
                 </div>
                 <a class="btn ${profil.ad ? '' : 'btn-primary'}" href="profil.html"><i class="fas fa-medal"></i> ${profil.ad ? 'Profilim ve rozetlerim' : 'Profil oluştur'}</a>`;
 
+            const bolumSayisi = K.PARCALAR.reduce((t, p) => t + p.seviye, 0);
+            $('istat').innerHTML = `<div><b>${K.ETKINLIKLER.length}</b><span>etkinlik</span></div><div><b>${bolumSayisi}+</b><span>bölüm ve görev</span></div><div><b>0</b><span>üyelik, reklam, ücret</span></div><div><b>%100</b><span>Türkçe</span></div>`;
+
             let secili = KL.oku('kademe', 'hepsi');
             function ciz() {
                 const kd = KADEMELER.find(k => k.id === secili) || KADEMELER[0];
@@ -214,7 +271,7 @@
                     const [n, t] = ilerleme(e);
                     const url = e.id === 'sensin' && kd.id !== 'hepsi' ? `${e.url}?kademe=${kd.id}`
                         : e.id === 'hata' && ['ilkokul', 'ortaokul', 'lise'].includes(kd.id) ? `${e.url}?kademe=${kd.id}` : e.url;
-                    return `<a class="card act" href="${url}">
+                    return `<a class="card act" href="${url}" style="--c:${e.renk}">
                         <i class="fas fa-arrow-right go"></i>${YENI.includes(e.id) ? '<span class="yeni">YENİ</span>' : ''}
                         <div class="act-icon" style="background:${e.renk}"><i class="fas ${e.ikon}"></i></div>
                         <span class="grade">${aralikYaz(e.sinif)}</span>
@@ -245,7 +302,7 @@
             });
 
             $('sifirla').addEventListener('click', () => {
-                if (!confirm('Bu cihazdaki tüm KodLab ilerlemesi, profil ve görevler silinsin mi?')) return;
+                if (!confirm('Bu cihazdaki tüm Kodlayalım ilerlemesi, profil ve görevler silinsin mi?')) return;
                 ['robot', 'tahmin', 'ikilik', 'piksel', 'sensin', 'oruntu', 'algoritma', 'mantik', 'hata', 'cizim', 'sifre', 'guvenlik', 'yz', 'ag', 'ag.yonlendir', 'web', 'oyun', 'python', 'python.son', 'dijital', 'veri', 'devre', 'profil', 'gorevler'].forEach(KL.sil);
                 location.reload();
             });

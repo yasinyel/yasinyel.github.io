@@ -1,4 +1,4 @@
-// KodLab — Dijital Dedektif: medya okuryazarlığı ve dijital vatandaşlık içerikleri
+// Kodlayalım — Dijital Dedektif: medya okuryazarlığı ve dijital vatandaşlık içerikleri
 // Bütün kişi, kurum, site ve marka adları hayalidir.
 // Metinlerdeki [[id|metin]] işaretleri tıklanabilir ipuçlarıdır; açıklamaları ipuclari[id] içindedir.
 (function (root) {

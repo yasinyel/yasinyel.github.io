@@ -1,4 +1,4 @@
-// KodLab — Makineye Öğret arayüzü
+// Kodlayalım — Makineye Öğret arayüzü
 (function () {
     'use strict';
     const Y = window.YZ;

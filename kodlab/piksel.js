@@ -1,4 +1,4 @@
-// KodLab — Piksel Kodlama
+// Kodlayalım — Piksel Kodlama
 (function () {
     'use strict';
     const $ = (id) => document.getElementById(id);

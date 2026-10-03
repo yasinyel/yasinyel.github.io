@@ -1,4 +1,4 @@
-// KodLab — İkilik Kartlar
+// Kodlayalım — İkilik Kartlar
 (function () {
     'use strict';
     const $ = (id) => document.getElementById(id);
