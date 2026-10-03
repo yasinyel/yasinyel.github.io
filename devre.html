@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#1d5fd6">
+    <link rel="icon" href="ikon/ikon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="ikon/ikon-192.png">
+    <title>KodKart Simülatörü — KodLab</title>
+    <meta name="description" content="5×5 LED ekranlı, düğmeli ve sensörlü sanal eğitim kartını bloklarla programla: kalp atışı, zar, termometre, gece lambası.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="ortak.css">
+    <link rel="stylesheet" href="blok-editor.css">
+    <style>
+        main { padding: 14px 0 50px; }
+        .gorev-bar { display: flex; gap: 6px; overflow-x: auto; padding: 4px 0 10px; }
+        .gorev-bar button { flex: 0 0 auto; border: 1px solid var(--line); background: var(--surface); border-radius: 12px; padding: 8px 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; color: var(--ink); }
+        .gorev-bar button.sel { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+        .gorev-bar button.done { border-color: var(--ok); }
+        .gorev-bar button.kilit { opacity: .45; cursor: not-allowed; }
+        .gorev-bar .stars { font-size: 9px; }
+        .studio { display: grid; grid-template-columns: 420px minmax(0, 1fr); gap: 16px; align-items: start; }
+        .sol { display: flex; flex-direction: column; gap: 12px; }
+        .kart-kutu { padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+        .pcb { position: relative; width: 100%; max-width: 360px; aspect-ratio: 1.25; background: linear-gradient(145deg, #0f3d3e, #0b2a2b); border-radius: 22px; box-shadow: inset 0 0 0 3px #1c5a5b, 0 12px 30px rgba(0,0,0,.25); display: grid; grid-template-columns: 60px 1fr 60px; align-items: center; padding: 14px 10px 38px; user-select: none; touch-action: none; }
+        .pcb.sallaniyor { animation: salla .35s; }
+        @keyframes salla { 0%,100% { transform: rotate(0) } 25% { transform: rotate(-4deg) } 75% { transform: rotate(4deg) } }
+        .ledler { display: grid; grid-template-columns: repeat(5, 1fr); gap: 9px; padding: 6px; justify-self: center; width: 100%; max-width: 190px; }
+        .led { aspect-ratio: 1; border-radius: 4px; background: #3a1a1a; transition: background .05s, box-shadow .05s; }
+        .led.yanik { background: #ff3b3b; box-shadow: 0 0 10px 3px rgba(255, 59, 59, .65); }
+        .dugme { justify-self: center; width: 46px; height: 46px; border-radius: 50%; border: 4px solid #555; background: radial-gradient(circle at 35% 35%, #4b4b4b, #111); color: #fff; font-weight: 800; font-family: var(--display); cursor: pointer; display: grid; place-items: center; font-size: 1rem; touch-action: none; }
+        .dugme.basili { transform: scale(.92); background: #000; border-color: #ffd166; }
+        .pinler { position: absolute; left: 14px; right: 14px; bottom: 8px; height: 24px; display: flex; gap: 3px; }
+        .pinler span { flex: 1; background: linear-gradient(#d4a72c, #a77d14); border-radius: 3px 3px 0 0; font-size: 9px; color: #3b2a00; font-weight: 800; text-align: center; padding-top: 4px; }
+        .pinler span.ince { flex: .35; }
+        .logo { position: absolute; top: 8px; left: 50%; transform: translateX(-50%); color: #7fd1c7; font-size: .7rem; font-weight: 800; letter-spacing: .1em; }
+        .sensorler { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .sensor { background: var(--bg-alt); border-radius: 12px; padding: 8px 12px; font-size: .85rem; }
+        .sensor label { display: flex; justify-content: space-between; font-weight: 700; }
+        .sensor input { width: 100%; }
+        .kontrol { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; width: 100%; }
+        .kontrol .bilgi { margin-left: auto; color: var(--muted); font-size: .8rem; }
+        .gorev-kart { padding: 16px; }
+        .gorev-kart h2 { font-size: 1.15rem; }
+        .gorev-kart p { color: var(--muted); font-size: .92rem; margin-top: 4px; }
+        .gorev-kart p b { color: var(--ink); }
+        .denetim { list-style: none; display: flex; flex-direction: column; gap: 6px; margin: 12px 0; }
+        .denetim li { display: flex; gap: 8px; align-items: flex-start; font-size: .9rem; padding: 7px 10px; border-radius: 10px; border: 1px solid var(--line); }
+        .denetim li i { margin-top: 3px; color: var(--muted); }
+        .denetim li.ok { border-color: var(--ok); background: var(--ok-soft); } .denetim li.ok i { color: var(--ok); }
+        .denetim li.no { border-color: var(--bad); background: var(--bad-soft); } .denetim li.no i { color: var(--bad); }
+        .editor-kart { overflow: hidden; }
+        .editor-bas { padding: 10px 14px; border-bottom: 1px solid var(--line); font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .editor { display: grid; grid-template-columns: 260px minmax(0, 1fr); height: 640px; }
+        @media (max-width: 1050px) { .studio { grid-template-columns: 1fr; } .sol { max-width: 560px; width: 100%; margin: 0 auto; } .editor { height: 540px; } }
+        @media (max-width: 600px) { .editor { grid-template-columns: 1fr; grid-template-rows: 240px 1fr; height: 660px; } .editor .be-kutu { flex-direction: row; flex-wrap: wrap; align-content: flex-start; border-right: 0; border-bottom: 1px solid var(--line); } .editor .be-kutu h3 { width: 100%; margin-top: 2px; } }
+    </style>
+</head>
+<body>
+    <header class="kl-top">
+        <div class="wrap kl-top-inner">
+            <a href="./" class="kl-brand"><span class="kl-logo">&lt;/&gt;</span>KodLab</a>
+            <span class="kl-crumb"><i class="fas fa-chevron-right" style="font-size:.7em"></i><span>KodKart Simülatörü</span></span>
+            <span class="kl-spacer"></span>
+            <button class="icon-btn" id="themeBtn" aria-label="Temayı değiştir"><i class="fas fa-circle-half-stroke"></i></button>
+        </div>
+    </header>
+    <main class="wrap">
+        <nav class="gorev-bar" id="gorevBar" aria-label="Görevler"></nav>
+        <div class="studio">
+            <div class="sol">
+                <section class="card kart-kutu">
+                    <div class="pcb" id="pcb">
+                        <span class="logo">KODKART</span>
+                        <button class="dugme" id="dA" aria-label="A düğmesi">A</button>
+                        <div class="ledler" id="ledler" aria-label="5×5 LED ekran" role="img"></div>
+                        <button class="dugme" id="dB" aria-label="B düğmesi">B</button>
+                        <div class="pinler"><span>0</span><span class="ince"></span><span>1</span><span class="ince"></span><span>2</span><span class="ince"></span><span>3V</span><span class="ince"></span><span>GND</span></div>
+                    </div>
+                    <div class="kontrol">
+                        <button class="btn btn-primary" id="baslat"><i class="fas fa-play"></i> Çalıştır</button>
+                        <button class="btn" id="durdur" disabled aria-label="Durdur"><i class="fas fa-stop"></i></button>
+                        <button class="btn" id="salla"><i class="fas fa-hand"></i> Salla</button>
+                        <span class="bilgi" id="bilgi">Klavye: A ve B tuşları</span>
+                    </div>
+                    <div class="sensorler">
+                        <div class="sensor"><label for="sicaklik"><span>🌡 Sıcaklık</span><span id="sicaklikD">22 °C</span></label><input type="range" id="sicaklik" min="-10" max="50" value="22"></div>
+                        <div class="sensor"><label for="isik"><span>☀ Işık</span><span id="isikD">120</span></label><input type="range" id="isik" min="0" max="255" value="120"></div>
+                    </div>
+                </section>
+                <section class="card gorev-kart" id="gorevKart"></section>
+            </div>
+            <section class="card editor-kart">
+                <div class="editor-bas"><i class="fas fa-microchip" style="color:var(--accent)"></i> KodKart programı</div>
+                <div class="editor"><div class="be-kutu" id="kutu"></div><div class="be-alan" id="alan"></div></div>
+            </section>
+        </div>
+    </main>
+    <dialog class="kl-dialog" id="kazandi">
+        <h2 id="kBaslik"></h2>
+        <div class="big-stars" id="kYildiz"></div>
+        <p id="kMetin"></p>
+        <div class="actions"><button class="btn" id="kKal">Burada kal</button><button class="btn btn-primary" id="kSonraki">Sonraki görev <i class="fas fa-arrow-right"></i></button></div>
+    </dialog>
+    <script src="ortak.js"></script>
+    <script src="blok-editor.js"></script>
+    <script src="devre-motor.js"></script>
+    <script src="devre.js"></script>
+</body>
+</html>
