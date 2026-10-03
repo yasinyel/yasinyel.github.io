@@ -165,7 +165,7 @@
             const K = window.Katalog;
             const $ = (id) => document.getElementById(id);
             const kacis = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
-            const YENI = ['oyun', 'cizim', 'sifre', 'guvenlik', 'yz', 'ag', 'web'];
+            const YENI = ['python', 'oyun', 'cizim', 'sifre', 'guvenlik', 'yz', 'ag', 'web'];
             const KADEMELER = [
                 { id: 'hepsi', ad: 'Tümü', aralik: [0, 12] },
                 { id: 'okuloncesi', ad: 'Okul Öncesi', not: 'Anasınıfı', aralik: [0, 0] },
@@ -242,7 +242,7 @@
 
             $('sifirla').addEventListener('click', () => {
                 if (!confirm('Bu cihazdaki tüm KodLab ilerlemesi, profil ve görevler silinsin mi?')) return;
-                ['robot', 'tahmin', 'ikilik', 'piksel', 'sensin', 'oruntu', 'algoritma', 'mantik', 'hata', 'cizim', 'sifre', 'guvenlik', 'yz', 'ag', 'ag.yonlendir', 'web', 'oyun', 'profil', 'gorevler'].forEach(KL.sil);
+                ['robot', 'tahmin', 'ikilik', 'piksel', 'sensin', 'oruntu', 'algoritma', 'mantik', 'hata', 'cizim', 'sifre', 'guvenlik', 'yz', 'ag', 'ag.yonlendir', 'web', 'oyun', 'python', 'python.son', 'profil', 'gorevler'].forEach(KL.sil);
                 location.reload();
             });
         })();

@@ -7,6 +7,8 @@
 (function (root) {
     'use strict';
     const oku = (k, v) => root.KL ? root.KL.oku(k, v) : v;
+    // Python görev kimlikleri (python-motor.js yüklenmeyen sayfalar için; test/katalog.test.js eşleştiğini denetler)
+    const PYTHON_IDLER = ['merhaba', 'parcalar', 'gb', 'birlestir', 'islemler', 'selam', 'kb', 'sure', 'pilsure', 'sifreuzun', 'cifttek', 'pildurum', 'ipoktet', 'giris', 'gerisay', 'kuvvet', 'sensor', 'piksel', 'bipbop', 'tahminoyun', 'sesli', 'palindrom', 'ping', 'kelime', 'gizle', 'ikilik', 'onluk', 'sezar', 'guc', 'ara', 'sirala', 'asal'];
     const dizi = (n, f) => Array.from({ length: n }, (_, i) => f(i) || 0);
 
     const ETKINLIKLER = [
@@ -106,6 +108,12 @@
             parcalar: [{ id: 'oyun', ad: 'Oyun Atölyesi', url: 'oyun.html', seviye: 5, yildiz: () => { const k = oku('oyun', { yildiz: {} }).yildiz; return ['balon', 'hareket', 'yildiz', 'dusman', 'kazan'].map(g => k[g] || 0); } }]
         },
         {
+            id: 'python', ad: 'Python Laboratuvarı', url: 'python.html', ikon: 'fa-laptop-code', renk: '#2563eb', sinif: [5, 12],
+            aciklama: 'Tarayıcıda gerçek Python yaz ve çalıştır. 32 görev kendiliğinden değerlendirilir, hatalar Türkçe açıklanır. Kurulum gerekmez.',
+            etiket: ['Python', 'Metin tabanlı kodlama', 'Algoritma'], kavram: 'print, değişken, input/int, if/elif/else, for/while, metin ve liste işlemleri, fonksiyon, arama ve sıralama algoritmaları', sure: 'Görev başı 5–15 dk',
+            parcalar: [{ id: 'python', ad: 'Python Laboratuvarı', url: 'python.html', seviye: 32, yildiz: () => { const k = oku('python', { yildiz: {} }).yildiz; return (typeof PythonMotor !== 'undefined' ? PythonMotor.GOREVLER.map(g => g.id) : PYTHON_IDLER).map(id => k[id] || 0); } }]
+        },
+        {
             id: 'tahmin', ad: 'Ne Yazar?', url: 'tahmin.html', ikon: 'fa-terminal', renk: '#7c3aed', sinif: [8, 12],
             aciklama: 'Python kodunu bilgisayar gibi oku ve ekrana ne yazacağını tahmin et. Sorular her seferinde farklı sayılarla gelir.',
             etiket: ['Python', 'Değişkenler', 'Kod okuma'], kavram: 'Değişken, operatör, metin, if/else, for/while, liste, fonksiyon (Python)', sure: 'Seviye başı 5–10 dk',
@@ -144,6 +152,8 @@
         { id: 'webci', ad: 'Web Tasarımcısı', ikon: 'fa-code', aciklama: 'Web Atölyesi\'nde tanıtım sayfanı yap', kosul: () => parca('web').yildiz()[9] > 0 },
         { id: 'yuz', ad: 'Yüz Yıldız', ikon: 'fa-star', aciklama: 'Toplam 100 yıldız topla', kosul: () => PARCALAR.reduce((t, p) => t + toplam(p.id), 0) >= 100 },
         { id: 'oyuncu', ad: 'Oyun Tasarımcısı', ikon: 'fa-gamepad', aciklama: 'Oyun Atölyesi\'nde Yıldız Avcısı oyununu bitir', kosul: () => parca('oyun').yildiz()[4] > 0 },
+        { id: 'pythoncu', ad: 'Pythoncu', ikon: 'fa-laptop-code', aciklama: 'Python Laboratuvarı\'nda 16 görev çöz', kosul: () => parca('python').yildiz().filter(x => x > 0).length >= 16 },
+        { id: 'algoritmaci', ad: 'Algoritma Mimarı', ikon: 'fa-cubes', aciklama: 'Python\'da Fonksiyonlar ve Algoritmalar ünitesini bitir', kosul: () => parca('python').yildiz().slice(25).every(x => x > 0) },
         { id: 'ucyuz', ad: 'Üç Yüz Yıldız', ikon: 'fa-crown', aciklama: 'Toplam 300 yıldız topla', kosul: () => PARCALAR.reduce((t, p) => t + toplam(p.id), 0) >= 300 }
     ];
 
