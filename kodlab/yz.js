@@ -8,8 +8,8 @@
     const yuzde = (x) => '%' + Math.round(x * 100);
 
     const BOLUMLER = [
-        { id: 'okyanus', ad: 'Okyanusu Temizle', ikon: 'fa-fish', renk: '#0ea5e9', sinif: '3. – 12. sınıf', ozet: 'Modele balığı ve çöpü ayırt etmeyi öğret, sonra okyanusu temizlesin.',
-          anlatim: 'Yapay zekâ önce <b>eğitim verisinden</b> öğrenir. Sana gösterilen her nesnenin balık mı çöp mü olduğunu söyle. Yeterince örnek gösterince model, hiç görmediği nesneleri kendisi sınıflandıracak.' },
+        { id: 'radar', ad: 'Uzay Radarı', ikon: 'fa-satellite', renk: '#4338ca', sinif: '3. – 12. sınıf', ozet: 'Radar robotuna uyduları göktaşlarından ayırmayı öğret, uzay istasyonunu koru.',
+          anlatim: 'Uzay istasyonumuz bir göktaşı kuşağından geçiyor! Radar robotu, kalkanı yalnızca <b>göktaşlarına</b> karşı açmalı; dost <b>uydulara</b> zarar vermemeli. Yapay zekâ önce <b>eğitim verisinden</b> öğrenir: radarda görünen her cismin uydu mu göktaşı mı olduğunu söyle. Yeterince örnek gösterince robot, hiç görmediği cisimleri kendisi tanıyacak.' },
         { id: 'onyargi', ad: 'Önyargılı Veri', ikon: 'fa-scale-unbalanced', renk: '#e5484d', sinif: '5. – 12. sınıf', ozet: 'Model neden kediye köpek dedi? Veriyi düzelt, modeli düzelt.',
           anlatim: 'Bu model kedi ve köpek fotoğraflarıyla eğitildi. Ama fotoğrafları çeken kişi bütün köpekleri <b>bahçede</b>, bütün kedileri <b>evin içinde</b> çekmiş. Bakalım model ne öğrenmiş?' },
         { id: 'kural', ad: 'Kendi Kuralını Öğret', ikon: 'fa-wand-magic-sparkles', renk: '#8b5cf6', sinif: '3. – 12. sınıf', ozet: 'Uzaylılar için kendi kuralını uydur, modelin bulup bulamayacağını gör.',
@@ -30,7 +30,7 @@
         bolum = BOLUMLER.find(b => b.id === id); hata = 0;
         $('baslik').textContent = bolum.ad; $('anlatim').innerHTML = bolum.anlatim;
         goster('oyun');
-        ({ okyanus, onyargi, kural, knn })[id]();
+        ({ radar, onyargi, kural, knn })[id]();
     }
     function bitir(y, metin) {
         if (y > (kayit[bolum.id] || 0)) { kayit[bolum.id] = y; KL.yaz('yz', kayit); }
@@ -54,23 +54,32 @@
 
     // ---------- Çizimler ----------
     function nesneSVG(n) {
-        const s = 0.6 + n.boyut * 0.4, c = `hsl(${n.ton},70%,55%)`, k = `hsl(${n.ton},70%,38%)`;
+        const s = 0.6 + n.boyut * 0.4, c = `hsl(${n.ton},65%,58%)`, k = `hsl(${n.ton},60%,38%)`;
+        const w = 30, h = 30 * n.oran;
         let ic;
-        if (n.tur === 'balik') {
-            const rx = 34, ry = 34 * n.oran;
-            ic = `<path d="M${-rx + 4},0 L${-rx - 22},${-ry * 0.9} L${-rx - 22},${ry * 0.9} Z" fill="${k}"/>
-                <ellipse rx="${rx}" ry="${ry}" fill="${c}"/>
-                ${n.cizgili ? `<path d="M-10,${-ry * .9} V${ry * .9} M5,${-ry * .95} V${ry * .95}" stroke="${k}" stroke-width="4" opacity=".7"/>` : ''}
-                ${n.yuzgec ? `<path d="M-6,${-ry + 2} L6,${-ry - 14} L14,${-ry + 4} Z" fill="${k}"/>` : ''}
-                <circle cx="${rx * .55}" cy="${-ry * .25}" r="5" fill="#fff"/><circle cx="${rx * .6}" cy="${-ry * .25}" r="2.6" fill="#111"/>`;
-        } else if (n.cesit === 0) {
-            ic = `<rect x="-14" y="-30" width="28" height="58" rx="8" fill="hsla(${n.ton},50%,70%,.75)" stroke="hsl(${n.ton},40%,40%)" stroke-width="2"/><rect x="-6" y="-42" width="12" height="14" rx="3" fill="hsl(${n.ton},40%,45%)"/>${n.cizgili ? '<rect x="-14" y="-6" width="28" height="12" fill="#fff" opacity=".8"/>' : ''}`;
-        } else if (n.cesit === 1) {
-            ic = `<rect x="-20" y="-26" width="40" height="52" rx="5" fill="${c}" stroke="${k}" stroke-width="2"/><rect x="-20" y="-8" width="40" height="8" fill="#fff" opacity=".8"/><ellipse cy="-26" rx="20" ry="5" fill="#cbd5e1"/>`;
-        } else if (n.cesit === 2) {
-            ic = `<path d="M-28,-10 Q-20,-34 -8,-22 Q0,-38 10,-22 Q24,-34 28,-8 Q34,20 18,28 Q0,36 -18,28 Q-36,18 -28,-10Z" fill="hsla(${n.ton},40%,85%,.85)" stroke="hsl(${n.ton},20%,55%)" stroke-width="2"/>`;
+        if (n.tur === 'uydu') {
+            const panel = (x) => `<rect x="${x}" y="-9" width="22" height="18" rx="2" fill="#1e3a8a" stroke="#93c5fd" stroke-width="1.5"/><path d="M${x + 7.3},-9 V9 M${x + 14.6},-9 V9 M${x},0 H${x + 22}" stroke="#93c5fd" stroke-width="1"/>`;
+            const govde = n.cesit === 1
+                ? `<rect x="${-w / 2}" y="${-h}" width="${w}" height="${h * 2}" rx="${w / 2}" fill="${c}" stroke="${k}" stroke-width="2"/>`
+                : n.cesit === 2
+                    ? `<rect x="${-w / 2 - 4}" y="${-h / 1.4}" width="${w + 8}" height="${h * 1.4}" rx="6" fill="${c}" stroke="${k}" stroke-width="2"/><rect x="${-w / 2 - 8}" y="-5" width="4" height="10" fill="${k}"/><rect x="${w / 2 + 4}" y="-5" width="4" height="10" fill="${k}"/>`
+                    : `<rect x="${-w / 2}" y="${-h / 1.2}" width="${w}" height="${h * 1.65}" rx="5" fill="${c}" stroke="${k}" stroke-width="2"/>`;
+            ic = `<line x1="-44" y1="0" x2="44" y2="0" stroke="#94a3b8" stroke-width="2.5"/>${panel(-50)}${panel(28)}${govde}
+                ${n.desen ? `<path d="M${-w / 2 + 2},-3 H${w / 2 - 2} M${-w / 2 + 2},5 H${w / 2 - 2}" stroke="${k}" stroke-width="3" opacity=".6"/>` : ''}
+                <circle cx="0" cy="${-h / 3}" r="5.5" fill="#e0f2fe" stroke="${k}" stroke-width="1.5"/><circle cx="1.5" cy="${-h / 3 - 1.5}" r="1.6" fill="#fff"/>
+                ${n.anten ? `<line x1="0" y1="${-h / 1.2}" x2="6" y2="${-h / 1.2 - 16}" stroke="#cbd5e1" stroke-width="2"/><circle cx="6" cy="${-h / 1.2 - 18}" r="3.4" fill="#fbbf24"/>` : ''}`;
         } else {
-            ic = `<circle r="26" fill="none" stroke="#334155" stroke-width="14"/><circle r="26" fill="none" stroke="#475569" stroke-width="2" stroke-dasharray="4 5"/>`;
+            // Düzensiz kayalık: yarıçap açıya göre dalgalanır
+            const rx = 30, ry = 30 * Math.min(n.oran, 1);
+            const noktalar = Array.from({ length: 12 }, (_, i) => {
+                const a = i / 12 * Math.PI * 2, d = 0.78 + 0.22 * Math.abs(Math.sin(i * 2.7 + n.ton));
+                return `${(Math.cos(a) * rx * d).toFixed(1)},${(Math.sin(a) * ry * d).toFixed(1)}`;
+            }).join(' ');
+            const buz = n.cesit === 3;
+            const dolgu = buz ? `hsl(${190 + n.ton % 30},45%,85%)` : `hsl(${n.ton},14%,${42 + (n.ton % 20)}%)`;
+            ic = `<polygon points="${noktalar}" fill="${dolgu}" stroke="${buz ? '#7dd3fc' : '#1f2937'}" stroke-width="2" stroke-linejoin="round"/>
+                ${n.desen && !buz ? `<circle cx="-9" cy="-5" r="6" fill="#00000030"/><circle cx="10" cy="6" r="4.5" fill="#00000030"/><circle cx="2" cy="-12" r="3" fill="#00000030"/>` : ''}
+                ${buz ? '<path d="M-14,-6 L-2,2 L8,-8 M-2,2 L2,12" stroke="#fff" stroke-width="2" fill="none"/>' : ''}`;
         }
         return `<svg viewBox="-60 -60 120 120" aria-hidden="true"><g transform="scale(${s})">${ic}</g></svg>`;
     }
@@ -103,28 +112,28 @@
             </g></svg>`;
     }
 
-    // ---------- 1. Okyanusu temizle ----------
-    function okyanus() {
+    // ---------- 1. Uzay radarı ----------
+    function radar() {
         const t = tohum();
-        const akis = Y.okyanus(t, 60), deneme = Y.okyanus(t + 1, 40);
+        const akis = Y.uzayNesneleri(t, 60), deneme = Y.uzayNesneleri(t + 1, 40);
         const egitim = [];
         let i = 0;
         $('icerik').innerHTML = `<div class="iki">
             <div class="card panel"><h3 style="font-size:1.05rem;margin-bottom:10px">1. Modeli eğit</h3>
-                <div class="buyuk" id="nesne"></div>
-                <div class="etiketle"><button class="btn" data-e="balik">🐟 Balık</button><button class="btn" data-e="cop">🗑️ Çöp</button></div>
-                <div class="sayac">Örnek: <b id="say">0</b> <span>🐟 <b id="sb">0</b></span> <span>🗑️ <b id="sc">0</b></span></div>
-                <button class="btn btn-primary" id="calistir" style="width:100%;margin-top:14px" disabled><i class="fas fa-robot"></i> Modeli okyanusta çalıştır</button>
+                <div class="buyuk uzay-arka" id="nesne"></div>
+                <div class="etiketle"><button class="btn" data-e="uydu">🛰️ Uydu</button><button class="btn" data-e="tas">☄️ Göktaşı</button></div>
+                <div class="sayac">Örnek: <b id="say">0</b> <span>🛰️ <b id="sb">0</b></span> <span>☄️ <b id="sc">0</b></span></div>
+                <button class="btn btn-primary" id="calistir" style="width:100%;margin-top:14px" disabled><i class="fas fa-robot"></i> Radarı çalıştır</button>
                 <p style="color:var(--muted);font-size:.85rem;margin-top:8px">En az 6 örnek göster (her türden en az 1). Az örnekle de deneyebilir, sonra daha fazla eğitebilirsin.</p></div>
             <div class="card panel"><h3 style="font-size:1.05rem;margin-bottom:10px">2. Model ne öğrendi?</h3><div id="sonucAlan"><p style="color:var(--muted)">Model henüz çalıştırılmadı.</p></div>
                 <h4 style="font-size:.9rem;margin:14px 0 6px;color:var(--muted)">Eğitim verin</h4><div class="mini-izgara" id="egitimIzgara"></div></div></div>`;
         const goster1 = () => { $('nesne').innerHTML = nesneSVG(akis[i % akis.length]); };
         const guncelle = () => {
             $('say').textContent = egitim.length;
-            $('sb').textContent = egitim.filter(e => e.y === 'balik').length;
-            $('sc').textContent = egitim.filter(e => e.y === 'cop').length;
+            $('sb').textContent = egitim.filter(e => e.y === 'uydu').length;
+            $('sc').textContent = egitim.filter(e => e.y === 'tas').length;
             $('calistir').disabled = egitim.length < 6 || new Set(egitim.map(e => e.y)).size < 2;
-            $('egitimIzgara').innerHTML = egitim.map(e => `<div class="mini">${nesneSVG(e.n)}<span class="et" style="background:${e.y === 'balik' ? '#0ea5e9' : '#64748b'}">${e.y === 'balik' ? 'balık' : 'çöp'}</span></div>`).join('');
+            $('egitimIzgara').innerHTML = egitim.map(e => `<div class="mini">${nesneSVG(e.n)}<span class="et" style="background:${e.y === 'uydu' ? '#4338ca' : '#78716c'}">${e.y === 'uydu' ? 'uydu' : 'göktaşı'}</span></div>`).join('');
         };
         document.querySelector('.etiketle').onclick = (e) => {
             const b = e.target.closest('button'); if (!b) return;
@@ -137,13 +146,13 @@
             const html = deneme.map(n => {
                 const p = Y.tahmin(egitim, n.x, 3).y, ok = p === n.y;
                 if (ok) dogru++;
-                return `<div class="mini ${ok ? 'dogru' : 'yanlis'}">${nesneSVG(n)}<span class="isaret" style="color:${ok ? 'var(--ok)' : 'var(--bad)'}">${ok ? '✓' : '✗'}</span><span class="et" style="background:${p === 'balik' ? '#0ea5e9' : '#64748b'}">${p === 'balik' ? 'balık' : 'çöp'}</span></div>`;
+                return `<div class="mini ${ok ? 'dogru' : 'yanlis'}">${nesneSVG(n)}<span class="isaret" style="color:${ok ? 'var(--ok)' : 'var(--bad)'}">${ok ? '✓' : '✗'}</span><span class="et" style="background:${p === 'uydu' ? '#4338ca' : '#78716c'}">${p === 'uydu' ? 'uydu' : 'göktaşı'}</span></div>`;
             }).join('');
             const ac = dogru / deneme.length;
             const yanlisEtiket = egitim.filter(e => e.y !== e.n.y).length;
-            $('sonucAlan').innerHTML = `<div class="sonuc-bant ${ac >= 0.9 ? 'iyi' : 'kotu'}"><b>${yuzde(ac)}</b> Model hiç görmediği ${deneme.length} nesneden ${dogru} tanesini doğru bildi.</div>
-                <div class="okyanus"><div class="mini-izgara">${html}</div></div>
-                <p style="margin-top:10px;color:var(--muted)">${ac >= 0.9 ? 'Model artık balıkları çöpten ayırabiliyor!' : yanlisEtiket ? `Eğitim verinde ${yanlisEtiket} yanlış etiket var. Model, ona öğrettiğin hataları da öğrenir!` : 'Model henüz yeterince öğrenemedi. Daha fazla ve daha çeşitli örnek göster.'}</p>`;
+            $('sonucAlan').innerHTML = `<div class="sonuc-bant ${ac >= 0.9 ? 'iyi' : 'kotu'}"><b>${yuzde(ac)}</b> Robot hiç görmediği ${deneme.length} cisimden ${dogru} tanesini doğru bildi.</div>
+                <div class="uzay"><div class="mini-izgara">${html}</div></div>
+                <p style="margin-top:10px;color:var(--muted)">${ac >= 0.9 ? 'Radar robotu artık uyduları göktaşlarından ayırabiliyor; istasyon güvende!' : yanlisEtiket ? `Eğitim verinde ${yanlisEtiket} yanlış etiket var. Model, ona öğrettiğin hataları da öğrenir!` : 'Model henüz yeterince öğrenemedi. Daha fazla ve daha çeşitli örnek göster.'}</p>`;
             KL.ses(ac >= 0.9 ? 'dogru' : 'yanlis');
             if (ac >= 0.9) {
                 const y = egitim.length <= 12 ? 3 : egitim.length <= 25 ? 2 : 1;

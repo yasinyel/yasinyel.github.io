@@ -31,23 +31,26 @@
         return test.filter(t => tahmin(ornekler, t.x, k, agirlik).y === t.y).length / test.length;
     }
 
-    // ---------- 1. Balık mı çöp mü ----------
-    // Özellikler: [renk tonu, en/boy oranı, kuyruk, göz, yüzgeç, boyut, çizgili]
-    const BALIK_OZELLIK = ['renk', 'şekil', 'kuyruk', 'göz', 'yüzgeç', 'boyut', 'desen'];
-    function okyanusNesnesi(r) {
-        const balik = r() < 0.55;
+    // ---------- 1. Uzay radarı: uydu mu göktaşı mı ----------
+    // Özellikler: [renk tonu, en/boy oranı, güneş paneli, pencere, anten, boyut, desen]
+    const RADAR_OZELLIK = ['renk', 'şekil', 'güneş paneli', 'pencere', 'anten', 'boyut', 'desen'];
+    function uzayNesnesi(r) {
+        const uydu = r() < 0.55;
         let n;
-        if (balik) {
-            n = { tur: 'balik', ton: Math.floor(r() * 360), oran: 0.45 + r() * 0.25, kuyruk: 1, goz: 1, yuzgec: r() < 0.8 ? 1 : 0, boyut: 0.4 + r() * 0.6, cizgili: r() < 0.35 ? 1 : 0, cesit: Math.floor(r() * 3) };
+        if (uydu) {
+            // 0 panelli uydu, 1 kapsül, 2 istasyon modülü
+            const cesit = Math.floor(r() * 3);
+            n = { tur: 'uydu', ton: Math.floor(r() * 360), oran: 0.45 + r() * 0.25, panel: 1, pencere: 1, anten: r() < 0.8 ? 1 : 0, boyut: 0.4 + r() * 0.6, desen: r() < 0.35 ? 1 : 0, cesit };
         } else {
-            const cesit = Math.floor(r() * 4); // 0 şişe, 1 kutu, 2 poşet, 3 lastik
-            n = { tur: 'cop', ton: Math.floor(r() * 360), oran: [0.3, 0.55, 0.8, 1][cesit] + r() * 0.1, kuyruk: 0, goz: 0, yuzgec: 0, boyut: 0.4 + r() * 0.6, cizgili: cesit === 1 ? 1 : (r() < 0.3 ? 1 : 0), cesit };
+            // 0 yuvarlak, 1 yumru, 2 uzun, 3 buz parçası
+            const cesit = Math.floor(r() * 4);
+            n = { tur: 'tas', ton: Math.floor(r() * 360), oran: [0.3, 0.55, 0.8, 1][cesit] + r() * 0.1, panel: 0, pencere: 0, anten: 0, boyut: 0.4 + r() * 0.6, desen: cesit === 1 ? 1 : (r() < 0.3 ? 1 : 0), cesit };
         }
-        n.x = [n.ton / 360, n.oran, n.kuyruk, n.goz, n.yuzgec, n.boyut, n.cizgili];
+        n.x = [n.ton / 360, n.oran, n.panel, n.pencere, n.anten, n.boyut, n.desen];
         n.y = n.tur;
         return n;
     }
-    function okyanus(tohum, adet) { const r = rastgele(tohum); return Array.from({ length: adet }, () => okyanusNesnesi(r)); }
+    function uzayNesneleri(tohum, adet) { const r = rastgele(tohum); return Array.from({ length: adet }, () => uzayNesnesi(r)); }
 
     // ---------- 2. Önyargılı veri: kedi / köpek ----------
     // Özellikler: [kulak sivriliği, burun uzunluğu, bıyık, arka plan (dışarı=1), tüy rengi]
@@ -120,7 +123,7 @@
         return { egitim: uret(egitimAdet, gurultu), test: uret(testAdet, 0), ek: uret(120, gurultu) };
     }
 
-    const api = { rastgele, mesafe, tahmin, dogruluk, okyanus, BALIK_OZELLIK, onyargiliVeri, HAYVAN_AGIRLIK, HAYVAN_OZELLIK, uzaylilar, UZAYLI_OZELLIK, UZAYLI_RENK, ozellikOnemi, noktaVeri };
+    const api = { rastgele, mesafe, tahmin, dogruluk, uzayNesneleri, RADAR_OZELLIK, onyargiliVeri, HAYVAN_AGIRLIK, HAYVAN_OZELLIK, uzaylilar, UZAYLI_OZELLIK, UZAYLI_RENK, ozellikOnemi, noktaVeri };
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     else root.YZ = api;
 })(typeof window !== 'undefined' ? window : globalThis);

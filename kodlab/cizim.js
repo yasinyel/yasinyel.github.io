@@ -1,4 +1,4 @@
-// KodLab — Çizim Atölyesi arayüzü: sürükle-bırak blok editörü + kaplumbağa sahnesi
+// KodLab — Çizim Atölyesi arayüzü: sürükle-bırak blok editörü + kalemli robot sahnesi
 (function () {
     'use strict';
     const C = window.Cizim;
@@ -306,28 +306,37 @@
         ctx.beginPath(); ctx.moveTo(c.x1 * OLCEK, c.y1 * OLCEK);
         ctx.lineTo((c.x1 + (c.x2 - c.x1) * oran) * OLCEK, (c.y1 + (c.y2 - c.y1) * oran) * OLCEK); ctx.stroke();
     }
-    function kaplumbagaCiz(x, y, h) {
-        const ctx = $('kaplumbaga').getContext('2d');
+    // KodLab'ın kalemli robotu (baktığı yön yukarı: anten ve gözler önde)
+    function robotCiz(x, y, h) {
+        const ctx = $('karakter').getContext('2d');
         ctx.clearRect(0, 0, 800, 800);
         ctx.save();
-        ctx.translate(x * OLCEK, y * OLCEK); ctx.rotate(h * Math.PI / 180);
-        ctx.fillStyle = '#16a36a'; ctx.strokeStyle = '#0f5132'; ctx.lineWidth = 3;
-        // Ayaklar ve kafa
-        ctx.fillStyle = '#4ade80';
-        for (const [ax, ay] of [[-15, -12], [15, -12], [-15, 12], [15, 12]]) { ctx.beginPath(); ctx.ellipse(ax, ay, 7, 5, 0, 0, Math.PI * 2); ctx.fill(); }
-        ctx.beginPath(); ctx.ellipse(0, -24, 8, 9, 0, 0, Math.PI * 2); ctx.fill();
-        // Kabuk
-        ctx.fillStyle = '#16a36a';
-        ctx.beginPath(); ctx.ellipse(0, 0, 16, 19, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-        ctx.strokeStyle = 'rgba(255,255,255,.5)'; ctx.lineWidth = 2;
-        ctx.beginPath(); ctx.moveTo(0, -12); ctx.lineTo(0, 12); ctx.moveTo(-10, 0); ctx.lineTo(10, 0); ctx.stroke();
+        ctx.translate(x * OLCEK, y * OLCEK); ctx.rotate(h * Math.PI / 180); ctx.scale(1.45, 1.45);
+        const yuvarlak = (x0, y0, w, hh, r) => { ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x0, y0, w, hh, r); else ctx.rect(x0, y0, w, hh); };
+        // Tekerlekler
+        ctx.fillStyle = '#163f8f';
+        yuvarlak(-22, -10, 7, 22, 3); ctx.fill(); yuvarlak(15, -10, 7, 22, 3); ctx.fill();
+        // Gövde
+        ctx.fillStyle = '#1d5fd6'; ctx.strokeStyle = '#0b3a8f'; ctx.lineWidth = 2;
+        yuvarlak(-16, -16, 32, 32, 9); ctx.fill(); ctx.stroke();
+        // Ekran ve gözler (öne bakar)
+        ctx.fillStyle = '#e8f0ff'; yuvarlak(-11, -13, 22, 13, 4); ctx.fill();
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath(); ctx.arc(-5, -7, 2.6, 0, Math.PI * 2); ctx.arc(5, -7, 2.6, 0, Math.PI * 2); ctx.fill();
+        // Anten: yönü gösterir
+        ctx.strokeStyle = '#163f8f'; ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.moveTo(0, -16); ctx.lineTo(0, -25); ctx.stroke();
+        ctx.fillStyle = '#ffd166'; ctx.beginPath(); ctx.arc(0, -27, 4, 0, Math.PI * 2); ctx.fill();
+        // Kalem ucu (çizimin yapıldığı nokta)
+        ctx.fillStyle = '#ffd166'; ctx.strokeStyle = '#92400e'; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.arc(0, 0, 4.5, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
         ctx.restore();
     }
     function sahneSifirla() {
         if (animasyon) cancelAnimationFrame(animasyon);
         animasyon = null;
         $('tuval').getContext('2d').clearRect(0, 0, 800, 800);
-        kaplumbagaCiz(bolum.bas.x, bolum.bas.y, bolum.bas.h);
+        robotCiz(bolum.bas.x, bolum.bas.y, bolum.bas.h);
     }
 
     function durum(m, tur = '') { $('durum').textContent = m; $('durum').className = 'durum ' + tur; }
@@ -384,7 +393,7 @@
                 else if (m.kalem && butce <= 0) { ctx.save(); cizgiCiz(ctx, m, oran); ctx.restore(); }
             }
             // Tamamlanmamış çizgiyi her karede baştan çizmek yerine kısmi çizim üst üste biner; sorun değil
-            kaplumbagaCiz(x, y, yon);
+            robotCiz(x, y, yon);
             if (i < H.length) animasyon = requestAnimationFrame(kare);
             else bitti(sonuc, h.program);
         };
@@ -404,13 +413,13 @@
         const ctx = $('tuval').getContext('2d');
         ctx.clearRect(0, 0, 800, 800);
         for (const c of sonuc.cizgiler) cizgiCiz(ctx, c);
-        kaplumbagaCiz(sonuc.son.x, sonuc.son.y, sonuc.son.h);
+        robotCiz(sonuc.son.x, sonuc.son.y, sonuc.son.h);
         if (!hedefCizgiler) { durum('Harika bir çizim! Resmini indirmek için tuvale sağ tıklayabilirsin.', 'ok'); return; }
         const k = C.karsilastir(hedefCizgiler, sonuc.cizgiler, !!bolum.renkOnemli);
         if (!k.tamam) {
             KL.ses('yanlis');
             let m = 'Neredeyse! Çizimin hedefle tam örtüşmüyor. ';
-            if (!sonuc.cizgiler.length) m = 'Kaplumbağa hiç çizgi çizmedi. Kalem kalkık mı kaldı? ';
+            if (!sonuc.cizgiler.length) m = 'Robot hiç çizgi çizmedi. Kalem kalkık mı kaldı? ';
             else if (k.eksik > 0.02 && k.fazla < 0.02) m += 'Bazı çizgiler eksik.';
             else if (k.fazla > 0.02 && k.eksik < 0.02) m += 'Fazladan çizgi var ya da çizgiler fazla uzun.';
             else if (bolum.renkOnemli && C.karsilastir(hedefCizgiler, sonuc.cizgiler, false).tamam) m = 'Şekil doğru ama renkler farklı!';
