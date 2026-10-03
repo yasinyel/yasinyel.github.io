@@ -143,11 +143,13 @@
             const [x, y] = hucre(adim);
             $(`c${x}_${y}`).classList.add('iz');
             adim++; adimHatasi = 0; ipucuAcik = false;
+            KL.ses('tik');
             karakterKonum();
             mesaj('');
             if (adim === bolum.hamleler.length) { bitti = true; guncelle(); setTimeout(kazan, 350); return; }
         } else {
             hata++; adimHatasi++;
+            KL.ses('yanlis');
             dugme.classList.remove('hata'); dugme.offsetWidth; dugme.classList.add('hata');
             clearTimeout(dugme._t); dugme._t = setTimeout(() => dugme.classList.remove('hata'), 350);
             const k = $('karakter'); k.classList.remove('sars'); k.offsetWidth; k.classList.add('sars');
@@ -179,7 +181,7 @@
             (ipucuKullanildi ? ' İpucu kullandığın için en fazla 2 yıldız.' : '') +
             (y < 3 ? ' Yeni sayılarla tekrar deneyip 3 yıldız alabilirsin.' : '');
         $('kSonraki').hidden = no === kademe.bolumler.length - 1;
-        if (y === 3) KL.konfeti();
+        if (y === 3) KL.konfeti(); else KL.ses('kazan');
         $('kazandi').showModal();
     }
 

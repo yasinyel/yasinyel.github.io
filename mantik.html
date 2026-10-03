@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#1d5fd6">
+    <link rel="icon" href="ikon/ikon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="ikon/ikon-192.png">
+    <title>Mantık Kapıları — KodLab</title>
+    <meta name="description" content="VE, VEYA, DEĞİL kapılarıyla devre kur; bilgisayarın toplama devresine kadar ilerle.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="ortak.css">
+    <style>
+        main { padding: 28px 0 60px; }
+        .intro h1 { font-size: clamp(1.8rem, 4vw, 2.4rem); }
+        .intro p { color: var(--muted); margin-top: 6px; max-width: 720px; }
+        .lvl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-top: 24px; }
+        .lvl-card { padding: 16px; text-align: left; cursor: pointer; display: flex; flex-direction: column; gap: 4px; transition: transform .15s, border-color .15s; }
+        .lvl-card:hover:not(:disabled) { transform: translateY(-2px); border-color: var(--accent); }
+        .lvl-card:disabled { opacity: .5; cursor: not-allowed; }
+        .lvl-card .no { font-family: var(--mono); color: var(--accent); font-size: .82rem; }
+        .lvl-card h3 { font-size: 1.1rem; }
+        .lvl-card small { color: var(--muted); }
+
+        .game-top { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .game-top h2 { font-size: 1.25rem; flex: 1; }
+        .lesson { padding: 14px 18px; margin-bottom: 16px; color: var(--muted); }
+        .lesson b { color: var(--ink); }
+        .play { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+        .circuit-card { padding: 12px; overflow-x: auto; }
+        svg.devre { display: block; margin: 0 auto; height: auto; font-family: var(--body); }
+        .tel { fill: none; stroke-width: 3.5; stroke: #9aa5b8; transition: stroke .2s; }
+        .tel.bir { stroke: #f5b400; filter: drop-shadow(0 0 3px rgba(245, 180, 0, .6)); }
+        .tel.belirsiz { stroke-dasharray: 5 5; opacity: .6; }
+        .kapi rect { fill: var(--surface); stroke: var(--ink); stroke-width: 2; }
+        .kapi.secilir { cursor: pointer; }
+        .kapi.secilir rect { stroke: var(--accent); stroke-dasharray: 6 4; fill: var(--accent-soft); }
+        .kapi.secilir:hover rect { stroke-dasharray: none; }
+        .kapi text.ad { font-weight: 800; font-size: 13px; fill: var(--ink); text-anchor: middle; }
+        .kapi text.ing { font-size: 9px; fill: var(--muted); text-anchor: middle; font-family: var(--mono); }
+        .giris { cursor: pointer; }
+        .giris rect { stroke-width: 2; transition: fill .2s; }
+        .giris text { font-weight: 800; text-anchor: middle; font-size: 14px; }
+        .lamba circle.cam { transition: fill .25s; stroke-width: 2; }
+        .lamba text { font-size: 12px; font-weight: 700; text-anchor: middle; fill: var(--muted); }
+        .side { display: flex; flex-direction: column; gap: 14px; }
+        .side .card { padding: 16px; }
+        .side h3 { font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-family: var(--body); margin-bottom: 10px; }
+        table.tt { width: 100%; border-collapse: collapse; font-family: var(--mono); text-align: center; font-size: .95rem; }
+        table.tt th { font-family: var(--body); font-size: .75rem; color: var(--muted); padding: 4px; border-bottom: 2px solid var(--line); }
+        table.tt th.grp { border-left: 2px solid var(--line); }
+        table.tt td { padding: 5px 4px; border-bottom: 1px solid var(--line); cursor: pointer; }
+        table.tt td.grp { border-left: 2px solid var(--line); }
+        table.tt tr.aktif td { background: var(--accent-soft); }
+        table.tt tr.ok td.chk { color: var(--ok); }
+        table.tt tr.bad td.chk { color: var(--bad); }
+        table.tt .bir { color: #c48a00; font-weight: 800; }
+        .durum { font-weight: 600; text-align: center; }
+        .durum.ok { color: var(--ok); }
+        .tebrik { text-align: center; }
+        .tebrik .actions { display: flex; gap: 8px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
+        @media (max-width: 900px) { .play { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <header class="kl-top">
+        <div class="wrap kl-top-inner">
+            <a href="./" class="kl-brand"><span class="kl-logo">&lt;/&gt;</span>KodLab</a>
+            <span class="kl-crumb"><i class="fas fa-chevron-right" style="font-size:.7em"></i><span>Mantık Kapıları</span></span>
+            <span class="kl-spacer"></span>
+            <button class="icon-btn" id="themeBtn" aria-label="Temayı değiştir"><i class="fas fa-circle-half-stroke"></i></button>
+        </div>
+    </header>
+
+    <main class="wrap">
+        <section id="liste">
+            <div class="intro">
+                <h1>Mantık Kapıları</h1>
+                <p>Bilgisayarın içindeki milyarlarca transistör, bu küçük kapılarla düşünür. Anahtarları aç kapa, kapıları seç, lambaları yak. En sonda bilgisayarın toplama devresini kendin kuracaksın!</p>
+            </div>
+            <div class="lvl-grid" id="lvlGrid"></div>
+        </section>
+
+        <section id="oyun" hidden>
+            <div class="game-top">
+                <button class="icon-btn" id="geri" aria-label="Bölümlere dön"><i class="fas fa-arrow-left"></i></button>
+                <h2 id="baslik"></h2>
+            </div>
+            <div class="card lesson" id="anlatim"></div>
+            <div class="play">
+                <div class="card circuit-card"><svg class="devre" id="devre" role="img" aria-label="Devre"></svg></div>
+                <div class="side">
+                    <div class="card">
+                        <h3 id="ttBaslik">Doğruluk tablosu</h3>
+                        <table class="tt" id="tablo"></table>
+                    </div>
+                    <div class="card durum" id="durum" role="status"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="ortak.js"></script>
+    <script src="mantik-motor.js"></script>
+    <script src="mantik.js"></script>
+</body>
+</html>

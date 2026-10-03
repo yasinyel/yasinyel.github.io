@@ -1,4 +1,4 @@
-// KodLab ortak yardımcılar: tema, ilerleme kaydı, bildirim, konfeti
+// KodLab ortak yardımcılar: tema, ilerleme kaydı, bildirim, konfeti, ses, çevrimdışı çalışma
 (function () {
     'use strict';
 
@@ -35,7 +35,34 @@
             el._t = setTimeout(() => el.classList.remove('show'), sure);
         },
 
+        // Kısa ses efektleri (dosya gerekmez, tarayıcıda sentezlenir)
+        sesAcik() { return KL.oku('ses', true); },
+        ses(tur) {
+            if (!KL.sesAcik()) return;
+            try {
+                const ctx = KL._ctx || (KL._ctx = new (window.AudioContext || window.webkitAudioContext)());
+                if (ctx.state === 'suspended') ctx.resume();
+                const NOTALAR = {
+                    dogru: [[660, 0, .08], [880, .07, .12]],
+                    yanlis: [[200, 0, .16, 'square'], [150, .1, .18, 'square']],
+                    tik: [[520, 0, .05]],
+                    kazan: [[523, 0, .12], [659, .1, .12], [784, .2, .12], [1047, .3, .3]]
+                }[tur] || [];
+                const t0 = ctx.currentTime;
+                for (const [frekans, bas, sure, dalga] of NOTALAR) {
+                    const o = ctx.createOscillator(), g = ctx.createGain();
+                    o.type = dalga || 'sine'; o.frequency.value = frekans;
+                    g.gain.setValueAtTime(0.0001, t0 + bas);
+                    g.gain.exponentialRampToValueAtTime(dalga ? 0.05 : 0.14, t0 + bas + 0.01);
+                    g.gain.exponentialRampToValueAtTime(0.0001, t0 + bas + sure);
+                    o.connect(g).connect(ctx.destination);
+                    o.start(t0 + bas); o.stop(t0 + bas + sure + 0.02);
+                }
+            } catch (e) {}
+        },
+
         konfeti(adet = 70) {
+            KL.ses('kazan');
             if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
             const renkler = ['#1d5fd6', '#f2b01e', '#16a36a', '#e5484d', '#8b5cf6', '#06b6d4'];
             for (let i = 0; i < adet; i++) {
@@ -68,8 +95,38 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         const b = document.getElementById('themeBtn');
-        if (b) b.addEventListener('click', KL.temaDegistir);
+        if (b) {
+            b.addEventListener('click', KL.temaDegistir);
+            // Her sayfanın üst barına ses ve profil düğmeleri
+            const ses = document.createElement('button');
+            ses.className = 'icon-btn'; ses.id = 'sesBtn';
+            const ciz = () => {
+                ses.innerHTML = `<i class="fas fa-volume-${KL.sesAcik() ? 'high' : 'xmark'}"></i>`;
+                ses.setAttribute('aria-label', KL.sesAcik() ? 'Sesi kapat' : 'Sesi aç');
+            };
+            ciz();
+            ses.addEventListener('click', () => { KL.yaz('ses', !KL.sesAcik()); ciz(); KL.ses('dogru'); });
+            b.before(ses);
+            if (!/profil\.html$/.test(location.pathname)) {
+                const p = document.createElement('a');
+                p.className = 'icon-btn'; p.href = 'profil.html'; p.setAttribute('aria-label', 'Profilim');
+                const ad = KL.oku('profil', {}).ad;
+                if (ad) {
+                    const h = document.createElement('span');
+                    h.style.cssText = 'font-weight:800;font-family:var(--display)';
+                    h.textContent = ad.trim()[0].toLocaleUpperCase('tr');
+                    p.appendChild(h);
+                } else p.innerHTML = '<i class="fas fa-user"></i>';
+                p.title = ad ? ad + ' — Profilim' : 'Profilim';
+                b.before(p);
+            }
+        }
     });
+
+    // Çevrimdışı çalışma: sayfalar ilk ziyarette önbelleğe alınır, internet kesilse de açılır
+    if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+        window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+    }
 
     window.KL = KL;
 })();

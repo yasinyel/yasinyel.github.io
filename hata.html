@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#1d5fd6">
+    <link rel="icon" href="ikon/ikon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="ikon/ikon-192.png">
+    <title>Hata Avcısı — KodLab</title>
+    <meta name="description" content="Robot yanlış yere gitti! Koddaki hatayı bul ve düzelt.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="ortak.css">
+    <style>
+        main { padding: 28px 0 60px; }
+        .intro h1 { font-size: clamp(1.8rem, 4vw, 2.4rem); }
+        .intro p { color: var(--muted); margin-top: 6px; max-width: 720px; }
+        .kademeler { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 24px; }
+        .kademe { padding: 20px; text-align: left; cursor: pointer; display: flex; flex-direction: column; gap: 6px; transition: transform .15s, border-color .15s; }
+        .kademe:hover { transform: translateY(-2px); border-color: var(--kc); }
+        .kademe .ik { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; color: #fff; background: var(--kc); }
+        .kademe h3 { font-size: 1.25rem; }
+        .kademe small { color: var(--kc); font-weight: 700; }
+        .kademe p { color: var(--muted); font-size: .9rem; }
+
+        .game-top { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+        .game-top h2 { font-size: 1.2rem; flex: 1; }
+        .game-top h2 small { display: block; font-family: var(--body); font-size: .8rem; color: var(--muted); font-weight: 600; }
+        .dots { display: flex; gap: 6px; }
+        .dots span { width: 12px; height: 12px; border-radius: 50%; background: var(--line); }
+        .dots span.ok { background: var(--ok); } .dots span.cur { background: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+        .play { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+        .panel { padding: 18px; }
+        .gorev { font-weight: 600; margin-bottom: 12px; }
+        .gorev .adim { display: inline-block; background: var(--accent); color: var(--accent-ink); border-radius: 8px; padding: 1px 8px; margin-right: 6px; font-size: .85rem; }
+        pre.code { background: var(--code-bg); color: var(--code-ink); font-family: var(--mono); font-size: 15.5px; line-height: 1.75; padding: 14px 0; border-radius: 14px; overflow-x: auto; border: 1px solid var(--line); }
+        pre.code .ln { display: block; padding-right: 16px; border-left: 3px solid transparent; white-space: pre; }
+        pre.code .ln::before { content: attr(data-n); display: inline-block; width: 2.2em; margin-right: 12px; color: #4a5875; text-align: right; }
+        .secilebilir pre.code .ln[data-id] { cursor: pointer; }
+        .secilebilir pre.code .ln[data-id]:hover { background: rgba(130, 170, 255, .14); }
+        pre.code .ln.yanlis { background: rgba(255, 107, 107, .18); border-left-color: #ff6b6b; }
+        pre.code .ln.bulundu { background: rgba(52, 211, 153, .18); border-left-color: #34d399; }
+        .k { color: #c792ea; } .f { color: #82aaff; } .s { color: #c3e88d; } .n { color: #f78c6c; }
+        .bloklar { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+        .blk { border-radius: 10px; font-weight: 700; color: #fff; }
+        .blk.mv { padding: 9px 14px; font-size: 1.05rem; box-shadow: inset 0 -3px 0 rgba(0,0,0,.18); }
+        .blk.rep { background: #f59e0b; display: flex; flex-direction: column; box-shadow: inset 0 -3px 0 rgba(0,0,0,.15); }
+        .rep-head { padding: 8px 14px; }
+        .rep-body { margin-left: 18px; padding: 6px 8px; background: var(--surface); border-radius: 8px 0 0 8px; display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+        .rep-foot { height: 12px; }
+        .secilebilir .blk { cursor: pointer; }
+        .blk.yanlis { outline: 4px solid var(--bad); outline-offset: 2px; }
+        .blk.bulundu { outline: 4px solid var(--ok); outline-offset: 2px; }
+        .dR { background: #16a36a; } .dL { background: #f97316; } .dU { background: #1d5fd6; } .dD { background: #8b5cf6; }
+        .duzeltme { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+        .duzeltme button { text-align: left; font-family: var(--mono); font-size: .95rem; padding: 10px 14px; border-radius: 10px; border: 2px solid var(--line); background: var(--code-bg); color: var(--code-ink); cursor: pointer; }
+        .duzeltme button:hover { border-color: var(--accent); }
+        .duzeltme button.hata { border-color: var(--bad); animation: sars .35s; opacity: .5; }
+        .fb { margin-top: 12px; font-weight: 600; min-height: 1.5em; }
+        .fb.bad { color: var(--bad); } .fb.ok { color: var(--ok); }
+        .board-wrap { background: var(--bg-alt); border-radius: 14px; padding: 16px; display: grid; place-items: center; overflow: hidden; }
+        .board { position: relative; display: grid; }
+        .cell { width: var(--c); height: var(--c); background: var(--tile); box-shadow: inset 0 0 0 1px var(--tile-line); }
+        .board svg.yollar { position: absolute; inset: 0; pointer-events: none; overflow: visible; }
+        .karakter { position: absolute; left: 0; top: 0; width: var(--c); height: var(--c); transition: transform .16s ease-out; z-index: 2; padding: 3px; }
+        .karakter svg { width: 100%; height: 100%; }
+        .legend { display: flex; gap: 16px; justify-content: center; margin-top: 12px; font-size: .88rem; color: var(--muted); flex-wrap: wrap; }
+        .legend i.l { display: inline-block; width: 26px; height: 0; border-top: 4px dashed; vertical-align: middle; margin-right: 6px; }
+        .sonuc { text-align: center; padding: 36px 22px; max-width: 560px; margin: 0 auto; }
+        .sonuc .big-stars { font-size: 2.6rem; margin: 12px 0; }
+        .sonuc .actions { display: flex; gap: 10px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
+        @keyframes sars { 0%,100% { translate: 0 } 25% { translate: -6px 0 } 75% { translate: 6px 0 } }
+        @media (max-width: 900px) { .play { grid-template-columns: 1fr; } .kademeler { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <header class="kl-top">
+        <div class="wrap kl-top-inner">
+            <a href="./" class="kl-brand"><span class="kl-logo">&lt;/&gt;</span>KodLab</a>
+            <span class="kl-crumb"><i class="fas fa-chevron-right" style="font-size:.7em"></i><span>Hata Avcısı</span></span>
+            <span class="kl-spacer"></span>
+            <button class="icon-btn" id="themeBtn" aria-label="Temayı değiştir"><i class="fas fa-circle-half-stroke"></i></button>
+        </div>
+    </header>
+
+    <main class="wrap">
+        <section id="liste">
+            <div class="intro">
+                <h1>Hata Avcısı</h1>
+                <p>Robot yanlış yere gitti! Yeşil kesikli çizgi robotun gitmesi gereken yolu, kırmızı çizgi ise kodun onu götürdüğü yolu gösteriyor. Koddaki <b>tek bir hatayı</b> bul ve düzelt. Programcılar zamanlarının büyük kısmını tam olarak bununla geçirir: hata ayıklama (debugging).</p>
+            </div>
+            <div class="kademeler" id="kademeler"></div>
+        </section>
+
+        <section id="oyun" hidden>
+            <div class="game-top">
+                <button class="icon-btn" id="geri" aria-label="Geri"><i class="fas fa-arrow-left"></i></button>
+                <h2 id="baslik"></h2>
+                <div class="dots" id="dots"></div>
+            </div>
+            <div class="play">
+                <div class="card panel" id="kodPanel">
+                    <p class="gorev" id="gorev"></p>
+                    <div id="kod"></div>
+                    <div class="duzeltme" id="duzeltme"></div>
+                    <p class="fb" id="fb" role="status"></p>
+                </div>
+                <div class="card panel">
+                    <div class="board-wrap" id="boardWrap"><div class="board" id="board"></div></div>
+                    <div class="legend">
+                        <span><i class="l" style="border-color:#16a36a"></i>Gitmesi gereken yol</span>
+                        <span><i class="l" style="border-color:#e5484d;border-top-style:solid"></i>Kodun götürdüğü yol</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="sonuc" hidden>
+            <div class="card sonuc">
+                <h2 id="sBaslik"></h2>
+                <div class="big-stars" id="sYildiz"></div>
+                <p id="sMetin" style="color:var(--muted)"></p>
+                <div class="actions">
+                    <button class="btn" id="sListe">Kademeler</button>
+                    <button class="btn btn-primary" id="sTekrar"><i class="fas fa-bug"></i> 5 yeni hata</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="ortak.js"></script>
+    <script src="sensin-motor.js"></script>
+    <script src="hata-motor.js"></script>
+    <script src="hata.js"></script>
+</body>
+</html>

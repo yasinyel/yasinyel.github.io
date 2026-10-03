@@ -144,6 +144,7 @@
         const kod = satirKodu(kaynak).map(([n, c]) =>
             `<span class="run">${n}<span class="sw" style="background:${RENKLER[c].hex}" title="${RENKLER[c].ad}"></span></span>`).join('');
         const tamam = !tasarim && piksel[y].every((c, x) => c === hedef[y][x]);
+        if (tamam && !el.classList.contains('ok') && !tasarim) KL.ses('tik');
         el.className = 'rc' + (tamam ? ' ok' : '');
         el.innerHTML = kod + (tasarim ? '' : `<span class="chk">${tamam ? '✓' : ''}</span>`);
     }

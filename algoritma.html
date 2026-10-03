@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#1d5fd6">
+    <link rel="icon" href="ikon/ikon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="ikon/ikon-192.png">
+    <title>Algoritma Sensin — KodLab</title>
+    <meta name="description" content="Arama ve sıralama algoritmalarını bilgisayar gibi adım adım kendin çalıştır.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="ortak.css">
+    <style>
+        main { padding: 28px 0 60px; }
+        .intro h1 { font-size: clamp(1.8rem, 4vw, 2.4rem); }
+        .intro p { color: var(--muted); margin-top: 6px; max-width: 720px; }
+        .algo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; margin-top: 24px; }
+        .algo { padding: 18px; text-align: left; cursor: pointer; display: flex; flex-direction: column; gap: 6px; transition: transform .15s, border-color .15s; }
+        .algo:hover { transform: translateY(-2px); border-color: var(--accent); }
+        .algo .ik { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; color: #fff; font-size: 1.1rem; }
+        .algo .grade { font-size: .78rem; font-weight: 700; color: var(--accent); }
+        .algo h3 { font-size: 1.2rem; }
+        .algo p { color: var(--muted); font-size: .9rem; flex: 1; }
+
+        .game-top { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+        .game-top h2 { font-size: 1.25rem; flex: 1; }
+        .meta { display: flex; gap: 14px; color: var(--muted); font-weight: 600; font-size: .92rem; }
+        .meta b { color: var(--ink); font-family: var(--mono); }
+        .play { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: 20px; align-items: start; }
+        .code-card { padding: 18px; }
+        .code-card h3, .vars h3 { font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-family: var(--body); margin-bottom: 10px; }
+        pre.code { background: var(--code-bg); color: var(--code-ink); font-family: var(--mono); font-size: 14.5px; line-height: 1.75; padding: 14px 0; border-radius: 14px; overflow-x: auto; border: 1px solid var(--line); }
+        pre.code .ln { display: block; padding-right: 16px; border-left: 3px solid transparent; white-space: pre; }
+        pre.code .ln::before { content: attr(data-n); display: inline-block; width: 2.2em; margin-right: 12px; color: #4a5875; text-align: right; }
+        pre.code .ln.cur { background: rgba(255, 209, 102, .14); border-left-color: #ffd166; }
+        .k { color: #c792ea; } .f { color: #82aaff; } .n { color: #f78c6c; }
+        .vars { margin-top: 14px; }
+        .vars table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: .95rem; }
+        .vars td { padding: 6px 10px; border-bottom: 1px solid var(--line); }
+        .vars td:first-child { color: var(--muted); width: 40%; }
+        .vars tr.chg td:last-child { color: var(--accent); font-weight: 700; }
+
+        .stage { padding: 20px; display: flex; flex-direction: column; gap: 18px; }
+        .target { text-align: center; font-family: var(--display); font-weight: 800; font-size: 1.5rem; min-height: 1.6em; }
+        .target span { color: var(--accent); }
+        .keycard { display: flex; justify-content: center; } .keycard .crd { width: 64px; }
+        .row { display: grid; grid-template-columns: repeat(var(--n, 7), minmax(0, 64px)); justify-content: center; gap: clamp(3px, .8vw, 10px); padding: 22px 0 22px; }
+        .crd { position: relative; width: 100%; aspect-ratio: 3/4; container-type: inline-size; border-radius: 10px; display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: clamp(.8rem, 2.4vw, 1.5rem); background: var(--surface); border: 2px solid var(--line); box-shadow: var(--shadow); transition: transform .3s, opacity .3s, border-color .2s, background .2s; flex: 0 0 auto; }
+        .crd.kapali { background: repeating-linear-gradient(45deg, var(--accent), var(--accent) 5px, color-mix(in srgb, var(--accent) 80%, #000) 5px, color-mix(in srgb, var(--accent) 80%, #000) 10px); color: transparent; border-color: var(--accent); }
+        .crd.vurgu { border-color: #f5b400; box-shadow: 0 0 0 4px rgba(245, 180, 0, .35); transform: translateY(-6px); }
+        .crd.sirali { border-color: var(--ok); background: var(--ok-soft); }
+        .crd.soluk { opacity: .3; }
+        .crd.bos { background: transparent; border-style: dashed; box-shadow: none; }
+        .crd.tikla { cursor: pointer; }
+        .crd.tikla:hover { border-color: var(--accent); transform: translateY(-4px); }
+        .crd.hata { animation: sars .35s; border-color: var(--bad); }
+        .crd .ix { position: absolute; bottom: -20px; font-family: var(--mono); font-size: .72rem; color: var(--muted); font-weight: 500; }
+        .crd .tag { position: absolute; top: -20px; font-family: var(--mono); font-size: .7rem; color: var(--accent); font-weight: 700; }
+        .crd.anahtar { border-color: #e5484d; box-shadow: 0 0 0 4px rgba(229, 72, 77, .25); }
+        .soru { text-align: center; font-weight: 600; font-size: 1.08rem; }
+        .secenekler { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        .secenekler .btn { min-width: 150px; padding: 12px 18px; font-size: 1rem; }
+        .secenekler .btn kbd { margin-left: 6px; font-size: .7rem; }
+        .fb { text-align: center; min-height: 1.5em; font-weight: 600; }
+        .fb.bad { color: var(--bad); } .fb.ok { color: var(--ok); }
+        .ozet { padding: 18px; border-radius: 14px; background: var(--ok-soft); text-align: center; }
+        .ozet h3 { font-size: 1.3rem; margin-bottom: 6px; }
+        .ozet .actions { display: flex; gap: 10px; justify-content: center; margin-top: 14px; flex-wrap: wrap; }
+        @keyframes sars { 0%,100% { translate: 0 } 25% { translate: -6px 0 } 75% { translate: 6px 0 } }
+        @media (max-width: 900px) { .play { grid-template-columns: 1fr; } .stage { order: -1; } }
+    </style>
+</head>
+<body>
+    <header class="kl-top">
+        <div class="wrap kl-top-inner">
+            <a href="./" class="kl-brand"><span class="kl-logo">&lt;/&gt;</span>KodLab</a>
+            <span class="kl-crumb"><i class="fas fa-chevron-right" style="font-size:.7em"></i><span>Algoritma Sensin</span></span>
+            <span class="kl-spacer"></span>
+            <button class="icon-btn" id="themeBtn" aria-label="Temayı değiştir"><i class="fas fa-circle-half-stroke"></i></button>
+        </div>
+    </header>
+
+    <main class="wrap">
+        <section id="liste">
+            <div class="intro">
+                <h1>Algoritma Sensin</h1>
+                <p>Bilgisayar bir diziyi nasıl sıralar, bir sayıyı nasıl arar? Bu sefer işlemci sensin! Soldaki algoritmayı satır satır uygula; her adımda bilgisayarın vereceği kararı sen ver. Sonunda kaç adımda bitirdiğini diğer algoritmalarla karşılaştır.</p>
+            </div>
+            <div class="algo-grid" id="algoGrid"></div>
+        </section>
+
+        <section id="oyun" hidden>
+            <div class="game-top">
+                <button class="icon-btn" id="geri" aria-label="Algoritmalara dön"><i class="fas fa-arrow-left"></i></button>
+                <h2 id="baslik"></h2>
+                <div class="meta">
+                    <span>Adım <b id="adimNo"></b></span>
+                    <span><i class="fas fa-xmark" style="color:var(--bad)"></i> <b id="hataNo">0</b></span>
+                </div>
+            </div>
+            <div class="play">
+                <div class="card code-card">
+                    <h3>Algoritma (Python)</h3>
+                    <pre class="code" id="kod"></pre>
+                    <div class="vars"><h3>Değişkenler</h3><table id="vars"></table></div>
+                </div>
+                <div class="card stage">
+                    <div class="target" id="hedef"></div>
+                    <div class="keycard" id="anahtar"></div>
+                    <div class="row" id="kartlar"></div>
+                    <div class="soru" id="soru"></div>
+                    <div class="secenekler" id="secenekler"></div>
+                    <div class="fb" id="fb" role="status"></div>
+                    <div class="ozet" id="ozet" hidden>
+                        <h3 id="ozBaslik"></h3>
+                        <div id="ozYildiz" style="font-size:1.8rem"></div>
+                        <p id="ozMetin"></p>
+                        <div class="actions">
+                            <button class="btn" id="digerleri">Diğer algoritmalar</button>
+                            <button class="btn btn-primary" id="tekrar"><i class="fas fa-shuffle"></i> Yeni sayılarla</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="ortak.js"></script>
+    <script src="algoritma-motor.js"></script>
+    <script src="algoritma.js"></script>
+</body>
+</html>
