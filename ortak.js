@@ -84,6 +84,30 @@
             return s + '</span>';
         },
 
+        // ---------- Sesli yönerge (tarayıcının Türkçe metin okuma özelliği) ----------
+        seslendirmeVar() { return 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window; },
+        seslendir(metin) {
+            if (!KL.seslendirmeVar() || !metin) return false;
+            speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance(String(metin).replace(/\s+/g, ' ').trim());
+            u.lang = 'tr-TR'; u.rate = 0.95;
+            const ses = speechSynthesis.getVoices().find(v => /^tr/i.test(v.lang));
+            if (ses) u.voice = ses;
+            speechSynthesis.speak(u);
+            return true;
+        },
+        // Sayfadaki görünür yönergeyi bulur: önce data-seslendir, sonra bilinen yönerge alanları
+        yonergeMetni() {
+            const gorunur = (e) => e.getClientRects().length > 0 && !e.closest('[hidden], dialog:not([open])');
+            const SECICILER = ['dialog[open] [data-seslendir]', 'dialog[open] p', '[data-seslendir]', '#anlatim', '.anlatim', '#lesson', '#goal', '#taskQ', '#gorev', '#adim', '.soru', '.gorev-kart p', '#msg', '.intro p', 'h1 + p'];
+            for (const s of SECICILER) for (const e of document.querySelectorAll(s)) {
+                if (!gorunur(e)) continue;
+                const t = (e.dataset.seslendir || e.innerText || '').trim();
+                if (t) return t;
+            }
+            return '';
+        },
+
         rastgele(a, b) { return a + Math.floor(Math.random() * (b - a + 1)); },
         sec(dizi) { return dizi[Math.floor(Math.random() * dizi.length)]; },
         karistir(dizi) {
@@ -107,6 +131,7 @@
             ciz();
             ses.addEventListener('click', () => { KL.yaz('ses', !KL.sesAcik()); ciz(); KL.ses('dogru'); });
             b.before(ses);
+            if (KL.seslendirmeVar()) sesliYonergeKur(ses);
             if (!/profil\.html$/.test(location.pathname)) {
                 const p = document.createElement('a');
                 p.className = 'icon-btn'; p.href = 'profil.html'; p.setAttribute('aria-label', 'Profilim');
@@ -122,6 +147,41 @@
             }
         }
     });
+
+    // Üst bara "yönergeyi dinle" düğmesi ve otomatik okuma
+    function sesliYonergeKur(once) {
+        const d = document.createElement('button');
+        d.className = 'icon-btn'; d.id = 'dinleBtn';
+        d.setAttribute('aria-label', 'Yönergeyi sesli dinle'); d.title = 'Yönergeyi sesli dinle';
+        d.setAttribute('aria-haspopup', 'true');
+        d.innerHTML = '<i class="fas fa-ear-listen"></i>';
+        const menu = document.createElement('div');
+        menu.className = 'kl-menu'; menu.hidden = true;
+        menu.innerHTML = '<button data-m="oku"><i class="fas fa-play"></i> Yönergeyi şimdi oku</button><label><input type="checkbox" data-m="oto"> Yeni yönergeleri kendiliğinden oku</label>';
+        once.before(d);
+        document.body.appendChild(menu);
+        const oto = menu.querySelector('[data-m="oto"]');
+        oto.checked = !!KL.oku('sesliYonerge', false);
+        const konumla = () => { const r = d.getBoundingClientRect(); menu.style.top = (r.bottom + 6 + window.scrollY) + 'px'; menu.style.left = Math.max(8, Math.min(r.right - 260, innerWidth - 268)) + 'px'; };
+        d.addEventListener('click', (e) => { e.stopPropagation(); if (speechSynthesis.speaking) { speechSynthesis.cancel(); menu.hidden = true; return; } konumla(); menu.hidden = !menu.hidden; });
+        document.addEventListener('click', (e) => { if (!menu.contains(e.target)) menu.hidden = true; });
+        let son = '';
+        menu.querySelector('[data-m="oku"]').addEventListener('click', () => {
+            menu.hidden = true;
+            son = KL.yonergeMetni();
+            if (!KL.seslendir(son || 'Bu ekranda okunacak bir yönerge yok.')) KL.bildir('Tarayıcın sesli okumayı desteklemiyor.');
+        });
+        oto.addEventListener('change', () => { KL.yaz('sesliYonerge', oto.checked); if (oto.checked) { son = ''; kontrol(); } else speechSynthesis.cancel(); });
+        // Otomatik okuma: sayfa içeriği değişip yeni bir yönerge görünür olunca okunur
+        let zaman = null;
+        const kontrol = () => {
+            if (!KL.oku('sesliYonerge', false)) return;
+            const t = KL.yonergeMetni();
+            if (t && t !== son) { son = t; KL.seslendir(t); }
+        };
+        new MutationObserver(() => { clearTimeout(zaman); zaman = setTimeout(kontrol, 700); }).observe(document.body, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['hidden', 'open'] });
+        setTimeout(kontrol, 900);
+    }
 
     // Çevrimdışı çalışma: sayfalar ilk ziyarette önbelleğe alınır, internet kesilse de açılır
     if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
