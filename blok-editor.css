@@ -1,0 +1,28 @@
+/* KodLab — genel blok editörü */
+.be-kutu { background: var(--bg-alt); padding: 12px; display: flex; flex-direction: column; gap: 7px; overflow-y: auto; border-right: 1px solid var(--line); align-items: flex-start; }
+.be-kutu h3 { font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-family: var(--body); margin-top: 6px; }
+.be-kutu.be-sil { background: var(--bad-soft); outline: 2px dashed var(--bad); outline-offset: -6px; }
+.be-kutu input, .be-kutu select { pointer-events: none; }
+.be-alan { position: relative; padding: 16px; overflow: auto; background-image: radial-gradient(var(--line) 1px, transparent 1px); background-size: 18px 18px; }
+.be-kok { display: flex; flex-direction: column; gap: 18px; align-items: flex-start; padding-bottom: 80px; }
+.be-bos { color: var(--muted); font-size: .92rem; position: absolute; top: 24px; left: 24px; pointer-events: none; }
+
+.be-blk { --b: #1d5fd6; display: inline-flex; flex-direction: column; color: #fff; font-weight: 700; font-size: .86rem; border-radius: 8px; user-select: none; touch-action: none; position: relative; max-width: 100%; }
+.be-ust { display: flex; align-items: center; gap: 6px; padding: 7px 10px; background: var(--b); border-radius: 8px; box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .18); cursor: grab; white-space: nowrap; flex-wrap: wrap; }
+.be-c > .be-ust { border-radius: 8px 8px 0 0; }
+.be-ic { display: flex; }
+.be-ic::before { content: ''; width: 16px; background: var(--b); flex: 0 0 auto; }
+.be-ic > .be-liste { min-height: 28px; padding: 4px 0 4px 6px; flex: 1; }
+.be-ara { background: var(--b); padding: 4px 10px; }
+.be-alt { height: 13px; background: var(--b); border-radius: 0 0 8px 8px; width: 90px; box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .18); }
+.be-sapka > .be-ust { border-radius: 16px 16px 8px 8px; padding-top: 10px; }
+.be-yigin > .be-liste { min-height: 26px; padding: 3px 0 0 0; }
+.be-liste { display: flex; flex-direction: column; gap: 3px; align-items: flex-start; }
+.be-blk input, .be-blk select { font: inherit; font-family: var(--mono); font-size: .82rem; border: 0; border-radius: 6px; padding: 2px 6px; background: #fff; color: #111827; }
+.be-blk input.be-n { width: 52px; text-align: center; }
+.be-blk input.be-t { width: 96px; font-family: var(--body); }
+.be-blk select { max-width: 170px; }
+.be-blk .be-hata { outline: 3px solid #ffd166; }
+.be-hayalet { position: fixed; z-index: 1000; pointer-events: none; opacity: .92; filter: drop-shadow(0 10px 16px rgba(0, 0, 0, .25)); }
+.be-imlec { position: absolute; height: 4px; width: 150px; background: #ffd166; border-radius: 4px; pointer-events: none; z-index: 5; box-shadow: 0 0 0 2px rgba(0, 0, 0, .15); }
+.be-calisiyor > .be-ust { outline: 3px solid #ffd166; outline-offset: 1px; }
