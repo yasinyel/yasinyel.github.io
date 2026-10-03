@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#1d5fd6">
+    <link rel="icon" href="ikon/ikon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="ikon/ikon-192.png">
+    <title>Gizli Mesaj — KodLab</title>
+    <meta name="description" content="Sezar ve Vigenère şifreleriyle mesaj şifrele, frekans analiziyle şifre kır, modern şifrelemenin gücünü keşfet.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="ortak.css">
+    <style>
+        main { padding: 28px 0 60px; }
+        .intro h1 { font-size: clamp(1.8rem, 4vw, 2.4rem); }
+        .intro p { color: var(--muted); margin-top: 6px; max-width: 720px; }
+        .lvl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; margin-top: 24px; }
+        .lvl-card { padding: 16px; text-align: left; cursor: pointer; display: flex; flex-direction: column; gap: 4px; transition: transform .15s, border-color .15s; }
+        .lvl-card:hover:not(:disabled) { transform: translateY(-2px); border-color: var(--accent); }
+        .lvl-card:disabled { opacity: .5; cursor: not-allowed; }
+        .lvl-card .no { font-family: var(--mono); color: var(--accent); font-size: .82rem; }
+        .lvl-card h3 { font-size: 1.12rem; }
+        .lvl-card small { color: var(--muted); }
+
+        .game-top { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+        .game-top h2 { font-size: 1.25rem; flex: 1; }
+        .dots { display: flex; gap: 6px; }
+        .dots span { width: 12px; height: 12px; border-radius: 50%; background: var(--line); }
+        .dots span.ok { background: var(--ok); } .dots span.cur { background: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+        .lesson { padding: 14px 18px; margin-bottom: 16px; color: var(--muted); }
+        .lesson b { color: var(--ink); }
+        .play { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+        .panel { padding: 20px; }
+        .soru { font-size: 1.1rem; margin-bottom: 14px; line-height: 1.7; }
+        code.sifreli, .sifreli-kutu { font-family: var(--mono); background: var(--code-bg); color: #ffd166; padding: 3px 8px; border-radius: 8px; letter-spacing: 1px; }
+        .sifreli-kutu { display: block; padding: 12px 14px; line-height: 1.7; margin: 10px 0; word-break: break-word; font-size: .95rem; }
+        .onizleme { font-family: var(--mono); background: var(--bg-alt); padding: 12px 14px; border-radius: 10px; letter-spacing: 1px; min-height: 48px; word-break: break-word; line-height: 1.7; }
+        .cevap { display: flex; gap: 8px; margin-top: 12px; }
+        .cevap input { flex: 1; font-family: var(--mono); font-size: 1.15rem; letter-spacing: 2px; text-transform: uppercase; padding: 10px 12px; border-radius: 10px; border: 2px solid var(--line); background: var(--bg); min-width: 0; }
+        .cevap input:focus { outline: none; border-color: var(--accent); }
+        .fb { margin-top: 12px; font-weight: 600; min-height: 1.5em; }
+        .fb.ok { color: var(--ok); } .fb.bad { color: var(--bad); }
+        .klavye { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 10px; }
+        .klavye button { width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); font-family: var(--mono); font-weight: 700; cursor: pointer; }
+        .klavye button:hover { border-color: var(--accent); }
+        .klavye button.genis { width: auto; padding: 0 10px; }
+
+        .cark-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        svg.cark { width: min(360px, 100%); height: auto; touch-action: none; }
+        svg.cark text { font-family: var(--mono); font-weight: 700; text-anchor: middle; dominant-baseline: central; }
+        .cark-kontrol { display: flex; gap: 10px; align-items: center; font-weight: 700; }
+        .cark-kontrol b { font-family: var(--mono); font-size: 1.3rem; min-width: 2ch; text-align: center; color: var(--accent); }
+        input[type=range].k { width: 100%; accent-color: var(--accent); }
+        .kbilgi { display: flex; justify-content: space-between; font-weight: 700; margin: 6px 0; }
+        .kbilgi b { font-family: var(--mono); color: var(--accent); font-size: 1.2rem; }
+        .grafik { display: grid; grid-template-columns: repeat(29, 1fr); gap: 2px; align-items: end; height: 170px; padding-top: 10px; }
+        .grafik .sutun { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; position: relative; }
+        .grafik .b1, .grafik .b2 { width: 100%; border-radius: 3px 3px 0 0; position: absolute; bottom: 16px; }
+        .grafik .b1 { background: rgba(100, 116, 139, .35); }
+        .grafik .b2 { background: var(--accent); width: 55%; transition: height .2s; }
+        .grafik span { font-family: var(--mono); font-size: .62rem; color: var(--muted); position: absolute; bottom: 0; }
+        .lejant { display: flex; gap: 14px; font-size: .82rem; color: var(--muted); margin-top: 8px; }
+        .lejant i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: middle; margin-right: 4px; }
+        .tablo-vig { overflow: auto; max-height: 440px; border-radius: 10px; border: 1px solid var(--line); }
+        .tablo-vig table { border-collapse: collapse; font-family: var(--mono); font-size: .72rem; }
+        .tablo-vig td, .tablo-vig th { width: 20px; height: 20px; text-align: center; padding: 0; }
+        .tablo-vig th { background: var(--bg-alt); position: sticky; top: 0; z-index: 1; }
+        .tablo-vig th.sol { position: sticky; left: 0; z-index: 2; }
+        .tablo-vig td.sat, .tablo-vig td.sut { background: var(--accent-soft); }
+        .tablo-vig td.kes { background: var(--accent); color: var(--accent-ink); font-weight: 800; }
+        .hizala { font-family: var(--mono); display: grid; gap: 2px 4px; margin: 10px 0; font-size: 1rem; }
+        .hizala div { text-align: center; padding: 2px 0; border-radius: 4px; }
+        .hizala .m { font-weight: 700; } .hizala .a { color: var(--accent); background: var(--accent-soft); } .hizala .d { color: var(--muted); font-size: .75rem; }
+        .guc-satir { display: flex; justify-content: space-between; align-items: baseline; margin: 8px 0; gap: 8px; }
+        .guc-satir b { font-family: var(--display); font-size: 1.6rem; color: var(--accent); }
+        .ornekler { display: flex; flex-direction: column; gap: 6px; margin-top: 12px; font-size: .9rem; }
+        .ornekler button { text-align: left; border: 1px solid var(--line); background: var(--bg); border-radius: 10px; padding: 8px 12px; cursor: pointer; display: flex; justify-content: space-between; gap: 8px; }
+        .ornekler button:hover { border-color: var(--accent); }
+        .ornekler small { color: var(--muted); }
+        .secenekler { display: flex; flex-direction: column; gap: 8px; }
+        .secenekler button { text-align: left; padding: 12px 14px; border-radius: 12px; border: 2px solid var(--line); background: var(--surface); cursor: pointer; font-weight: 600; }
+        .secenekler button:hover { border-color: var(--accent); }
+        .secenekler button.hata { border-color: var(--bad); background: var(--bad-soft); }
+        .secenekler button.dogru { border-color: var(--ok); background: var(--ok-soft); }
+        .sonuc { text-align: center; padding: 36px 22px; max-width: 560px; margin: 0 auto; }
+        .sonuc .big-stars { font-size: 2.6rem; margin: 12px 0; }
+        .sonuc .actions { display: flex; gap: 10px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
+        @media (max-width: 900px) { .play { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <header class="kl-top">
+        <div class="wrap kl-top-inner">
+            <a href="./" class="kl-brand"><span class="kl-logo">&lt;/&gt;</span>KodLab</a>
+            <span class="kl-crumb"><i class="fas fa-chevron-right" style="font-size:.7em"></i><span>Gizli Mesaj</span></span>
+            <span class="kl-spacer"></span>
+            <button class="icon-btn" id="themeBtn" aria-label="Temayı değiştir"><i class="fas fa-circle-half-stroke"></i></button>
+        </div>
+    </header>
+
+    <main class="wrap">
+        <section id="liste">
+            <div class="intro">
+                <h1>Gizli Mesaj</h1>
+                <p>Şifreleme, mesajı yalnızca anahtarı bilenin okuyabileceği hale getirmektir. İnternette gönderdiğin her mesaj, girdiğin her şifre bu sayede korunur. 2000 yıllık Sezar şifresinden başla, bugünkü bankaların kullandığı yöntemlere kadar ilerle. Kod kıran bir dedektif ol!</p>
+            </div>
+            <div class="lvl-grid" id="lvlGrid"></div>
+        </section>
+
+        <section id="oyun" hidden>
+            <div class="game-top">
+                <button class="icon-btn" id="geri" aria-label="Geri"><i class="fas fa-arrow-left"></i></button>
+                <h2 id="baslik"></h2>
+                <div class="dots" id="dots"></div>
+            </div>
+            <div class="card lesson" id="anlatim"></div>
+            <div class="play">
+                <div class="card panel" id="soruPanel"></div>
+                <div class="card panel" id="aracPanel"></div>
+            </div>
+        </section>
+
+        <section id="sonuc" hidden>
+            <div class="card sonuc">
+                <h2 id="sBaslik"></h2>
+                <div class="big-stars" id="sYildiz"></div>
+                <p id="sMetin" style="color:var(--muted)"></p>
+                <div class="actions">
+                    <button class="btn" id="sListe">Bölümler</button>
+                    <button class="btn" id="sTekrar"><i class="fas fa-rotate-left"></i> Tekrar</button>
+                    <button class="btn btn-primary" id="sSonraki">Sonraki <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="ortak.js"></script>
+    <script src="sifre-motor.js"></script>
+    <script src="sifre.js"></script>
+</body>
+</html>
