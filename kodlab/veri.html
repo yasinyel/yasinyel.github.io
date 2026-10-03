@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#1d5fd6">
+    <link rel="icon" href="ikon/ikon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="ikon/ikon-192.png">
+    <title>Veri Bilimi Atölyesi — KodLab</title>
+    <meta name="description" content="Veriyi oku, grafiğini çiz, ortalama ve ortancayı hesapla, yanıltıcı grafikleri yakala, kendi anketini yap.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="ortak.css">
+    <style>
+        main { padding: 28px 0 60px; }
+        .intro h1 { font-size: clamp(1.8rem, 4vw, 2.4rem); }
+        .intro p { color: var(--muted); margin-top: 6px; max-width: 720px; }
+        .bol-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; margin-top: 24px; }
+        .bol { padding: 20px; text-align: left; cursor: pointer; display: flex; flex-direction: column; gap: 6px; transition: transform .15s, border-color .15s; }
+        .bol:hover { transform: translateY(-2px); border-color: var(--accent); }
+        .bol .ik { width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center; color: #fff; font-size: 1.2rem; }
+        .bol h3 { font-size: 1.2rem; }
+        .bol p { color: var(--muted); font-size: .9rem; flex: 1; }
+        .bol small { color: var(--accent); font-weight: 700; }
+
+        .game-top { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .game-top h2 { font-size: 1.25rem; flex: 1; }
+        .dots { display: flex; gap: 6px; flex-wrap: wrap; }
+        .dots span { width: 12px; height: 12px; border-radius: 50%; background: var(--line); }
+        .dots span.ok { background: var(--ok); } .dots span.cur { background: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+        .panel { padding: 22px; }
+        .uyari { background: var(--accent-soft); border-radius: 12px; padding: 12px 14px; font-size: .92rem; margin-bottom: 16px; }
+
+        .k { cursor: pointer; border-radius: 4px; transition: background .15s; }
+        .bulmaca .k:hover { background: rgba(245, 180, 0, .25); }
+        .k.bulundu { background: rgba(229, 72, 77, .18); outline: 2px solid var(--bad); outline-offset: 1px; }
+        .k.bos { animation: titre .3s; }
+        @keyframes titre { 0%,100% { translate: 0 } 33% { translate: -3px 0 } 66% { translate: 3px 0 } }
+        .lnk { color: #1d5fd6; text-decoration: underline; font-weight: 600; }
+        .durum-cubugu { font-family: var(--mono); font-size: .8rem; background: var(--bg-alt); color: var(--muted); padding: 6px 12px; min-height: 30px; border-top: 1px solid var(--line); }
+        .karar { display: flex; gap: 10px; margin: 14px 0; flex-wrap: wrap; }
+        .karar .btn { flex: 1; padding: 14px; font-size: 1rem; }
+        .ipucu-listesi { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+        .ipucu-listesi li { background: var(--bad-soft); border-radius: 10px; padding: 8px 12px; font-size: .92rem; }
+        .ipucu-listesi li.gizli { background: var(--bg-alt); color: var(--muted); }
+        .fb { font-weight: 600; min-height: 1.5em; margin-top: 10px; }
+        .fb.ok { color: var(--ok); } .fb.bad { color: var(--bad); }
+
+        /* Ne yapmalı */
+        .durum-kart { max-width: 760px; margin: 0 auto; }
+        .durum-kart .soru { font-size: 1.2rem; font-weight: 600; margin-bottom: 16px; line-height: 1.5; }
+        .secenekler { display: flex; flex-direction: column; gap: 10px; }
+        .secenekler button { text-align: left; padding: 14px 16px; border-radius: 12px; border: 2px solid var(--line); background: var(--surface); cursor: pointer; font-size: 1rem; font-weight: 600; }
+        .secenekler button:hover { border-color: var(--accent); }
+        .secenekler button.dogru { border-color: var(--ok); background: var(--ok-soft); }
+        .secenekler button.yanlis { border-color: var(--bad); background: var(--bad-soft); opacity: .7; }
+        .sonuc { text-align: center; padding: 36px 22px; max-width: 560px; margin: 0 auto; }
+        .sonuc .big-stars { font-size: 2.6rem; margin: 12px 0; }
+        .sonuc .actions { display: flex; gap: 10px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
+        .sonuc { text-align: center; padding: 36px 22px; max-width: 560px; margin: 0 auto; }
+        .sonuc .big-stars { font-size: 2.6rem; margin: 12px 0; }
+        .sonuc .actions { display: flex; gap: 10px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
+        /* Grafik renkleri (kategorik sıra sabit) */
+        .viz { --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100; --s5: #e87ba4; --s6: #008300; --s7: #4a3aa7; --s8: #e34948;
+               --grid: #e3e6eb; --eks: #8a93a3; --yazi: #3b4250; --yuzey: var(--surface); }
+        @media (prefers-color-scheme: dark) { :root:where(:not([data-theme="light"])) .viz { --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181; --s6: #008300; --s7: #9085e9; --s8: #e66767; --grid: #263247; --eks: #6b778c; --yazi: #c3cad6; } }
+        :root[data-theme="dark"] .viz { --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181; --s6: #008300; --s7: #9085e9; --s8: #e66767; --grid: #263247; --eks: #6b778c; --yazi: #c3cad6; }
+        .viz svg { width: 100%; height: auto; display: block; font-family: var(--body); }
+        .viz text { fill: var(--yazi); font-size: 12px; }
+        .viz .baslik-y { font-weight: 700; font-size: 13px; }
+        .viz .izgara { stroke: var(--grid); stroke-width: 1; }
+        .viz .eksen { stroke: var(--eks); stroke-width: 1; }
+        .viz .isaret:hover { opacity: .8; }
+        .gr-kart { padding: 16px; }
+        .gr-kart h3 { font-size: 1rem; margin-bottom: 6px; }
+        .dd { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+        .tablo-kutu { overflow-x: auto; }
+        table.veri { width: 100%; border-collapse: collapse; font-size: .9rem; }
+        table.veri th, table.veri td { padding: 7px 8px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
+        table.veri td.s { text-align: right; font-family: var(--mono); }
+        table.veri th { background: var(--bg-alt); position: sticky; top: 0; }
+        table.veri th button { border: 0; background: none; font: inherit; font-weight: 700; cursor: pointer; color: var(--ink); display: flex; gap: 6px; align-items: center; padding: 0; }
+        table.veri th button.aktif { color: var(--accent); }
+        .suzgec { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; align-items: center; font-size: .88rem; }
+        .suzgec select, .cevap input, .cevap select { padding: 8px 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); font: inherit; }
+        .soru-kart .soru { font-size: 1.12rem; font-weight: 600; line-height: 1.5; margin-bottom: 14px; }
+        .cevap { display: flex; gap: 8px; flex-wrap: wrap; }
+        .cevap input { width: 140px; font-family: var(--mono); font-size: 1.05rem; }
+        .aciklama { margin-top: 12px; padding: 10px 12px; border-radius: 10px; background: var(--bg-alt); font-size: .92rem; line-height: 1.55; }
+        .turler { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+        .turler button { padding: 14px 10px; border-radius: 12px; border: 2px solid var(--line); background: var(--surface); cursor: pointer; font: inherit; font-weight: 700; display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--ink); }
+        .turler button i { font-size: 1.5rem; color: var(--accent); }
+        .turler button.dogru { border-color: var(--ok); background: var(--ok-soft); }
+        .turler button.yanlis { border-color: var(--bad); background: var(--bad-soft); }
+        .cizim-alan { touch-action: none; user-select: none; }
+        .cizim-alan .tutamak { cursor: ns-resize; }
+        .anket { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 18px; align-items: start; }
+        .anket input.baslik-in { width: 100%; font: inherit; font-size: 1.1rem; font-weight: 700; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); }
+        .secenek { display: flex; gap: 6px; align-items: center; margin-top: 8px; }
+        .secenek .renk { width: 12px; height: 12px; border-radius: 3px; flex: 0 0 auto; }
+        .secenek input { flex: 1; min-width: 0; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); font: inherit; }
+        .secenek .sayi { width: 44px; text-align: center; font-family: var(--mono); font-weight: 700; font-size: 1.1rem; }
+        .secenek .btn { padding: 8px 12px; }
+        .ozet { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+        .ozet div { background: var(--bg-alt); border-radius: 10px; padding: 8px 12px; font-size: .85rem; }
+        .ozet b { display: block; font-size: 1.2rem; font-family: var(--display); }
+        .sekme { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+        .sekme button { border: 0; background: var(--surface); padding: 6px 12px; cursor: pointer; font: inherit; font-weight: 600; color: var(--muted); }
+        .sekme button.sel { background: var(--accent); color: var(--accent-ink); }
+        .ikili { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        @media (max-width: 900px) { .dd, .anket { grid-template-columns: 1fr; } }
+        @media (max-width: 600px) { .ikili { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <header class="kl-top">
+        <div class="wrap kl-top-inner">
+            <a href="./" class="kl-brand"><span class="kl-logo">&lt;/&gt;</span>KodLab</a>
+            <span class="kl-crumb"><i class="fas fa-chevron-right" style="font-size:.7em"></i><span>Veri Bilimi Atölyesi</span></span>
+            <span class="kl-spacer"></span>
+            <button class="icon-btn" id="themeBtn" aria-label="Temayı değiştir"><i class="fas fa-circle-half-stroke"></i></button>
+        </div>
+    </header>
+
+    <main class="wrap">
+        <section id="liste">
+            <div class="intro">
+                <h1>Veri Bilimi Atölyesi</h1>
+                <p>Bilgisayarlar ve yapay zekâ veriden öğrenir; haberler ve reklamlar veriyle bizi ikna etmeye çalışır. Veriyi okumayı, doğru grafiği seçmeyi, ortalamayı yorumlamayı ve yanıltıcı grafikleri yakalamayı öğren.</p>
+            </div>
+            <div class="bol-grid" id="bolumler"></div>
+        </section>
+        <section id="oyun" hidden>
+            <div class="game-top">
+                <button class="icon-btn" id="geri" aria-label="Geri"><i class="fas fa-arrow-left"></i></button>
+                <h2 id="baslik"></h2>
+                <div class="dots" id="dots"></div>
+            </div>
+            <div id="icerik"></div>
+        </section>
+        <section id="sonuc" hidden>
+            <div class="card sonuc">
+                <h2 id="sBaslik"></h2>
+                <div class="big-stars" id="sYildiz"></div>
+                <p id="sMetin" style="color:var(--muted)"></p>
+                <div class="actions">
+                    <button class="btn" id="sListe">Bölümler</button>
+                    <button class="btn btn-primary" id="sTekrar"><i class="fas fa-rotate-left"></i> Tekrar</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="ortak.js"></script>
+    <script src="veri-motor.js"></script>
+    <script src="veri.js"></script>
+</body>
+</html>
