@@ -108,6 +108,12 @@
             parcalar: [{ id: 'oyun', ad: 'Oyun Atölyesi', url: 'oyun.html', seviye: 5, yildiz: () => { const k = oku('oyun', { yildiz: {} }).yildiz; return ['balon', 'hareket', 'yildiz', 'dusman', 'kazan'].map(g => k[g] || 0); } }]
         },
         {
+            id: 'devre', ad: 'KodKart Simülatörü', url: 'devre.html', ikon: 'fa-microchip', renk: '#0f766e', sinif: [3, 12],
+            aciklama: '5×5 LED ekranlı, düğmeli ve sensörlü sanal eğitim kartını bloklarla programla: atan kalp, zar, termometre, gece lambası, kapı zili.',
+            etiket: ['Fiziksel programlama', 'Sensörler', 'Olaylar'], kavram: 'Girdi-işlem-çıktı, olaylar (düğme, sallama), sensör okuma, LED koordinatları, değişken, rastgele sayı, koşul, sonsuz döngü, ses', sure: 'Görev başı 10 dk',
+            parcalar: [{ id: 'devre', ad: 'KodKart Simülatörü', url: 'devre.html', seviye: 8, yildiz: () => { const k = oku('devre', { yildiz: {} }).yildiz; return ['kalp', 'isim', 'sayac', 'zar', 'termo', 'gece', 'tkm', 'zil'].map(g => k[g] || 0); } }]
+        },
+        {
             id: 'veri', ad: 'Veri Bilimi Atölyesi', url: 'veri.html', ikon: 'fa-chart-column', renk: '#0369a1', sinif: [3, 12],
             aciklama: 'Veri tablosunu oku, doğru grafiği seç ve çiz, ortalama ile ortancayı yorumla, yanıltıcı grafikleri yakala, kendi anketini yap.',
             etiket: ['Veri okuryazarlığı', 'Grafik', 'İstatistik'], kavram: 'Tablo sıralama/süzme, grafik türleri, ortalama, ortanca, tepe değer, açıklık, uç değer, yanıltıcı grafikler, korelasyon ve nedensellik, anket', sure: 'Bölüm başı 10 dk',
@@ -168,6 +174,7 @@
         { id: 'algoritmaci', ad: 'Algoritma Mimarı', ikon: 'fa-cubes', aciklama: 'Python\'da Fonksiyonlar ve Algoritmalar ünitesini bitir', kosul: () => parca('python').yildiz().slice(25).every(x => x > 0) },
         { id: 'dedektif', ad: 'Dijital Dedektif', ikon: 'fa-user-secret', aciklama: 'Dijital Dedektif\'in bütün bölümlerini bitir', kosul: () => tamam('dijital') },
         { id: 'veribilimci', ad: 'Veri Bilimci', ikon: 'fa-chart-column', aciklama: 'Veri Bilimi Atölyesi\'nin bütün bölümlerini bitir', kosul: () => tamam('veri') },
+        { id: 'donanim', ad: 'Donanım Ustası', ikon: 'fa-microchip', aciklama: 'KodKart\'ın bütün görevlerini bitir', kosul: () => tamam('devre') },
         { id: 'ucyuz', ad: 'Üç Yüz Yıldız', ikon: 'fa-crown', aciklama: 'Toplam 300 yıldız topla', kosul: () => PARCALAR.reduce((t, p) => t + toplam(p.id), 0) >= 300 }
     ];
 

@@ -53,5 +53,9 @@ test('Python görev listesi motorla aynı', () => {
     const src = require('fs').readFileSync(require('path').join(__dirname, '../katalog.js'), 'utf8');
     assert.deepStrictEqual(JSON.parse(src.match(/PYTHON_IDLER = (\[.*?\]);/)[1].replace(/'/g, '"')), M.GOREVLER.map(g => g.id));
 });
+test('KodKart görev listesi motorla aynı', () => {
+    const D = require('../devre-motor.js');
+    assert.strictEqual(K.parca('devre').yildiz().length, D.GOREVLER.filter(g => !g.serbest).length);
+});
 console.log(hata ? `${hata} hata` : 'Katalog doğrulandı');
 process.exit(hata ? 1 : 0);
