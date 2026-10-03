@@ -16,9 +16,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="ortak.css">
     <style>
-        body { overflow-x: clip; }
         .hero { padding: 56px 0 34px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; align-items: center; position: relative; }
-        .hero::before { content: ''; position: absolute; inset: -40px -10vw auto; height: 560px; z-index: -1; pointer-events: none;
+        .hero::before { content: ''; position: absolute; inset: -40px 0 auto; height: 560px; z-index: -1; pointer-events: none;
             background: radial-gradient(600px 300px at 80% 40%, color-mix(in srgb, #7c3aed 16%, transparent), transparent 70%), radial-gradient(500px 280px at 15% 20%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 70%); }
         .ust-etiket { display: inline-flex; align-items: center; gap: 8px; font-size: .85rem; font-weight: 700; color: var(--accent); background: var(--accent-soft); padding: 6px 14px; border-radius: 99px; }
         .ust-etiket .nokta { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 4px color-mix(in srgb, var(--ok) 25%, transparent); }
