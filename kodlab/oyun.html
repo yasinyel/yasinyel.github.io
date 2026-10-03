@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#1d5fd6">
+    <link rel="icon" href="ikon/ikon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="ikon/ikon-192.png">
+    <title>Oyun Atölyesi — KodLab</title>
+    <meta name="description" content="Bloklarla kendi oyununu yap: olaylar, puan, can, çarpışma. Bitince linkle arkadaşlarına oynat.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="ortak.css">
+    <link rel="stylesheet" href="blok-editor.css">
+    <style>
+        main { padding: 14px 0 50px; }
+        .gorev-bar { display: flex; gap: 6px; overflow-x: auto; padding: 4px 0 10px; }
+        .gorev-bar button { flex: 0 0 auto; border: 1px solid var(--line); background: var(--surface); border-radius: 12px; padding: 8px 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+        .gorev-bar button.sel { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+        .gorev-bar button.done { border-color: var(--ok); }
+        .gorev-bar button.kilit { opacity: .45; cursor: not-allowed; }
+        .gorev-bar .stars { font-size: 9px; }
+        .studio { display: grid; grid-template-columns: 500px minmax(0, 1fr); gap: 16px; align-items: start; }
+        .sol { display: flex; flex-direction: column; gap: 12px; }
+        .sahne-kart { padding: 10px; }
+        .sahne { position: relative; width: 100%; aspect-ratio: 4 / 3; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); touch-action: none; }
+        .sahne canvas { width: 100%; height: 100%; display: block; }
+        .kontrol { display: flex; gap: 8px; align-items: center; margin-top: 10px; flex-wrap: wrap; }
+        .kontrol .bilgi { margin-left: auto; color: var(--muted); font-size: .82rem; }
+        .pad { display: none; grid-template-columns: repeat(4, 52px) 1fr; gap: 6px; margin-top: 10px; }
+        .pad button { height: 48px; border-radius: 12px; border: 0; background: var(--ink); color: var(--bg); font-size: 1.3rem; touch-action: none; }
+        .pad button.bosluk { font-size: .9rem; font-weight: 700; }
+        @media (pointer: coarse) { .pad { display: grid; } }
+        .gorev-kart { padding: 16px; }
+        .gorev-kart h2 { font-size: 1.15rem; }
+        .gorev-kart p { color: var(--muted); font-size: .92rem; margin-top: 4px; }
+        .gorev-kart p b { color: var(--ink); }
+        .denetim { list-style: none; display: flex; flex-direction: column; gap: 6px; margin: 12px 0; }
+        .denetim li { display: flex; gap: 8px; align-items: flex-start; font-size: .9rem; padding: 7px 10px; border-radius: 10px; border: 1px solid var(--line); }
+        .denetim li i { margin-top: 3px; color: var(--muted); }
+        .denetim li.ok { border-color: var(--ok); background: var(--ok-soft); } .denetim li.ok i { color: var(--ok); }
+        .denetim li.no { border-color: var(--bad); background: var(--bad-soft); } .denetim li.no i { color: var(--bad); }
+        .karakterler { padding: 12px; }
+        .karakterler h3 { font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-family: var(--body); margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .kar-liste { display: flex; gap: 8px; flex-wrap: wrap; }
+        .kar { border: 2px solid var(--line); background: var(--surface); border-radius: 12px; padding: 6px 10px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: .9rem; }
+        .kar span.e { font-size: 1.5rem; }
+        .kar.sel { border-color: var(--accent); background: var(--accent-soft); }
+        .kar small { color: var(--muted); font-weight: 500; font-family: var(--mono); font-size: .7rem; }
+        .kar-ayar { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; align-items: center; }
+        .kar-ayar input, .kar-ayar select { padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); }
+        .emoji-sec { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; margin-top: 8px; }
+        .emoji-sec button { font-size: 1.4rem; border: 1px solid var(--line); background: var(--bg); border-radius: 8px; cursor: pointer; padding: 4px; }
+        .editor-kart { overflow: hidden; }
+        .editor-bas { padding: 10px 14px; border-bottom: 1px solid var(--line); font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .editor-bas .e { font-size: 1.4rem; }
+        .editor { display: grid; grid-template-columns: 250px minmax(0, 1fr); height: 620px; }
+        .oynat-mod .studio { grid-template-columns: 1fr; max-width: 760px; margin: 0 auto; }
+        .oynat-mod .editor-kart, .oynat-mod .gorev-bar, .oynat-mod .karakterler, .oynat-mod .gorev-kart { display: none; }
+        .paylas-kutu { display: flex; gap: 6px; margin-top: 8px; }
+        .paylas-kutu input { flex: 1; min-width: 0; font-family: var(--mono); font-size: .75rem; padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); }
+        @media (max-width: 1100px) { .studio { grid-template-columns: 1fr; } .sol { max-width: 560px; } .editor { height: 520px; } }
+        @media (max-width: 600px) { .editor { grid-template-columns: 1fr; grid-template-rows: 240px 1fr; height: 640px; } .editor .be-kutu { flex-direction: row; flex-wrap: wrap; align-content: flex-start; border-right: 0; border-bottom: 1px solid var(--line); } .editor .be-kutu h3 { width: 100%; margin-top: 2px; } }
+    </style>
+</head>
+<body>
+    <header class="kl-top">
+        <div class="wrap kl-top-inner">
+            <a href="./" class="kl-brand"><span class="kl-logo">&lt;/&gt;</span>KodLab</a>
+            <span class="kl-crumb"><i class="fas fa-chevron-right" style="font-size:.7em"></i><span>Oyun Atölyesi</span></span>
+            <span class="kl-spacer"></span>
+            <button class="icon-btn" id="themeBtn" aria-label="Temayı değiştir"><i class="fas fa-circle-half-stroke"></i></button>
+        </div>
+    </header>
+    <main class="wrap" id="ana">
+        <nav class="gorev-bar" id="gorevBar" aria-label="Görevler"></nav>
+        <div class="studio">
+            <div class="sol">
+                <section class="card sahne-kart">
+                    <div class="sahne"><canvas id="tuval" width="960" height="720" aria-label="Oyun sahnesi"></canvas></div>
+                    <div class="kontrol">
+                        <button class="btn btn-primary" id="baslat"><i class="fas fa-play"></i> Başlat</button>
+                        <button class="btn" id="durdur" disabled><i class="fas fa-stop"></i></button>
+                        <button class="btn" id="tamEkran" title="Tam ekran"><i class="fas fa-expand"></i></button>
+                        <span class="bilgi" id="bilgi">Karakterleri sahnede sürükleyerek yerleştirebilirsin.</span>
+                    </div>
+                    <div class="pad" id="pad" aria-label="Ekran tuşları">
+                        <button data-t="sol">←</button><button data-t="yukari">↑</button><button data-t="asagi">↓</button><button data-t="sag">→</button><button data-t="bosluk" class="bosluk">boşluk</button>
+                    </div>
+                </section>
+                <section class="card gorev-kart" id="gorevKart"></section>
+                <section class="card karakterler" id="karakterKart"></section>
+            </div>
+            <section class="card editor-kart">
+                <div class="editor-bas" id="editorBas"></div>
+                <div class="editor"><div class="be-kutu" id="kutu"></div><div class="be-alan" id="alan"></div></div>
+            </section>
+        </div>
+    </main>
+    <dialog class="kl-dialog" id="kazandi">
+        <h2 id="kBaslik"></h2>
+        <div class="big-stars" id="kYildiz"></div>
+        <p id="kMetin"></p>
+        <div class="actions"><button class="btn" id="kKal">Oyunu geliştir</button><button class="btn btn-primary" id="kSonraki">Sonraki görev <i class="fas fa-arrow-right"></i></button></div>
+    </dialog>
+    <script src="ortak.js"></script>
+    <script src="blok-editor.js"></script>
+    <script src="oyun-motor.js"></script>
+    <script src="oyun.js"></script>
+</body>
+</html>

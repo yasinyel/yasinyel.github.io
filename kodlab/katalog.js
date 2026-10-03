@@ -100,6 +100,12 @@
             parcalar: [{ id: 'web', ad: 'Web Atölyesi', url: 'web.html', seviye: 10, yildiz: () => { const k = oku('web', { yildiz: {} }).yildiz; return dizi(10, i => k[i]); } }]
         },
         {
+            id: 'oyun', ad: 'Oyun Atölyesi', url: 'oyun.html', ikon: 'fa-gamepad', renk: '#db2777', sinif: [3, 12],
+            aciklama: 'Bloklarla kendi oyununu yap: tuşla hareket, puan, can, çarpışma. Bitirince linkini arkadaşlarına gönder, onlar da oynasın.',
+            etiket: ['Oyun tasarımı', 'Olaylar', 'Değişkenler'], kavram: 'Olay tabanlı programlama, koordinat sistemi, değişken (puan/can), koşul, çarpışma, paralel betikler', sure: 'Görev başı 10–15 dk',
+            parcalar: [{ id: 'oyun', ad: 'Oyun Atölyesi', url: 'oyun.html', seviye: 5, yildiz: () => { const k = oku('oyun', { yildiz: {} }).yildiz; return ['balon', 'hareket', 'yildiz', 'dusman', 'kazan'].map(g => k[g] || 0); } }]
+        },
+        {
             id: 'tahmin', ad: 'Ne Yazar?', url: 'tahmin.html', ikon: 'fa-terminal', renk: '#7c3aed', sinif: [8, 12],
             aciklama: 'Python kodunu bilgisayar gibi oku ve ekrana ne yazacağını tahmin et. Sorular her seferinde farklı sayılarla gelir.',
             etiket: ['Python', 'Değişkenler', 'Kod okuma'], kavram: 'Değişken, operatör, metin, if/else, for/while, liste, fonksiyon (Python)', sure: 'Seviye başı 5–10 dk',
@@ -137,6 +143,7 @@
         { id: 'agmuh', ad: 'Ağ Mühendisi', ikon: 'fa-network-wired', aciklama: 'Paket Yolculuğu\'nun dört bölümünü bitir', kosul: () => tamam('ag') },
         { id: 'webci', ad: 'Web Tasarımcısı', ikon: 'fa-code', aciklama: 'Web Atölyesi\'nde tanıtım sayfanı yap', kosul: () => parca('web').yildiz()[9] > 0 },
         { id: 'yuz', ad: 'Yüz Yıldız', ikon: 'fa-star', aciklama: 'Toplam 100 yıldız topla', kosul: () => PARCALAR.reduce((t, p) => t + toplam(p.id), 0) >= 100 },
+        { id: 'oyuncu', ad: 'Oyun Tasarımcısı', ikon: 'fa-gamepad', aciklama: 'Oyun Atölyesi\'nde Yıldız Avcısı oyununu bitir', kosul: () => parca('oyun').yildiz()[4] > 0 },
         { id: 'ucyuz', ad: 'Üç Yüz Yıldız', ikon: 'fa-crown', aciklama: 'Toplam 300 yıldız topla', kosul: () => PARCALAR.reduce((t, p) => t + toplam(p.id), 0) >= 300 }
     ];
 
