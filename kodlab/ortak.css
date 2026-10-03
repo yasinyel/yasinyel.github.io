@@ -105,3 +105,9 @@ dialog.kl-dialog::backdrop { background: rgba(10, 15, 25, 0.5); }
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
+/* Sesli yönerge menüsü */
+.kl-menu { position: absolute; z-index: 60; width: 260px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 12px 30px rgba(0, 0, 0, .18); padding: 6px; display: flex; flex-direction: column; gap: 2px; }
+.kl-menu button, .kl-menu label { display: flex; gap: 10px; align-items: center; padding: 9px 10px; border-radius: 8px; border: 0; background: none; font: inherit; font-size: .9rem; color: var(--ink); cursor: pointer; text-align: left; }
+.kl-menu button:hover, .kl-menu label:hover { background: var(--bg-alt); }
+.kl-menu i { color: var(--accent); width: 16px; }
