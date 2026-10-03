@@ -1,6 +1,6 @@
 // KodLab — Çizim Atölyesi motoru
-// Kaplumbağa grafikleri: program ağacı, çalıştırıcı, çizim karşılaştırma,
-// Python turtle alt kümesi ayrıştırıcısı ve bloklardan Python kodu üretici.
+// Kalemli robotla çizim (Logo geleneğindeki "yönlü kalem" grafikleri): program ağacı, çalıştırıcı,
+// çizim karşılaştırma, Python turtle modülü alt kümesi ayrıştırıcısı ve bloklardan Python kodu üretici.
 (function (root) {
     'use strict';
 
@@ -340,21 +340,21 @@
 
     // ---------- Bölümler ----------
     // bloklar: araç kutusunda görünecek bloklar. enFazla: 3 yıldız için en fazla blok sayısı (yoksa çözümün blok sayısı)
-    // bas: kaplumbağanın başlangıcı (tuval 400x400, h=0 yukarı)
+    // bas: robotun başlangıcı (tuval 400x400, h=0 yukarı)
     const { ileri, geri, saga, sola, kaldir, indir, renk, kalinlik, tekrar, say, tanim, cagir } = I;
     const TEMEL = ['ileri', 'saga', 'sola'];
     const BOLUMLER = [
-        { ad: 'İlk Çizgi', anlatim: '"ileri" bloğunu sürükleyip <b>çalıştırınca</b> bloğunun altına bırak. Kaplumbağa baktığı yöne doğru yürür ve arkasında iz bırakır.', bloklar: ['ileri'], bas: { x: 200, y: 300, h: 0 }, cozum: [ileri(200)] },
-        { ad: 'Köşe', anlatim: 'Dönme blokları kaplumbağayı olduğu yerde çevirir. 90 derece, dik bir köşe demektir.', bloklar: TEMEL, bas: { x: 120, y: 300, h: 0 }, cozum: [ileri(150), saga(90), ileri(150)] },
+        { ad: 'İlk Çizgi', anlatim: '"ileri" bloğunu sürükleyip <b>çalıştırınca</b> bloğunun altına bırak. Robot baktığı yöne doğru ilerler ve kalemiyle arkasında iz bırakır.', bloklar: ['ileri'], bas: { x: 200, y: 300, h: 0 }, cozum: [ileri(200)] },
+        { ad: 'Köşe', anlatim: 'Dönme blokları robotu olduğu yerde çevirir. Anteni hangi yöne bakıyorsa robot o yöne gider. 90 derece, dik bir köşe demektir.', bloklar: TEMEL, bas: { x: 120, y: 300, h: 0 }, cozum: [ileri(150), saga(90), ileri(150)] },
         { ad: 'Kare', anlatim: 'Bir kare çiz. Her kenar 100 adım, her köşede 90 derece dön.', bloklar: TEMEL, bas: { x: 150, y: 250, h: 0 }, cozum: [ileri(100), saga(90), ileri(100), saga(90), ileri(100), saga(90), ileri(100)], enFazla: 8 },
         { ad: 'Döngüyle Kare', anlatim: 'Aynı kareyi <b>tekrarla</b> bloğuyla çiz. Sadece 3 blok yeterli!', bloklar: [...TEMEL, 'tekrar'], bas: { x: 150, y: 250, h: 0 }, cozum: [tekrar(4, ileri(100), saga(90))] },
         { ad: 'Merdiven', anlatim: 'Merdivenin bir basamağını bul, sonra onu tekrarla.', bloklar: [...TEMEL, 'tekrar'], bas: { x: 90, y: 330, h: 0 }, cozum: [tekrar(5, ileri(45), saga(90), ileri(45), sola(90))] },
-        { ad: 'Üçgen', anlatim: 'Eşkenar üçgen çiz. Dikkat: kaplumbağa iç açı kadar değil, <b>dış açı</b> kadar döner. 3 köşede toplam 360 derece döner, yani her köşede 360 ÷ 3 = ?', bloklar: [...TEMEL, 'tekrar'], bas: { x: 120, y: 290, h: 0 }, cozum: [tekrar(3, ileri(160), saga(120))] },
+        { ad: 'Üçgen', anlatim: 'Eşkenar üçgen çiz. Dikkat: robot iç açı kadar değil, <b>dış açı</b> kadar döner. 3 köşede toplam 360 derece döner, yani her köşede 360 ÷ 3 = ?', bloklar: [...TEMEL, 'tekrar'], bas: { x: 120, y: 290, h: 0 }, cozum: [tekrar(3, ileri(160), saga(120))] },
         { ad: 'Altıgen', anlatim: 'Arı peteği gibi bir altıgen çiz. Her köşede kaç derece dönmeli?', bloklar: [...TEMEL, 'tekrar'], bas: { x: 150, y: 310, h: 0 }, cozum: [tekrar(6, ileri(80), saga(60))] },
         { ad: 'Daire', anlatim: 'Bilgisayarlar daireyi de çok küçük adımlarla çizer: 36 kez 10 adım git, 10 derece dön.', bloklar: [...TEMEL, 'tekrar'], bas: { x: 140, y: 260, h: 0 }, cozum: [tekrar(36, ileri(10), saga(10))] },
-        { ad: 'Kesikli Çizgi', anlatim: '<b>Kalemi kaldır</b> bloğundan sonra kaplumbağa iz bırakmadan yürür. <b>Kalemi indir</b> ile yeniden çizmeye başlar.', bloklar: [...TEMEL, 'tekrar', 'kaldir', 'indir'], bas: { x: 200, y: 360, h: 0 }, cozum: [tekrar(8, ileri(20), kaldir(), ileri(20), indir())] },
+        { ad: 'Kesikli Çizgi', anlatim: '<b>Kalemi kaldır</b> bloğundan sonra robot iz bırakmadan ilerler. <b>Kalemi indir</b> ile yeniden çizmeye başlar.', bloklar: [...TEMEL, 'tekrar', 'kaldir', 'indir'], bas: { x: 200, y: 360, h: 0 }, cozum: [tekrar(8, ileri(20), kaldir(), ileri(20), indir())] },
         { ad: 'Renkli Üçgen', anlatim: '<b>Renk</b> bloğuyla kalemin rengini değiştir. Bu bölümde renkler de doğru olmalı!', bloklar: [...TEMEL, 'tekrar', 'renk'], bas: { x: 120, y: 290, h: 0 }, renkOnemli: true, cozum: [renk('kirmizi'), ileri(160), saga(120), renk('mavi'), ileri(160), saga(120), renk('yesil'), ileri(160)] },
-        { ad: 'Yıldız', anlatim: '5 köşeli yıldız. Kaplumbağa her uçta çok keskin döner: 144 derece.', bloklar: [...TEMEL, 'tekrar'], bas: { x: 110, y: 250, h: 90 }, cozum: [tekrar(5, ileri(180), saga(144))] },
+        { ad: 'Yıldız', anlatim: '5 köşeli yıldız. Robot her uçta çok keskin döner: 144 derece.', bloklar: [...TEMEL, 'tekrar'], bas: { x: 110, y: 250, h: 90 }, cozum: [tekrar(5, ileri(180), saga(144))] },
         { ad: 'Dönen Kareler', anlatim: 'Bir kareyi çiz, biraz dön, tekrar çiz… <b>İç içe döngü</b> ile güzel bir desen oluştur.', bloklar: [...TEMEL, 'tekrar'], bas: { x: 200, y: 200, h: 0 }, cozum: [tekrar(6, tekrar(4, ileri(90), saga(90)), saga(60))] },
         { ad: 'Kare Fonksiyonu', anlatim: '<b>Fonksiyon</b> ile kendi bloğunu yap: "kare" fonksiyonunu tanımla, sonra 3 kez çağırarak yan yana kareler çiz.', bloklar: [...TEMEL, 'tekrar', 'kaldir', 'indir', 'tanim', 'cagir'], bas: { x: 60, y: 240, h: 0 }, cozum: [tanim('kare', [], tekrar(4, ileri(70), saga(90))), tekrar(3, cagir('kare'), kaldir(), saga(90), ileri(100), sola(90), indir())] },
         { ad: 'Kare Sarmal', anlatim: '<b>Say</b> bloğu bir sayacı adım adım artırır. Her turda sayaç kadar ileri git: kenarlar büyüdükçe sarmal oluşur!', bloklar: [...TEMEL, 'tekrar', 'say'], bas: { x: 200, y: 200, h: 0 }, cozum: [say('i', 10, 300, 10, [ileri('i'), saga(90)])] },

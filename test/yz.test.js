@@ -6,17 +6,17 @@ let hata = 0;
 const test = (ad, f) => { try { f(); console.log('  ✓ ' + ad); } catch (e) { hata++; console.log('  ✗ ' + ad + ': ' + e.message); } };
 const ort = (d) => d.reduce((a, b) => a + b, 0) / d.length;
 
-test('Balık/çöp: 12 doğru etiketli örnekle model %85+ doğru', () => {
+test('Uzay radarı: 12 doğru etiketli örnekle model %85+ doğru', () => {
     const sonuclar = [];
     for (let t = 1; t <= 200; t++) {
-        const veri = Y.okyanus(t, 112), egitim = veri.slice(0, 12), deneme = veri.slice(12);
+        const veri = Y.uzayNesneleri(t, 112), egitim = veri.slice(0, 12), deneme = veri.slice(12);
         if (new Set(egitim.map(e => e.y)).size < 2) continue;
         sonuclar.push(Y.dogruluk(egitim, deneme, 3));
     }
     assert.ok(ort(sonuclar) > 0.85, 'ortalama ' + ort(sonuclar).toFixed(2));
 });
-test('Balık/çöp: yanlış etiketlenen veri modeli bozuyor', () => {
-    const veri = Y.okyanus(7, 112), egitim = veri.slice(0, 20).map(e => ({ ...e, y: e.y === 'balik' ? 'cop' : 'balik' }));
+test('Uzay radarı: yanlış etiketlenen veri modeli bozuyor', () => {
+    const veri = Y.uzayNesneleri(7, 112), egitim = veri.slice(0, 20).map(e => ({ ...e, y: e.y === 'uydu' ? 'tas' : 'uydu' }));
     assert.ok(Y.dogruluk(egitim, veri.slice(20), 3) < 0.2);
 });
 test('Önyargı: yalnızca önyargılı veriyle eğitilen model "yerinde olmayan" hayvanları yanlış biliyor', () => {
@@ -67,6 +67,6 @@ test('Aşırı öğrenme: daha fazla veri test başarısını artırıyor', () =
     for (let t = 1; t <= 100; t++) { const v = Y.noktaVeri(t); a.push(Y.dogruluk(v.egitim, v.test, 5)); b.push(Y.dogruluk([...v.egitim, ...v.ek], v.test, 5)); }
     assert.ok(ort(b) > ort(a) + 0.02, `${ort(a).toFixed(3)} → ${ort(b).toFixed(3)}`);
 });
-test('Aynı tohum aynı veriyi üretiyor', () => { assert.deepStrictEqual(Y.okyanus(5, 10), Y.okyanus(5, 10)); });
+test('Aynı tohum aynı veriyi üretiyor', () => { assert.deepStrictEqual(Y.uzayNesneleri(5, 10), Y.uzayNesneleri(5, 10)); });
 console.log(hata ? `${hata} hata` : 'Yapay zekâ motoru doğrulandı');
 process.exit(hata ? 1 : 0);

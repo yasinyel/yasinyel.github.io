@@ -65,8 +65,8 @@
         },
         {
             id: 'cizim', ad: 'Çizim Atölyesi', url: 'cizim.html', ikon: 'fa-pen-nib', renk: '#16a36a', sinif: [3, 12],
-            aciklama: 'Blokları sürükle, kaplumbağaya çizim yaptır: kare, yıldız, çiçek, kar tanesi… Lisede aynı görevleri gerçek Python turtle koduyla yaz.',
-            etiket: ['Blok kodlama', 'Döngü', 'Fonksiyon', 'Python turtle'], kavram: 'Sürükle-bırak blok kodlama, açılar, döngüler, iç içe döngü, fonksiyon, sayaç; Python turtle', sure: 'Bölüm başı 3–8 dk',
+            aciklama: 'Blokları sürükle, kalemli robotumuza çizim yaptır: kare, yıldız, çiçek, kar tanesi… Lisede aynı görevleri gerçek Python koduyla yaz.',
+            etiket: ['Blok kodlama', 'Döngü', 'Fonksiyon', 'Python'], kavram: 'Sürükle-bırak blok kodlama, açılar, döngüler, iç içe döngü, fonksiyon, sayaç; Python (turtle modülü)', sure: 'Bölüm başı 3–8 dk',
             parcalar: [{ id: 'cizim', ad: 'Çizim Atölyesi', url: 'cizim.html', seviye: 16, yildiz: () => { const k = oku('cizim', { yildiz: {} }).yildiz; return dizi(16, i => k[i]); } }]
         },
         {
@@ -85,7 +85,7 @@
             id: 'yz', ad: 'Makineye Öğret', url: 'yz.html', ikon: 'fa-brain', renk: '#c026d3', sinif: [3, 12],
             aciklama: 'Gerçek bir yapay zekâ modelini örneklerle eğit. Önyargılı verinin modeli nasıl yanılttığını gör, lisede aşırı öğrenmeyi keşfet.',
             etiket: ['Yapay zekâ', 'Makine öğrenmesi', 'Veri önyargısı'], kavram: 'Eğitim verisi, sınıflandırma, k-en yakın komşu, veri önyargısı, aşırı öğrenme (overfitting)', sure: 'Bölüm başı 8–12 dk',
-            parcalar: [{ id: 'yz', ad: 'Makineye Öğret', url: 'yz.html', seviye: 4, yildiz: () => { const k = oku('yz', {}); return ['okyanus', 'onyargi', 'kural', 'knn'].map(x => k[x] || 0); } }]
+            parcalar: [{ id: 'yz', ad: 'Makineye Öğret', url: 'yz.html', seviye: 4, yildiz: () => { const k = oku('yz', {}); return ['radar', 'onyargi', 'kural', 'knn'].map(x => k[x] || 0); } }]
         },
         {
             id: 'ag', ad: 'Paket Yolculuğu', url: 'ag.html', ikon: 'fa-network-wired', renk: '#2563eb', sinif: [4, 12],
@@ -129,7 +129,7 @@
         { id: 'siralama', ad: 'Sıralama Makinesi', ikon: 'fa-arrow-down-wide-short', aciklama: 'Üç sıralama algoritmasının hepsini tamamla', kosul: () => parca('algoritma').yildiz().slice(3).every(x => x > 0) },
         { id: 'devre', ad: 'Devre Tasarımcısı', ikon: 'fa-microchip', aciklama: 'Tam toplayıcı devresini kur', kosul: () => parca('mantik').yildiz()[10] > 0 },
         { id: 'python2', ad: 'Python Yorumlayıcısı', ikon: 'fa-laptop-code', aciklama: 'Ne Yazar?\'ın bütün seviyelerini bitir', kosul: () => tamam('tahmin') },
-        { id: 'sanatci', ad: 'Kaplumbağa Sanatçısı', ikon: 'fa-pen-nib', aciklama: 'Çizim Atölyesi\'nin 16 bölümünü bitir', kosul: () => tamam('cizim') },
+        { id: 'sanatci', ad: 'Çizgi Ustası', ikon: 'fa-pen-nib', aciklama: 'Çizim Atölyesi\'nin 16 bölümünü bitir', kosul: () => tamam('cizim') },
         { id: 'kriptograf', ad: 'Kod Kırıcı', ikon: 'fa-user-secret', aciklama: 'Frekans analiziyle şifre kır', kosul: () => parca('sifre').yildiz()[3] > 0 },
         { id: 'kalkan', ad: 'Siber Kalkan', ikon: 'fa-shield-halved', aciklama: 'Şifre Kalesi\'nin dört bölümünü bitir', kosul: () => tamam('guvenlik') },
         { id: 'oltaci', ad: 'Oltalama Avcısı', ikon: 'fa-fish', aciklama: 'Oltalama Avı\'nı hatasız bitir', kosul: () => parca('guvenlik').yildiz()[2] === 3 },
