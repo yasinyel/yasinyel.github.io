@@ -13,6 +13,16 @@
             destek: 'İlk dersleri tekrarlatın; ekran klavyesindeki renkli ipuçlarını açık tutun.',
             zenginlestirme: 'Büyük harf, noktalama ve rakam derslerine geçip hız testinde rekor denemesi yapsınlar.'
         },
+        tablo: {
+            hedefler: ['Hücre, satır, sütun ve aralık kavramlarını kullanır.', 'Hazır fonksiyonlarla (TOPLA, ORTALAMA, EĞER…) hesap yapar.', 'Göreli ve mutlak başvuru arasındaki farkı açıklar ve doldurmayı kullanır.'],
+            giris: 'Sınıf kantininin bir haftalık satış listesini gösterin: "Toplamı hesap makinesiyle mi bulursunuz, yoksa bilgisayara mı yaptırırsınız? Bir fiyat değişirse ne olur?"',
+            isinma: 'Tahtaya küçük bir tablo çizin; öğrenciler "B3 hangi hücre?", "A1:A4 aralığında kaç hücre var?" sorularını yanıtlasın.',
+            adimlar: ['İlk üç görevi birlikte yapın; formüllerin = ile başladığını ve sonucun veriler değişince kendiliğinden güncellendiğini gösterin.', 'Hücreleri Çarp görevinde doldurmayı tanıtın; kayan başvuruları birlikte inceleyin.', 'Sabit Hücre görevinde $ olmadan doldurunca ne olduğunu deneyin, sonra $ ile düzeltin.', 'Ortaokul ve lise: EĞER, EĞERSAY, ETOPLA görevleri ve Not Çizelgesi projesi.'],
+            tartisma: ['Sonucu elle yazmak yerine formül yazmak neden daha iyi?', '$ işareti ne zaman gerekir?', 'Hesap tablosunu günlük hayatta nerelerde kullanabiliriz? (bütçe, anket, spor istatistikleri)'],
+            cikis: 'Bir aralığın ortalamasını bulan formülü ve 50\'den büyük sayıları sayan formülü kâğıda yazın.',
+            destek: 'Formül çubuğunun altındaki fonksiyon düğmelerini ve hücreye tıklayarak başvuru eklemeyi gösterin.',
+            zenginlestirme: 'Serbest Tablo\'da sınıf anketi ya da aylık harçlık bütçesi tablosu hazırlasınlar.'
+        },
         donanim: {
             hedefler: ['Bilgisayarın temel iç parçalarını ve görevlerini söyler.', 'Çevre birimlerini girdi, çıktı ve depolama olarak sınıflar.', 'Veri birimlerini karşılaştırır ve basit arızaların nedenini bulur.'],
             giris: 'Eski bir bilgisayar kasasının kapağını açın (ya da fotoğrafını gösterin): "Sizce bu parçaların her biri ne işe yarıyor?"',
