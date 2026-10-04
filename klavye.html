@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="Yasin Yel">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#1d5fd6">
+    <link rel="icon" href="ikon/ikon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="ikon/ikon-192.png">
+    <title>Klavye Ustası — Kodlayalım</title>
+    <meta name="description" content="On parmak klavye kullanmayı öğren: Türkçe Q klavyede 20 ders, kelime yağmuru oyunu ve hız testi.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="ortak.css">
+    <style>
+        main { padding: 20px 0 40px; }
+        .sekmeler { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+        .sekmeler button { border: 1px solid var(--line); background: var(--surface); border-radius: 12px; padding: 10px 16px; font-weight: 700; cursor: pointer; color: var(--ink); display: flex; gap: 8px; align-items: center; }
+        .sekmeler button.sel { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+        .duzen { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 16px; align-items: start; }
+        .dersler { padding: 8px; max-height: calc(100vh - 160px); overflow-y: auto; position: sticky; top: 76px; }
+        .dersler button { display: flex; width: 100%; gap: 8px; align-items: center; border: 0; background: none; padding: 7px 8px; border-radius: 8px; cursor: pointer; text-align: left; font-size: .88rem; color: var(--ink); }
+        .dersler button:hover { background: var(--bg-alt); }
+        .dersler button.sel { background: var(--accent-soft); color: var(--accent); font-weight: 700; }
+        .dersler button.kilit { opacity: .45; }
+        .dersler button .no { width: 22px; height: 22px; border-radius: 7px; background: var(--bg-alt); display: grid; place-items: center; font-size: .75rem; font-weight: 700; flex: 0 0 auto; }
+        .dersler button.ok .no { background: var(--ok); color: #fff; }
+        .dersler button .stars { margin-left: auto; font-size: 8px; }
+        .kart { padding: 20px; }
+        .ders-bas { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: flex-start; }
+        .ders-bas h1 { font-size: 1.4rem; }
+        .ders-bas p { color: var(--muted); font-size: .92rem; margin-top: 4px; }
+        .olcum { display: flex; gap: 10px; }
+        .olcum div { background: var(--bg-alt); border-radius: 12px; padding: 8px 14px; text-align: center; min-width: 90px; }
+        .olcum b { display: block; font-family: var(--display); font-size: 1.5rem; line-height: 1.1; }
+        .olcum small { color: var(--muted); font-size: .75rem; }
+        .metin { margin-top: 16px; font-family: var(--mono); font-size: clamp(1.2rem, 2.6vw, 1.75rem); line-height: 1.9; letter-spacing: .02em; padding: 16px 18px; background: var(--bg-alt); border-radius: 14px; min-height: 130px; outline: none; cursor: text; }
+        .metin span { border-radius: 4px; }
+        .metin .kel { display: inline-block; white-space: nowrap; }
+        .metin { position: relative; }
+        #hMetin { max-height: 210px; overflow: hidden; }
+        .metin .d { color: var(--ok); }
+        .metin .y { color: var(--bad); background: var(--bad-soft); text-decoration: underline; }
+        .metin .s { background: var(--accent); color: var(--accent-ink); box-shadow: 0 0 0 2px var(--accent); }
+        .metin .s.bosluk { background: var(--accent-soft); box-shadow: 0 0 0 2px var(--accent); }
+        .metin .b { color: var(--muted); }
+        .ilerleme { height: 8px; border-radius: 99px; background: var(--bg-alt); overflow: hidden; margin-top: 12px; }
+        .ilerleme div { height: 100%; background: linear-gradient(90deg, var(--accent), #7c3aed); width: 0; transition: width .2s; }
+        .ipucu { margin-top: 12px; font-size: .9rem; color: var(--muted); display: flex; gap: 8px; align-items: center; min-height: 1.5em; }
+        .ipucu b { color: var(--ink); }
+        .ipucu .nokta { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
+        .klavye { margin-top: 16px; display: flex; flex-direction: column; gap: 6px; align-items: center; user-select: none; }
+        .sira { display: flex; gap: 6px; }
+        .tus { --p: #94a3b8; width: clamp(28px, 5.2vw, 52px); height: clamp(34px, 5.2vw, 50px); border-radius: 9px; border: 1px solid color-mix(in srgb, var(--p) 55%, var(--line)); background: color-mix(in srgb, var(--p) 14%, var(--surface)); display: grid; place-items: center; font-family: var(--mono); font-weight: 700; font-size: clamp(.8rem, 1.6vw, 1.05rem); color: var(--ink); cursor: pointer; position: relative; transition: transform .08s, background .1s; }
+        .tus.cikinti::after { content: ''; position: absolute; bottom: 6px; width: 12px; height: 3px; border-radius: 2px; background: var(--ink); opacity: .5; }
+        .tus.hedef { background: var(--p); color: #fff; transform: translateY(-2px); box-shadow: 0 6px 14px color-mix(in srgb, var(--p) 45%, transparent); }
+        .tus.basildi { transform: scale(.92); }
+        .tus.yanlis { background: var(--bad); color: #fff; }
+        .tus.bosluk-tus { width: clamp(200px, 38vw, 380px); }
+        .tus.shift { width: clamp(50px, 8vw, 90px); font-family: var(--body); font-size: .8rem; }
+        .eller { display: flex; justify-content: center; gap: 30px; margin-top: 14px; flex-wrap: wrap; }
+        .el { display: flex; gap: 5px; align-items: flex-end; }
+        .parmak { width: 22px; border-radius: 11px 11px 6px 6px; opacity: .35; transition: opacity .1s, transform .1s; }
+        .parmak.aktif { opacity: 1; transform: translateY(-6px); }
+        .not-tel { display: none; margin-top: 12px; font-size: .85rem; color: var(--muted); }
+        @media (pointer: coarse) { .not-tel { display: block; } }
+        /* Kelime yağmuru */
+        .yagmur { position: relative; height: 460px; border-radius: 16px; overflow: hidden; background: linear-gradient(180deg, #0b1440, #1e1b6b); margin-top: 12px; }
+        .yagmur .kel { position: absolute; font-family: var(--mono); font-weight: 700; font-size: 1.3rem; color: #fff; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25); padding: 4px 10px; border-radius: 10px; white-space: nowrap; }
+        .yagmur .kel u { color: #ffd166; text-decoration: none; }
+        .yagmur .kel.hedefte { border-color: #ffd166; box-shadow: 0 0 0 2px #ffd166; }
+        .yagmur .zemin { position: absolute; left: 0; right: 0; bottom: 0; height: 6px; background: #ef4444; opacity: .7; }
+        .yagmur .bilgi { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; color: #fff; padding: 20px; }
+        .yagmur .bilgi h2 { font-size: 2rem; }
+        .yazilan { margin-top: 10px; font-family: var(--mono); font-size: 1.4rem; min-height: 2.2rem; padding: 6px 14px; border-radius: 12px; background: var(--bg-alt); }
+        .kontrol { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 12px; }
+        @media (max-width: 860px) { .duzen { grid-template-columns: 1fr; } .dersler { position: static; max-height: 220px; } }
+    </style>
+</head>
+<body>
+    <header class="kl-top">
+        <div class="wrap kl-top-inner">
+            <a href="./" class="kl-brand"><span class="kl-logo" aria-hidden="true"></span><span class="kl-ad"><b>Kod</b>layalım</span></a>
+            <span class="kl-crumb"><i class="fas fa-chevron-right" style="font-size:.7em"></i><span>Klavye Ustası</span></span>
+            <span class="kl-spacer"></span>
+            <button class="icon-btn" id="themeBtn" aria-label="Temayı değiştir"><i class="fas fa-circle-half-stroke"></i></button>
+        </div>
+    </header>
+    <main class="wrap">
+        <nav class="sekmeler" id="sekmeler">
+            <button data-s="ders" class="sel"><i class="fas fa-graduation-cap"></i> Dersler</button>
+            <button data-s="yagmur"><i class="fas fa-cloud-rain"></i> Kelime Yağmuru</button>
+            <button data-s="hiz"><i class="fas fa-gauge-high"></i> Hız Testi</button>
+        </nav>
+        <div class="duzen" id="dersAlan">
+            <nav class="card dersler" id="dersler" aria-label="Dersler"></nav>
+            <section class="card kart">
+                <div class="ders-bas"><div><h1 id="baslik"></h1><p id="anlatim"></p></div>
+                    <div class="olcum"><div><b id="hiz">0</b><small>kelime/dk</small></div><div><b id="dogruluk">100</b><small>% doğruluk</small></div></div></div>
+                <div class="metin" id="metin" tabindex="0" aria-label="Yazılacak metin"></div>
+                <div class="ilerleme"><div id="ilerleme"></div></div>
+                <div class="ipucu" id="ipucu"></div>
+                <div class="klavye" id="klavye" aria-hidden="true"></div>
+                <div class="eller" id="eller" aria-hidden="true"></div>
+                <p class="not-tel"><i class="fas fa-keyboard"></i> En iyi sonuç için gerçek bir klavye kullan. Ekrandaki tuşlara dokunarak da deneyebilirsin.</p>
+                <div class="kontrol"><button class="btn btn-sm" id="yeniden"><i class="fas fa-rotate-left"></i> Baştan başla</button></div>
+            </section>
+        </div>
+        <section class="card kart" id="yagmurAlan" hidden>
+            <div class="ders-bas"><div><h1>Kelime Yağmuru</h1><p>Kelimeler yere düşmeden yaz! Her kelime bir puan, yere düşen kelime bir can.</p></div>
+                <div class="olcum"><div><b id="ySkor">0</b><small>puan</small></div><div><b id="yCan">❤❤❤</b><small>can</small></div><div><b id="yRekor">0</b><small>rekor</small></div></div></div>
+            <div class="yagmur" id="yagmur"><div class="bilgi" id="yBilgi"><div><h2>Hazır mısın?</h2><p style="opacity:.8;margin:8px 0 16px">Kelimeler, bitirdiğin derslerdeki harflerden seçilir.</p><button class="btn btn-primary" id="yBasla"><i class="fas fa-play"></i> Başla</button></div></div><div class="zemin"></div></div>
+            <div class="yazilan" id="yYazilan" aria-live="polite"></div>
+        </section>
+        <section class="card kart" id="hizAlan" hidden>
+            <div class="ders-bas"><div><h1>Hız Testi</h1><p>1 dakika boyunca cümleleri yaz. Hata yapınca doğru harfe basana kadar ilerleyemezsin.</p></div>
+                <div class="olcum"><div><b id="hSure">60</b><small>saniye</small></div><div><b id="hHiz">0</b><small>kelime/dk</small></div><div><b id="hRekor">–</b><small>rekor</small></div></div></div>
+            <div class="metin" id="hMetin" tabindex="0" aria-label="Hız testi metni"></div>
+            <div class="kontrol"><button class="btn btn-primary" id="hBasla"><i class="fas fa-play"></i> Testi başlat</button><span id="hSonuc" style="font-weight:700"></span></div>
+        </section>
+    </main>
+    <dialog class="kl-dialog" id="bitti">
+        <h2 id="bBaslik"></h2>
+        <div class="big-stars" id="bYildiz"></div>
+        <p id="bMetin"></p>
+        <div class="actions"><button class="btn" id="bTekrar">Tekrar</button><button class="btn btn-primary" id="bSonraki">Sonraki ders <i class="fas fa-arrow-right"></i></button></div>
+    </dialog>
+    <script src="ortak.js"></script>
+    <script src="klavye-motor.js"></script>
+    <script src="klavye.js"></script>
+</body>
+</html>
