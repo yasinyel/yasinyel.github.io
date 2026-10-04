@@ -100,9 +100,9 @@
         },
         {
             id: 'web', ad: 'Web Atölyesi', url: 'web.html', ikon: 'fa-code', renk: '#ea580c', sinif: [5, 12],
-            aciklama: 'HTML ve CSS ile kendi web sayfanı yap. Yazdıkça önizleme anında değişir, görevler kendiliğinden işaretlenir.',
-            etiket: ['HTML', 'CSS', 'Web tasarım'], kavram: 'HTML etiketleri, liste, bağlantı, resim ve alt metni, tablo; CSS renk, sınıf, kutu modeli, flexbox', sure: 'Bölüm başı 5–10 dk',
-            parcalar: [{ id: 'web', ad: 'Web Atölyesi', url: 'web.html', seviye: 10, yildiz: () => { const k = oku('web', { yildiz: {} }).yildiz; return dizi(10, i => k[i]); } }]
+            aciklama: 'HTML, CSS ve JavaScript ile web sayfaları ve küçük uygulamalar yap: 40 bölüm. Yazdıkça önizleme anında değişir, görevler kendiliğinden denetlenir.',
+            etiket: ['HTML', 'CSS', 'JavaScript'], kavram: 'HTML etiketleri, anlamlı etiketler, formlar, erişilebilirlik; CSS kutu modeli, flexbox, grid, konumlandırma, @media, değişkenler, geçişler; JavaScript: DOM, olaylar, değişkenler, koşul, döngü, dizi', sure: 'Bölüm başı 5–10 dk',
+            parcalar: [{ id: 'web', ad: 'Web Atölyesi', url: 'web.html', seviye: 40, yildiz: () => { const k = oku('web', { yildiz: {} }).yildiz; return dizi(40, i => k[i]); } }]
         },
         {
             id: 'oyun', ad: 'Oyun Atölyesi', url: 'oyun.html', ikon: 'fa-gamepad', renk: '#db2777', sinif: [3, 12],
@@ -251,6 +251,7 @@
         { id: 'yzegitmen', ad: 'Yapay Zekâ Eğitmeni', ikon: 'fa-brain', aciklama: 'Makineye Öğret\'in dört bölümünü bitir', kosul: () => tamam('yz') },
         { id: 'agmuh', ad: 'Ağ Mühendisi', ikon: 'fa-network-wired', aciklama: 'Paket Yolculuğu\'nun dört bölümünü bitir', kosul: () => tamam('ag') },
         { id: 'webci', ad: 'Web Tasarımcısı', ikon: 'fa-code', aciklama: 'Web Atölyesi\'nde tanıtım sayfanı yap', kosul: () => parca('web').yildiz()[9] > 0 },
+        { id: 'jsci', ad: 'JavaScript Geliştirici', ikon: 'fa-file-code', aciklama: 'Web Atölyesi\'nin JavaScript bölümlerinin hepsini bitir', kosul: () => parca('web').yildiz().slice(25).every(x => x > 0) },
         { id: 'yuz', ad: 'Yüz Yıldız', ikon: 'fa-star', aciklama: 'Toplam 100 yıldız topla', kosul: () => PARCALAR.reduce((t, p) => t + toplam(p.id), 0) >= 100 },
         { id: 'oyuncu', ad: 'Oyun Tasarımcısı', ikon: 'fa-gamepad', aciklama: 'Oyun Atölyesi\'nde Yıldız Avcısı oyununu bitir', kosul: () => parca('oyun').yildiz()[4] > 0 },
         { id: 'pythoncu', ad: 'Pythoncu', ikon: 'fa-laptop-code', aciklama: 'Python Laboratuvarı\'nda 16 görev çöz', kosul: () => parca('python').yildiz().filter(x => x > 0).length >= 16 },
