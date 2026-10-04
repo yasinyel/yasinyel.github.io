@@ -132,7 +132,7 @@
             };
             const ciz = () => {
                 $('.kl-ipucu-say').textContent = basamak.length ? `${acik}/${basamak.length}` : '';
-                let h = basamak.slice(0, acik).map((b, i) => `<div class="kl-ipucu-adim a${i}" data-seslendir="${String(b.metin).replace(/<[^>]+>/g, ' ').replace(/"/g, '&quot;')}"><div class="kl-ipucu-etiket"><i class="fas ${IKON[i]}"></i> ${BASLIK[i]}</div><div>${b.metin}</div>${b.uygula ? `<button type="button" class="btn btn-sm kl-ipucu-uygula" data-i="${i}"><i class="fas fa-wand-magic-sparkles"></i> ${b.uygulaYazi || 'Çözümü yükle'}</button>` : ''}</div>`).join('');
+                let h = basamak.slice(0, acik).map((b, i) => ({ ...b, metin: typeof b.metin === 'function' ? b.metin() : b.metin })).map((b, i) => `<div class="kl-ipucu-adim a${i}" data-seslendir="${String(b.metin).replace(/<[^>]+>/g, ' ').replace(/"/g, '&quot;')}"><div class="kl-ipucu-etiket"><i class="fas ${IKON[i]}"></i> ${BASLIK[i]}</div><div>${b.metin}</div>${b.uygula ? `<button type="button" class="btn btn-sm kl-ipucu-uygula" data-i="${i}"><i class="fas fa-wand-magic-sparkles"></i> ${b.uygulaYazi || 'Çözümü yükle'}</button>` : ''}</div>`).join('');
                 if (acik < basamak.length) h += `<div class="kl-ipucu-sonraki">${NOT[acik] ? `<small>${NOT[acik]}</small>` : ''}<button type="button" class="btn btn-sm ${acik ? '' : 'btn-primary'} kl-ipucu-ac"><i class="fas ${IKON[acik]}"></i> ${acik ? (acik === 1 ? 'Daha fazla ipucu' : 'Örnek çözümü göster') : 'İlk ipucunu göster'}</button></div>`;
                 else h += '<p class="kl-ipucu-son">Çözümü anladıktan sonra kendin yazmayı dene; bir dahaki sefere ipucusuz 3 yıldız alabilirsin!</p>';
                 $('.kl-ipucu-icerik').innerHTML = h;
@@ -146,7 +146,7 @@
             $('.kl-ipucu-icerik').addEventListener('click', (e) => {
                 if (e.target.closest('.kl-ipucu-ac')) { acik = Math.min(basamak.length, acik + 1); kaydet(); ciz(); KL.ses('tik'); if (ayar.acilinca) ayar.acilinca(acik); }
                 const u = e.target.closest('.kl-ipucu-uygula');
-                if (u) { const b = basamak[+u.dataset.i]; if (b.uygula) { b.uygula(); panelAc(false); KL.bildir('Örnek çözüm yüklendi. Çalıştırıp nasıl çalıştığını incele.'); } }
+                if (u) { const b = basamak[+u.dataset.i]; if (b.uygula) { b.uygula(); panelAc(false); const m = b.bildiri ?? 'Örnek çözüm yüklendi. Çalıştırıp nasıl çalıştığını incele.'; if (m) KL.bildir(m); } }
             });
             ciz();
             return {

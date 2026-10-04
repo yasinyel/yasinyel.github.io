@@ -14,6 +14,23 @@
         { baslik: 'Hızlı Ol!', ozet: '8 kart, süre tutuluyor. 60 saniyenin altında bitirebilir misin?', bit: 8, mod: 'karisik', sure: true }
     ];
 
+    // İpucu Asistanı: [düşündüren soru, ipucu]; üçüncü basamak o anki sayıya göre hesaplanır
+    const IPUCLARI = [
+        ['Kartlardaki noktalar sağdan sola nasıl artıyor? 1, 2, 4, …', 'En büyük karttan başla: kart hedef sayıdan büyük değilse aç ve değerini sayıdan çıkar. Kalanla bir sonraki karta geç.'],
+        ['5. kartta kaç nokta olmalı? Her kart, sağındakinin kaç katı?', 'Yeni kartta 16 nokta var. Sayıyı oluştururken en büyük karttan başla; okurken sadece açık kartların değerlerini topla.'],
+        ['Kapalı kartlar toplama katılır mı?', 'Sadece açık (1) kartların değerlerini topla. Örneğin 1 0 1 0 0 1 → 32 + 8 + 1 = 41.'],
+        ['8 kartla oluşturulabilecek en büyük sayı kaç? Bütün kartlar açıkken toplam ne olur?', 'Kart değerleri: 128, 64, 32, 16, 8, 4, 2, 1. Büyükten küçüğe git; sığan kartı aç ve kalanı hesapla.'],
+        ['Hızlı olmak için hangi kartlara her seferinde bakmadan karar verebilirsin?', 'Sayı 128 ya da daha büyükse 128 kartı açıktır. Tek sayılarda 1 kartı her zaman açıktır. Kalanı büyükten küçüğe hesapla.']
+    ];
+    let ipucuKont = null;
+    function cozumAdimlari() {
+        const parca = []; let kalan = hedef;
+        for (let i = sv.bit - 1; i >= 0; i--) { const v = 2 ** i; if (v <= kalan) { parca.push(v); kalan -= v; } }
+        const ikilik = hedef.toString(2).padStart(sv.bit, '0');
+        return mod === 'olustur'
+            ? `<b>${hedef}</b> = ${parca.join(' + ') || '0'}<br>Açılacak kartlar: ${parca.join(', ')}. İkilik yazılışı: <code>${ikilik}</code>`
+            : `Açık kartlar: ${parca.join(' + ')} = <b>${hedef}</b>`;
+    }
     let sv = null, tur = 0, hata = 0, bitler = [], hedef = 0, mod = 'olustur', baslangic = 0, serbest = false, kilitli = false;
 
     function goster(id) { ['liste', 'oyun', 'sonuc'].forEach(s => { $(s).hidden = s !== id; }); window.scrollTo(0, 0); }
@@ -78,12 +95,18 @@
         tur = 0; hata = 0; baslangic = Date.now();
         $('gTitle').textContent = `Seviye ${i + 1}: ${sv.baslik}`;
         $('kontrol').hidden = false; $('opts').hidden = false;
+        if (ipucuKont) ipucuKont.kaldir();
+        ipucuKont = KL.ipucu({ etkinlik: 'ikilik', bolum: i, yer: $('ipucuYer'), basamaklar: [IPUCLARI[i][0], IPUCLARI[i][1], {
+            metin: cozumAdimlari, uygulaYazi: 'Kartları benim için çevir', bildiri: '',
+            uygula: () => { if (kilitli) return; if (mod === 'olustur') { bitler = bitler.map((_, j) => !!(hedef & (1 << j))); guncelle(); } else $('okuInput').value = hedef; }
+        }] });
         goster('oyun');
         yeniTur();
     }
 
     function serbestBasla() {
         serbest = true; sv = null; mod = 'olustur';
+        if (ipucuKont) { ipucuKont.kaldir(); ipucuKont = null; }
         $('gTitle').textContent = 'Serbest Keşif';
         $('dots').innerHTML = '';
         bitler = Array(8).fill(false);
@@ -130,6 +153,7 @@
         if (mod === 'oku' && $('okuInput').value === '') { $('okuInput').focus(); return; }
         if (!dogru) {
             hata++;
+            if (ipucuKont) ipucuKont.yanlis();
             KL.ses('yanlis');
             const t = $('task'); t.classList.remove('shake'); t.offsetWidth; t.classList.add('shake');
             KL.bildir(mod === 'olustur' ? `Şu an ${deger()} oluşturdun, ${hedef} olmalı.` : 'Tekrar topla: sadece açık kartlar sayılır.');
@@ -146,7 +170,7 @@
 
     function bitir() {
         const sn = Math.round((Date.now() - baslangic) / 1000);
-        let y = hata === 0 ? 3 : hata <= 2 ? 2 : 1;
+        let y = Math.min(hata === 0 ? 3 : hata <= 2 ? 2 : 1, ipucuKont ? ipucuKont.yildizSiniri() : 3);
         if (sv.sure && sn > 60) y = Math.min(y, 2);
         if (sv.sure && sn > 120) y = 1;
         if (y > (kayit.yildiz[sv.no] || 0)) { kayit.yildiz[sv.no] = y; KL.yaz('ikilik', kayit); }
