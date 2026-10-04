@@ -38,6 +38,7 @@
         gorevAc(+b.dataset.i);
     };
 
+    let ipucuKont = null; // İpucu Asistanı
     function gorevAc(i) {
         durdur();
         gorevNo = i; gorev = M.GOREVLER[i];
@@ -50,6 +51,28 @@
         if (gorev.id === 'dusman') secili = 'dusman';
         if (gorev.id === 'hareket' || gorev.id === 'kazan') secili = 'robot';
         ed.izinliAyarla(gorev.bloklar || Object.keys(tanim));
+        // İpucu Asistanı (serbest atölyede yok)
+        if (ipucuKont) { ipucuKont.kaldir(); ipucuKont = null; }
+        const t = (window.OYUN_IPUCLARI || {})[gorev.id], cozum = M.COZUMLER[gorev.id];
+        if (!gorev.serbest && t) {
+            const ozet = Object.entries(cozum || {}).map(([id, l]) => `<b>${kacis((M.KAR[id] || {}).ad || id)}</b>: ${l.length} betik`).join(' · ');
+            ipucuKont = KL.ipucu({
+                etkinlik: 'oyun', bolum: gorev.id, yer: $('ipucuYer'),
+                basamaklar: [t[0], t[1], cozum ? {
+                    metin: `Örnek çözümde: ${ozet}. Yükledikten sonra karakterleri tek tek seçip kodlarını incele, sonra oyunu başlat.`,
+                    uygulaYazi: 'Çözümü projeme yükle',
+                    uygula: () => {
+                        durdur();
+                        for (const [id, l] of Object.entries(cozum)) {
+                            let k = proje.karakterler.find(x => x.id === id);
+                            if (!k) { k = M.yeniKar(M.KAR[id]); proje.karakterler.push(k); }
+                            k.betikler = JSON.parse(JSON.stringify(l));
+                        }
+                        kaydet(); karakterCiz(); editorAc(); ciz();
+                    }
+                } : null]
+            });
+        }
         gorevKartCiz();
         karakterCiz();
         editorAc();
@@ -74,12 +97,13 @@
         gorevKartCiz(s);
         if (s.every(x => x.gecti)) {
             const deneme = kayit.deneme[gorev.id] || 0;
-            const y = deneme <= 1 ? 3 : deneme <= 3 ? 2 : 1;
+            const normal = deneme <= 1 ? 3 : deneme <= 3 ? 2 : 1;
+            const y = Math.min(normal, ipucuKont ? ipucuKont.yildizSiniri() : 3);
             kayit.yildiz[gorev.id] = Math.max(kayit.yildiz[gorev.id] || 0, y);
             kaydet(); gorevBarCiz();
             $('kBaslik').textContent = y === 3 ? 'Süper oyun!' : 'Görev tamam!';
             $('kYildiz').innerHTML = KL.yildizHTML(y);
-            $('kMetin').textContent = y === 3 ? 'Oyunun bütün kontrolleri geçti!' : `Oyunun ${deneme + 1}. kontrolde geçti. Daha az denemeyle 3 yıldız alabilirsin.`;
+            $('kMetin').textContent = y < normal ? `Oyunun çalışıyor! İpucu kullandığın için ${y} yıldız. Görevi kendi başına tekrar yaparsan 3 yıldız alabilirsin.` : y === 3 ? 'Oyunun bütün kontrolleri geçti!' : `Oyunun ${deneme + 1}. kontrolde geçti. Daha az denemeyle 3 yıldız alabilirsin.`;
             $('kSonraki').hidden = gorevNo === M.GOREVLER.length - 1;
             if (y === 3) KL.konfeti(); else KL.ses('kazan');
             $('kazandi').showModal();
@@ -87,6 +111,7 @@
             kayit.deneme[gorev.id] = (kayit.deneme[gorev.id] || 0) + 1; kaydet();
             KL.ses('yanlis');
             KL.bildir(`${s.filter(x => !x.gecti).length} kontrol geçmedi. Kırmızı olanlara bak.`);
+            if (ipucuKont) ipucuKont.yanlis();
         }
     }
     $('kKal').onclick = () => $('kazandi').close();

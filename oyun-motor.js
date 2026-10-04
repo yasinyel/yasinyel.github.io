@@ -408,6 +408,42 @@
         }
     ];
 
+    // ---------- Örnek çözümler (İpucu Asistanı'nın son basamağı; testlerde de kullanılır) ----------
+    const b = (t, o = {}) => ({ t, ...o });
+    const sapka = (t, govde, o = {}) => ({ t, ...o, govde });
+    const hareket = [sapka('tus_basili', [b('x_degistir', { n: 5 })], { tus: 'sag' }), sapka('tus_basili', [b('x_degistir', { n: -5 })], { tus: 'sol' }), sapka('tus_basili', [b('y_degistir', { n: 5 })], { tus: 'yukari' }), sapka('tus_basili', [b('y_degistir', { n: -5 })], { tus: 'asagi' })];
+    const yildiz = [sapka('degince', [b('puan_degistir', { n: 1 }), b('rastgele_git'), b('ses', { tur: 'dogru' })], { hedef: 'robot' })];
+    const dusman = [sapka('surekli', [b('x_degistir', { n: 4 }), b('eger', { k: 'kenar', n: 0, govde: [b('git', { x: -220, y: 0 })] })]), sapka('degince', [b('can_degistir', { n: -1 }), b('eger', { k: 'can=', n: 0, govde: [b('kaybet', { metin: 'Bitti' })] })], { hedef: 'robot' })];
+    const yatay = [sapka('tus_basili', [b('x_degistir', { n: 6 })], { tus: 'sag' }), sapka('tus_basili', [b('x_degistir', { n: -6 })], { tus: 'sol' })];
+    const dikey = [sapka('tus_basili', [b('y_degistir', { n: 5 })], { tus: 'yukari' }), sapka('tus_basili', [b('y_degistir', { n: -5 })], { tus: 'asagi' })];
+    const elmaDus = [sapka('surekli', [b('y_degistir', { n: -4 }), b('eger', { k: 'kenar', n: 0, govde: [b('git', { x: 0, y: 150 })] })])];
+    const kurbaga = [sapka('tiklaninca', [b('puan_degistir', { n: 1 }), b('gizle')]), sapka('surekli', [b('eger', { k: 'sans', n: 2, govde: [b('rastgele_git'), b('goster')] })])];
+    const meteorAk = [sapka('surekli', [b('x_degistir', { n: -6 }), b('eger', { k: 'kenar', n: 0, govde: [b('git', { x: 210, y: 0 })] })])];
+    const meteorCarp = sapka('degince', [b('can_degistir', { n: -1 }), b('git', { x: 210, y: 0 }), b('eger', { k: 'can=', n: 0, govde: [b('kaybet')] })], { hedef: 'roket' });
+    const hayaletK = [sapka('surekli', [b('eger', { k: 'sans', n: 3, govde: [b('rastgele_git')] })]), sapka('degince', [b('can_degistir', { n: -1 }), b('rastgele_git')], { hedef: 'robot' })];
+    const COZUMLER = {
+        balon: { balon: [sapka('tiklaninca', [b('puan_degistir', { n: 1 }), b('rastgele_git'), b('eger', { k: 'puan=', n: 10, govde: [b('kazan', { metin: 'Süper!' })] })])] },
+        hareket: { robot: hareket },
+        yildiz: { robot: hareket, yildiz },
+        dusman: { robot: hareket, yildiz, dusman },
+        kazan: { robot: [sapka('baslayinca', [b('puan_yap', { n: 0 }), b('can_yap', { n: 3 })]), ...hareket, sapka('surekli', [b('eger', { k: 'puan=', n: 10, govde: [b('kazan', { metin: 'Kazandın' })] })])], yildiz, dusman },
+        elma1: { kedi: yatay },
+        elma2: { kedi: yatay, elma: elmaDus },
+        elma3: { kedi: yatay, elma: [...elmaDus, sapka('degince', [b('puan_degistir', { n: 1 }), b('git', { x: 0, y: 150 }), b('eger', { k: 'puan=', n: 5, govde: [b('kazan')] })], { hedef: 'kedi' })] },
+        kurbaga1: { kurbaga: kurbaga },
+        kurbaga2: { kurbaga: [...kurbaga, sapka('tiklaninca', [b('eger', { k: 'puan=', n: 10, govde: [b('kazan')] })])], bomba: [sapka('tiklaninca', [b('can_degistir', { n: -1 }), b('rastgele_git'), b('eger', { k: 'can=', n: 0, govde: [b('kaybet')] })])] },
+        meteor1: { roket: dikey, meteor: meteorAk },
+        meteor2: { roket: dikey, meteor: [...meteorAk, meteorCarp] },
+        meteor3: { roket: [...dikey, sapka('surekli', [b('puan_degistir', { n: 1 }), b('eger', { k: 'puan>', n: 600, govde: [b('kazan')] })])], meteor: [...meteorAk, meteorCarp] },
+        hayalet1: { robot: hareket, hayalet: hayaletK },
+        hayalet2: { robot: [...hareket, sapka('baslayinca', [b('can_yap', { n: 3 }), b('puan_yap', { n: 0 })]), sapka('surekli', [b('puan_degistir', { n: 1 }), b('eger', { k: 'puan>', n: 900, govde: [b('kazan')] }), b('eger', { k: 'can=', n: 0, govde: [b('kaybet')] })])], hayalet: hayaletK },
+        sohbet: { robot: [sapka('baslayinca', [b('soyle', { metin: 'Merhaba, ben Kodi!', sure: 2 })]), sapka('tus_basilinca', [b('soyle', { metin: 'Bilgisayar neden üşür? Pencereleri açık!', sure: 3 })], { tus: 'bosluk' }), sapka('tiklaninca', [b('kostum', { emoji: '🐱' })])] },
+        duvar: { robot: [...hareket, sapka('degince', [b('git', { x: -180, y: -120 })], { hedef: 'duvar' }), sapka('degince', [b('kazan')], { hedef: 'yildiz' })] },
+        penalti: { top: [sapka('tus_basilinca', [b('tekrar', { n: 10, govde: [b('x_degistir', { n: 20 })] })], { tus: 'bosluk' }), sapka('tus_basili', [b('y_degistir', { n: 4 })], { tus: 'yukari' }), sapka('tus_basili', [b('y_degistir', { n: -4 })], { tus: 'asagi' }), sapka('degince', [b('puan_degistir', { n: 1 }), b('git', { x: -150, y: 0 }), b('eger', { k: 'puan=', n: 3, govde: [b('kazan')] })], { hedef: 'kale' })] },
+        kalp: { robot: hareket, kalp: [sapka('degince', [b('eger', { k: 'can<', n: 5, govde: [b('can_degistir', { n: 1 })] }), b('rastgele_git')], { hedef: 'robot' })], dusman },
+        final: { robot: hareket, yildiz: [sapka('degince', [b('puan_degistir', { n: 1 }), b('rastgele_git'), b('eger', { k: 'puan=', n: 10, govde: [b('kazan')] })], { hedef: 'robot' })], dusman: [...dusman, sapka('surekli', [b('eger', { k: 'puan>', n: 5, govde: [b('boyut', { n: 150 })] })])] }
+    };
+
     function baslangicProjesi(g, onceki) {
         const p = onceki ? sayiliKopya(onceki) : { arka: 'uzay', karakterler: [] };
         for (const id of g.karakterler) if (!p.karakterler.some(k => k.id === id)) p.karakterler.push(yeniKar(KAR[id]));
@@ -419,7 +455,7 @@
         return g.denetimler.map(d => { try { return { ad: d.ad, gecti: !!d.f(proje) }; } catch (e) { return { ad: d.ad, gecti: false }; } });
     }
 
-    const api = { GEN, YUK, TUSLAR, EMOJILER, ARKALAR, tanim, Oyun, GOREVLER, KAR, baslangicProjesi, denetle, yeniKar };
+    const api = { GEN, YUK, TUSLAR, EMOJILER, ARKALAR, tanim, Oyun, GOREVLER, KAR, COZUMLER, baslangicProjesi, denetle, yeniKar };
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     else root.OyunMotor = api;
 })(typeof window !== 'undefined' ? window : globalThis);

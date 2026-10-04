@@ -14,5 +14,7 @@ const R = require('../robot-seviyeler.js');
 denetle('Robot Kodla', require('../robot-ipucu.js').IPUCLARI, R.length, i => !!R[i].cozum);
 const C = require('../cizim-motor.js');
 denetle('Çizim Atölyesi', require('../cizim-ipucu.js'), C.BOLUMLER.length, i => !!C.BOLUMLER[i].cozum);
+const O = require('../oyun-motor.js'), OI = require('../oyun-ipucu.js'), og = O.GOREVLER.filter(g => !g.serbest);
+denetle('Oyun Atölyesi', og.map(g => OI[g.id] || []), og.length, i => !!O.COZUMLER[og[i].id]);
 console.log(hata ? `${hata} hata` : 'İpuçları tam');
 process.exit(hata ? 1 : 0);
