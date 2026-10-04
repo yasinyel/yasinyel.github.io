@@ -221,7 +221,7 @@
             const K = window.Katalog;
             const $ = (id) => document.getElementById(id);
             const kacis = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
-            const YENI = ['klavye', 'devre', 'veri', 'dijital', 'python', 'oyun', 'cizim', 'sifre', 'guvenlik', 'yz', 'ag', 'web'];
+            const YENI = ['donanim', 'klavye', 'devre', 'veri', 'dijital', 'python', 'oyun', 'cizim', 'sifre', 'guvenlik', 'yz', 'ag', 'web'];
             const KADEMELER = [
                 { id: 'hepsi', ad: 'Tümü', aralik: [0, 12] },
                 { id: 'okuloncesi', ad: 'Okul Öncesi', not: 'Anasınıfı', aralik: [0, 0] },
@@ -301,7 +301,7 @@
 
             $('sifirla').addEventListener('click', () => {
                 if (!confirm('Bu cihazdaki tüm Kodlayalım ilerlemesi, profil ve görevler silinsin mi?')) return;
-                ['robot', 'tahmin', 'ikilik', 'piksel', 'sensin', 'oruntu', 'algoritma', 'mantik', 'hata', 'cizim', 'sifre', 'guvenlik', 'yz', 'ag', 'ag.yonlendir', 'web', 'oyun', 'python', 'python.son', 'dijital', 'veri', 'devre', 'klavye', 'profil', 'gorevler'].forEach(KL.sil);
+                ['robot', 'tahmin', 'ikilik', 'piksel', 'sensin', 'oruntu', 'algoritma', 'mantik', 'hata', 'cizim', 'sifre', 'guvenlik', 'yz', 'ag', 'ag.yonlendir', 'web', 'oyun', 'python', 'python.son', 'dijital', 'veri', 'devre', 'klavye', 'donanim', 'profil', 'gorevler'].forEach(KL.sil);
                 location.reload();
             });
         })();

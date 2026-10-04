@@ -108,6 +108,12 @@
             parcalar: [{ id: 'oyun', ad: 'Oyun Atölyesi', url: 'oyun.html', seviye: 5, yildiz: () => { const k = oku('oyun', { yildiz: {} }).yildiz; return ['balon', 'hareket', 'yildiz', 'dusman', 'kazan'].map(g => k[g] || 0); } }]
         },
         {
+            id: 'donanim', ad: 'Bilgisayarın İçi', url: 'donanim.html', ikon: 'fa-screwdriver-wrench', renk: '#475569', sinif: [1, 12],
+            aciklama: 'Parçaları anakarta takıp bilgisayarı çalıştır, parçaları görevleriyle eşleştir, girdi-çıktı birimlerini ayır, veri birimlerini hesapla, arızaları bul.',
+            etiket: ['Donanım', 'Girdi-çıktı', 'Veri birimleri'], kavram: 'Anakart, işlemci, bellek (RAM), depolama (SSD), ekran kartı, güç kaynağı; girdi/çıktı/depolama birimleri; bit, bayt, KB, MB, GB, TB; temel sorun giderme', sure: 'Bölüm başı 5–10 dk',
+            parcalar: [{ id: 'donanim', ad: 'Bilgisayarın İçi', url: 'donanim.html', seviye: 5, yildiz: () => { const k = oku('donanim', { yildiz: {} }).yildiz; return ['topla', 'eslestir', 'sinifla', 'birim', 'ariza'].map(b => k[b] || 0); } }]
+        },
+        {
             id: 'klavye', ad: 'Klavye Ustası', url: 'klavye.html', ikon: 'fa-keyboard', renk: '#0891b2', sinif: [1, 12],
             aciklama: 'On parmak klavye kullanmayı öğren: Türkçe Q klavyede 20 ders, renkli parmak rehberi, kelime yağmuru oyunu ve hız testi.',
             etiket: ['On parmak', 'Klavye', 'Hız'], kavram: 'Klavye düzeni, ana sıra, parmak konumu, doğruluk ve hız (kelime/dk), büyük harf, noktalama, rakamlar', sure: 'Ders başı 3–5 dk',
@@ -182,6 +188,7 @@
         { id: 'veribilimci', ad: 'Veri Bilimci', ikon: 'fa-chart-column', aciklama: 'Veri Bilimi Atölyesi\'nin bütün bölümlerini bitir', kosul: () => tamam('veri') },
         { id: 'donanim', ad: 'Donanım Ustası', ikon: 'fa-microchip', aciklama: 'KodKart\'ın bütün görevlerini bitir', kosul: () => tamam('devre') },
         { id: 'onparmak', ad: 'On Parmak', ikon: 'fa-keyboard', aciklama: 'Klavye Ustası\'nın 20 dersini bitir', kosul: () => tamam('klavye') },
+        { id: 'teknisyen', ad: 'Teknisyen', ikon: 'fa-screwdriver-wrench', aciklama: 'Bilgisayarın İçi\'nin bütün bölümlerini bitir', kosul: () => tamam('donanim') },
         { id: 'ucyuz', ad: 'Üç Yüz Yıldız', ikon: 'fa-crown', aciklama: 'Toplam 300 yıldız topla', kosul: () => PARCALAR.reduce((t, p) => t + toplam(p.id), 0) >= 300 }
     ];
 
