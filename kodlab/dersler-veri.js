@@ -3,6 +3,16 @@
 (function (root) {
     'use strict';
     const PLANLAR = {
+        klavye: {
+            hedefler: ['Parmaklarını ana sıraya doğru yerleştirir.', 'Her tuşa doğru parmakla basar.', 'Klavyeye bakmadan, doğruluğunu koruyarak yazar.'],
+            giris: 'İki parmakla ve on parmakla yazan iki kişinin videosunu ya da canlı gösterimini karşılaştırın: "Hangisi daha hızlı, neden?"',
+            isinma: 'Masaya kâğıttan bir klavye çizip parmakları ana sıraya (a s d f — j k l ş) koyma alıştırması yapın; f ve j tuşlarındaki çıkıntıları gösterin.',
+            adimlar: ['Öğrenciler sırayla derslere başlasın; ekrandaki renkli parmak rehberini kullansınlar.', 'Doğruluğun hızdan önemli olduğunu vurgulayın: 3 yıldız için en az %97 doğruluk gerekir.', 'Son 10 dakikada Kelime Yağmuru oyunuyla sınıf içi dostça bir yarışma yapın.'],
+            tartisma: ['Klavyeye bakmadan yazmak neden zor ama faydalı?', 'Hangi parmağın en çok zorlandı?', 'Doğru oturuş ve ekrana uzaklık neden önemli?'],
+            cikis: 'Hız testinde ulaştığınız kelime/dakika ve doğruluk değerini kâğıda yazın; bir sonraki derste karşılaştıracağız.',
+            destek: 'İlk dersleri tekrarlatın; ekran klavyesindeki renkli ipuçlarını açık tutun.',
+            zenginlestirme: 'Büyük harf, noktalama ve rakam derslerine geçip hız testinde rekor denemesi yapsınlar.'
+        },
         oruntu: {
             hedefler: ['Tekrar eden bir örüntüyü fark eder.', 'Örüntünün devamını tahmin eder.', 'Kendi örüntüsünü oluşturur.'],
             giris: 'Sınıfta alkış-şaplak ritmi yapın (alkış, alkış, dizine vur…). "Sırada ne var?" diye sorun.',
