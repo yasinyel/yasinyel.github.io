@@ -1,7 +1,7 @@
 // Çalıştır: node kodlab/test/katalog.test.js
 const assert = require('assert');
 const store = {};
-global.KL = { oku: (k, v) => (k in store ? JSON.parse(JSON.stringify(store[k])) : v), yaz: (k, v) => { store[k] = JSON.parse(JSON.stringify(v)); } };
+global.KL = { oku: (k, v) => (k in store ? JSON.parse(JSON.stringify(store[k])) : v), yaz: (k, v) => { store[k] = JSON.parse(JSON.stringify(v)); }, ipucuOzeti: () => store.ipucuOzeti || {} };
 const K = require('../katalog.js');
 const S = require('../sensin-motor.js');
 let hata = 0;
@@ -26,6 +26,7 @@ test('Rapor kodu gidip geliyor (Türkçe karakterlerle)', () => {
     store.robot = { yildiz: { 0: 3, 1: 2, 5: 1 } };
     store.sensin = { lise: { 0: 3, 11: 2 } };
     store.algoritma = { ikili: 3 };
+    store.ipucuOzeti = { robot: [3, 1] };
     const kod = K.raporOlustur({ ad: 'Çağrı Işık Öztürk', sinif: '9-Ş', no: '42' }, 'g123');
     const r = K.raporOku('Merhaba öğretmenim, kodum: ' + kod + ' teşekkürler');
     assert.strictEqual(r.ad, 'Çağrı Işık Öztürk'); assert.strictEqual(r.sinif, '9-Ş'); assert.strictEqual(r.gorev, 'g123');
@@ -33,7 +34,9 @@ test('Rapor kodu gidip geliyor (Türkçe karakterlerle)', () => {
     assert.strictEqual(r.ilerleme.robot, dolgu('robot', '320001'));
     assert.strictEqual(r.ilerleme['sensin.lise'], dolgu('sensin.lise', '300000000002'));
     assert.strictEqual(r.ilerleme.algoritma, dolgu('algoritma', '003'));
-    assert.ok(kod.length < 300, 'kod çok uzun: ' + kod.length);
+    assert.deepStrictEqual(r.ipucu, { robot: [3, 1] });
+    delete store.ipucuOzeti;
+    assert.ok(kod.length < 320, 'kod çok uzun: ' + kod.length);
 });
 test('Bozuk kod reddediliyor', () => {
     const kod = K.raporOlustur({ ad: 'Ali', sinif: '5-A' });

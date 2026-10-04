@@ -121,8 +121,11 @@
         const toplamY = (r) => parcalar.reduce((t, p) => t + yildizlar(r, p).reduce((a, b) => a + b, 0), 0);
         const tamamlanan = (r) => parcalar.reduce((t, p) => t + yildizlar(r, p).filter(x => x > 0).length, 0);
         const toplamBolum = parcalar.reduce((t, p) => t + p.seviye, 0);
+        // İpucu kullanımı: [ipucu alınan bölüm, çözümü görülen bölüm]
+        const ipucu = (r) => Object.values(r.ipucu || {}).reduce((t, [a, c]) => [t[0] + a, t[1] + c], [0, 0]);
+        const ipucuDetay = (r) => Object.entries(r.ipucu || {}).map(([e, [a, c]]) => `${(K.ETKINLIKLER.find(x => x.id === e) || { ad: e }).ad}: ${a} bölümde ipucu, ${c} bölümde çözüm`).join('\n') || 'İpucu kullanmadı';
 
-        const deger = { ad: r => r.ad, sinif: r => r.sinif, zaman: r => r.zaman, toplam: toplamY };
+        const deger = { ad: r => r.ad, sinif: r => r.sinif, zaman: r => r.zaman, toplam: toplamY, ipucu: r => ipucu(r)[0] * 100 + ipucu(r)[1] };
         parcalar.forEach(p => { deger[p.id] = r => yildizlar(r, p).filter(x => x > 0).length; });
         const f = deger[siralama.alan] || deger.ad;
         rows.sort((a, b) => { const x = f(a), y = f(b); const c = typeof x === 'string' ? x.localeCompare(y, 'tr', { numeric: true }) : x - y; return siralama.ters ? -c : c; });
@@ -144,16 +147,17 @@
         $('tablo').innerHTML = `<thead><tr>
             <th data-s="ad">Öğrenci${ok('ad')}</th><th data-s="sinif">Sınıf${ok('sinif')}</th>
             ${parcalar.map(p => `<th data-s="${p.id}" title="${kacis(parcaAdi(p))}">${kacis(parcaAdi(p).replace('Bilgisayar Sensin · ', 'Sensin · '))}${ok(p.id)}</th>`).join('')}
-            <th data-s="toplam">Yıldız${ok('toplam')}</th><th data-s="zaman">Güncelleme${ok('zaman')}</th><th></th></tr></thead><tbody>` +
+            <th data-s="toplam">Yıldız${ok('toplam')}</th><th data-s="ipucu" title="İpucu alınan bölüm / çözümü görülen bölüm">İpucu${ok('ipucu')}</th><th data-s="zaman">Güncelleme${ok('zaman')}</th><th></th></tr></thead><tbody>` +
             rows.map(r => `<tr>
                 <td><b>${kacis(r.ad)}</b>${r.no ? ` <small style="color:var(--muted)">${kacis(r.no)}</small>` : ''}</td><td>${kacis(r.sinif)}</td>
                 ${parcalar.map(p => { const y = yildizlar(r, p), b = y.filter(x => x > 0).length; return `<td class="p" title="Bölüm yıldızları: ${y.join(' ')}">${b}/${p.seviye}<div class="pb"><div style="width:${b / p.seviye * 100}%"></div></div></td>`; }).join('')}
                 <td><b style="color:var(--gold)">★</b> ${toplamY(r)}</td>
+                <td title="${kacis(ipucuDetay(r))}">${(([a, c]) => a ? `<i class="fas fa-lightbulb" style="color:var(--gold)"></i> ${a}${c ? ` <small style="color:var(--muted)">· ${c} çözüm</small>` : ''}` : '<small style="color:var(--muted)">—</small>')(ipucu(r))}</td>
                 <td><small>${new Date(r.zaman).toLocaleString('tr-TR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</small></td>
                 <td><button class="sil" data-k="${kacis(anahtar(r))}" aria-label="Sil"><i class="fas fa-xmark"></i></button></td></tr>`).join('') + '</tbody>';
 
         // Excel için son görünümü sakla
-        sonGorunum = { rows, parcalar, yildizlar, toplamY };
+        sonGorunum = { rows, parcalar, yildizlar, toplamY, ipucu };
     }
     let sonGorunum = null;
 
@@ -174,13 +178,13 @@
     // Türkçe Excel noktalı virgülü ayraç olarak bekler; BOM ile Türkçe karakterler doğru açılır
     $('csv').addEventListener('click', () => {
         if (!sonGorunum || !sonGorunum.rows.length) { KL.bildir('Aktarılacak öğrenci yok.'); return; }
-        const { rows, parcalar, yildizlar, toplamY } = sonGorunum;
+        const { rows, parcalar, yildizlar, toplamY, ipucu } = sonGorunum;
         const h = (s) => `"${String(s ?? '').replace(/"/g, '""')}"`;
-        const satirlar = [['Öğrenci', 'No', 'Sınıf', ...parcalar.map(p => `${parcaAdi(p)} (bölüm)`), ...parcalar.map(p => `${parcaAdi(p)} (yıldız)`), 'Toplam yıldız', 'Son güncelleme'].map(h).join(';')];
+        const satirlar = [['Öğrenci', 'No', 'Sınıf', ...parcalar.map(p => `${parcaAdi(p)} (bölüm)`), ...parcalar.map(p => `${parcaAdi(p)} (yıldız)`), 'Toplam yıldız', 'İpucu alınan bölüm', 'Çözümü görülen bölüm', 'Son güncelleme'].map(h).join(';')];
         for (const r of rows) satirlar.push([r.ad, r.no, r.sinif,
             ...parcalar.map(p => `${yildizlar(r, p).filter(x => x > 0).length}/${p.seviye}`),
             ...parcalar.map(p => yildizlar(r, p).reduce((a, b) => a + b, 0)),
-            toplamY(r), new Date(r.zaman).toLocaleString('tr-TR')].map(h).join(';'));
+            toplamY(r), ipucu(r)[0], ipucu(r)[1], new Date(r.zaman).toLocaleString('tr-TR')].map(h).join(';'));
         const blob = new Blob(['﻿' + satirlar.join('\r\n')], { type: 'text/csv;charset=utf-8' });
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);

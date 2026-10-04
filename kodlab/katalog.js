@@ -291,6 +291,9 @@
         // Sondaki sıfırlar yazılmaz (kod kısa kalsın); okurken bölüm sayısına göre geri doldurulur
         for (const x of PARCALAR) { const y = x.yildiz(); if (y.some(v => v > 0)) p[x.id] = y.join('').replace(/0+$/, ''); }
         const veri = { v: 1, a: profil.ad || '', s: profil.sinif || '', n: profil.no || '', t: Math.floor(Date.now() / 1000), p };
+        // İpucu kullanımı: etkinlik → [ipucu açılan bölüm sayısı, çözümü görülen bölüm sayısı]
+        const ip = root.KL && root.KL.ipucuOzeti ? root.KL.ipucuOzeti() : {};
+        if (Object.keys(ip).length) veri.i = ip;
         if (gorevId) veri.g = gorevId;
         const govde = b64(JSON.stringify(veri));
         return `KL1.${govde}.${saglama(govde)}`;
@@ -304,7 +307,7 @@
             const v = JSON.parse(b64coz(m[1]));
             const ilerleme = {};
             for (const [id, y] of Object.entries(v.p || {})) { const x = parca(id); ilerleme[id] = x ? String(y).padEnd(x.seviye, '0') : String(y); }
-            return { ad: v.a, sinif: v.s, no: v.n, zaman: v.t * 1000, gorev: v.g || null, ilerleme };
+            return { ad: v.a, sinif: v.s, no: v.n, zaman: v.t * 1000, gorev: v.g || null, ilerleme, ipucu: v.i || {} };
         } catch (e) { return { hata: 'Kod okunamadı' }; }
     }
 
