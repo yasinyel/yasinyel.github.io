@@ -298,7 +298,20 @@
                 { ad: 'İkili tekrar', p: () => [rep(r(2, 3), sa(), yu())] },
                 { ad: 'Merdiven', p: () => [rep(3, sa(), as())] },
                 { ad: 'Kutudan önce, kutudan sonra', p: () => [yu(), rep(3, sa()), as()] },
-                { ad: 'İki kutu', p: () => [rep(r(2, 3), sa()), rep(r(2, 3), as()), so()] }
+                { ad: 'İki kutu', p: () => [rep(r(2, 3), sa()), rep(r(2, 3), as()), so()] },
+                // ---- Ek bölümler ----
+                { ad: 'L harfi', p: () => [as(), as(), as(), sa(), sa()] },
+                { ad: 'Kare çiz', p: () => [sa(), sa(), as(), as(), so(), so(), yu()] },
+                { ad: 'Zikzak', p: () => [sa(), yu(), sa(), as(), sa(), yu()] },
+                { ad: 'Yılan', p: () => rastgeleYonler(10).map(P.mv) },
+                { ad: 'Yukarı kutusu', p: () => [rep(r(3, 5), yu()), sa()] },
+                { ad: 'Merdiven çıkışı', p: () => [rep(3, yu(), sa())] },
+                { ad: 'Üçlü kutu', p: () => [rep(2, sa(), sa(), yu())] },
+                { ad: 'Kutu, ok, kutu', p: () => [sa(), rep(r(2, 3), as()), sa(), rep(2, yu())] },
+                { ad: 'Dört kutu', p: () => [rep(2, sa()), rep(2, as()), rep(2, so()), rep(2, yu())] },
+                { ad: 'Dalga', p: () => [rep(3, yu(), sa(), as(), sa())] },
+                { ad: 'Uzun yolculuk', p: () => [...rastgeleYonler(3, 'RUD').map(P.mv), rep(r(2, 3), sa()), ...rastgeleYonler(2, 'RD').map(P.mv)] },
+                { ad: 'Büyük kutu', p: () => [rep(r(2, 3), sa(), as(), as()), sa()] }
             ]
         },
         {
@@ -314,7 +327,21 @@
                 { ad: 'Basamaklar', p: () => [rep(2, rep(2, sa()), rep(2, as()))] },
                 { ad: 'Köprü', p: () => [rep(r(2, 3), yu(), rep(2, sa()), as())] },
                 { ad: 'Zikzak', p: () => [rep(2, sa(), rep(2, yu(), sa()))] },
-                { ad: 'Dağlar', p: () => [rep(2, rep(2, sa(), yu()), rep(2, sa(), as()))] }
+                { ad: 'Dağlar', p: () => [rep(2, rep(2, sa(), yu()), rep(2, sa(), as()))] },
+                // ---- Ek bölümler ----
+                { ad: 'Dikdörtgen', p: () => [rep(3, sa()), rep(2, as()), rep(3, so()), rep(2, yu())] },
+                { ad: 'Testere', p: () => [rep(3, yu(), yu(), sa(), as(), as(), sa())] },
+                { ad: 'Kare dalga', p: () => [rep(2, rep(2, yu()), sa(), rep(2, as()), sa())] },
+                { ad: 'Üç kat', p: () => [rep(3, rep(3, sa()), yu())] },
+                { ad: 'Sarmal', p: () => [sa(), as(), rep(2, so()), rep(2, yu()), rep(3, sa()), rep(3, as())] },
+                { ad: 'İkili iç içe', p: () => [rep(2, rep(2, sa(), yu()))] },
+                { ad: 'Kale duvarı', p: () => [rep(3, yu(), sa(), as(), sa())] },
+                { ad: 'Uzun tekrar', p: () => [rep(r(5, 7), sa()), rep(r(2, 3), yu())] },
+                { ad: 'Git ve dön', p: () => [rep(4, sa()), rep(4, so()), rep(2, as())] },
+                { ad: 'Üç katlı iç içe', yeni: 'İç içe üç tekrar! En içten başla: en içteki her seferinde baştan çalışır.', p: () => [rep(2, rep(2, rep(2, sa()), yu()))] },
+                { ad: 'Kutular ve bloklar', p: () => [rep(r(2, 3), as()), sa(), rep(r(2, 3), yu()), sa()] },
+                { ad: 'Aşağı yukarı', p: () => [rep(2, sa(), as()), rep(2, sa(), yu())] },
+                { ad: 'Büyük merdiven', p: () => [rep(3, rep(2, sa()), rep(2, yu()))] }
             ]
         },
         {
@@ -331,7 +358,22 @@
                 { ad: 'Büyüyen merdiven', p: () => [set('a', 1), rep(3, rep('a', sa()), yu(), set('a', op('+', 'a', 1)))] },
                 { ad: 'Fonksiyon', yeni: 'Fonksiyon, bir isim verilmiş kod parçasıdır. Tanımlandığında çalışmaz, çağrıldığında çalışır.', p: () => [def('zikzak', [], sa(), yu(), sa(), as()), call('zikzak'), yu(), call('zikzak')] },
                 { ad: 'Parametre', p: () => { const a = [r(1, 3), r(1, 3), r(1, 3)]; return [def('git', ['n'], rep('n', sa()), as()), ...a.map(x => call('git', x))]; } },
-                { ad: 've / veya', p: () => { const lo = r(1, 2), hi = lo + r(2, 3); return [set('i', 1), whl(op('<=', 'i', 6), iff(op('and', op('>', 'i', lo), op('<', 'i', hi)), [yu()], [sa()]), set('i', op('+', 'i', 1)))]; } }
+                { ad: 've / veya', p: () => { const lo = r(1, 2), hi = lo + r(2, 3); return [set('i', 1), whl(op('<=', 'i', 6), iff(op('and', op('>', 'i', lo), op('<', 'i', hi)), [yu()], [sa()]), set('i', op('+', 'i', 1)))]; } },
+                // ---- Ek bölümler ----
+                { ad: 'İki değişken', p: () => { const a = r(1, 3), b = r(1, 3); return [set('a', a), set('b', b), rep('a', sa()), rep('b', yu()), rep(op('+', 'a', 'b'), so())]; } },
+                { ad: 'Değişken takası', yeni: 'İki değişkenin değerini değiştirmek için üçüncü bir geçici değişken (t) gerekir.', p: () => { const a = r(1, 2), b = a + r(1, 2); return [set('a', a), set('b', b), set('t', 'a'), set('a', 'b'), set('b', 't'), rep('a', sa()), rep('b', as())]; } },
+                { ad: 'Çarpma', p: () => [set('x', r(2, 3)), rep(op('*', 'x', 2), sa()), yu()] },
+                { ad: 'Eşit mi?', p: () => { const a = r(1, 3), b = sec([a, r(1, 3)]); return [set('a', a), set('b', b), iff(op('==', 'a', 'b'), [yu(), yu(), yu()], [sa(), sa(), sa()]), as()]; } },
+                { ad: 'Koşul ve değişken', p: () => [set('n', r(2, 6)), iff(op('>', 'n', 3), [rep('n', sa())], [rep('n', yu())]), as()] },
+                { ad: 'Toplam döngüsü', p: () => [set('t', 0), set('i', 1), whl(op('<=', 'i', r(2, 3)), set('t', op('+', 't', 'i')), set('i', op('+', 'i', 1))), rep('t', sa()), yu()] },
+                { ad: 'Çift sayılar', p: () => [set('i', 0), whl(op('<', 'i', r(6, 8)), iff(op('==', op('%', 'i', 2), 0), [sa()]), set('i', op('+', 'i', 1))), as()] },
+                { ad: 'Üçün katları', p: () => [set('i', 1), whl(op('<=', 'i', r(6, 8)), iff(op('==', op('%', 'i', 3), 0), [yu()], [sa()]), set('i', op('+', 'i', 1)))] },
+                { ad: 'Büyük olan', p: () => { const a = r(1, 4), b = r(1, 4); return [set('a', a), set('b', b), iff(op('>', 'a', 'b'), [rep('a', sa())], [rep('b', sa())]), as(), as()]; } },
+                { ad: 'Fonksiyonu tekrarla', p: () => [def('basamak', [], sa(), yu()), rep(r(2, 4), call('basamak'))] },
+                { ad: 'Parametreli kare', p: () => [def('kare', ['n'], rep('n', sa()), rep('n', as()), rep('n', so()), rep('n', yu())), call('kare', r(2, 3)), sa()] },
+                { ad: 'İki parametre', p: () => [def('git', ['a', 'b'], rep('a', sa()), rep('b', yu())), call('git', r(1, 3), r(1, 2)), call('git', r(1, 2), r(1, 2))] },
+                { ad: 'Büyüyen adımlar', p: () => [set('a', 1), whl(op('<=', 'a', 3), rep('a', sa()), as(), set('a', op('+', 'a', 1)))] },
+                { ad: 'Azalan değişken', p: () => [set('x', r(10, 20)), whl(op('>', 'x', 0), iff(op('==', op('%', 'x', 2), 0), [sa()], [as()]), set('x', op('-', 'x', 3)))] }
             ]
         },
         {
@@ -352,7 +394,26 @@
                 { ad: 'Dönüş değeri', p: () => [def('uzunluk', ['x'], ret(op('-', op('*', 'x', 2), 1))), forR('i', 1, 4, forR('_', 0, Cagir('uzunluk', 'i'), sa()), yu())] },
                 { ad: 'İkilik sayı', p: () => { const v = r(9, 30); return [set('n', v), whl(op('>', 'n', 0), iff(op('==', op('%', 'n', 2), 1), [yu()], [sa()]), set('n', op('//', 'n', 2)))]; } },
                 { ad: 'Collatz', p: () => { const v = sec([3, 5, 6, 12]); return [set('n', v), whl(op('!=', 'n', 1), iff(op('==', op('%', 'n', 2), 0), [set('n', op('//', 'n', 2)), sa()], [set('n', op('+', op('*', 3, 'n'), 1)), yu()]))]; } },
-                { ad: 'Özyineleme', yeni: 'Fonksiyon kendini çağırabilir. Her çağrı bitince kaldığı yerden devam eder!', p: () => [def('f', ['n'], iff(op('==', 'n', 0), [ret()]), sa(), call('f', op('-', 'n', 1)), yu()), call('f', r(2, 4))] }
+                { ad: 'Özyineleme', yeni: 'Fonksiyon kendini çağırabilir. Her çağrı bitince kaldığı yerden devam eder!', p: () => [def('f', ['n'], iff(op('==', 'n', 0), [ret()]), sa(), call('f', op('-', 'n', 1)), yu()), call('f', r(2, 4))] },
+                // ---- Ek bölümler ----
+                { ad: 'for içinde if', p: () => [forR('i', 0, r(6, 8), iff(op('==', op('%', 'i', 2), 0), [sa()], [yu()]))] },
+                { ad: 'Liste toplamı', p: () => { const l = [r(1, 2), r(1, 2), r(1, 2)]; return [set('l', Lst(l)), set('t', 0), forIn('x', 'l', set('t', op('+', 't', 'x'))), forR('_', 0, 't', sa()), yu()]; } },
+                { ad: 'len()', yeni: 'len(liste) listedeki eleman sayısını verir.', p: () => [set('l', Lst(Array.from({ length: r(3, 6) }, () => r(1, 9)))), forR('_', 0, Len('l'), sa()), yu()] },
+                { ad: 'Listede ara', p: () => { const l = Array.from({ length: 5 }, () => r(1, 9)), k = r(1, 4); for (let i = 0; i < k; i++) if (l[i] === l[k]) l[i] = (l[k] % 9) + 1; const h = l[k]; return [set('l', Lst(l)), set('hedef', h), forIn('x', 'l', iff(op('==', 'x', 'hedef'), [yu(), brk()], [sa()])), as()]; } },
+                { ad: 'En büyüğü bul', p: () => [set('l', Lst(Array.from({ length: r(3, 4) }, () => r(1, 5)))), set('m', 0), forIn('x', 'l', iff(op('>', 'x', 'm'), [set('m', 'x')])), forR('_', 0, 'm', sa()), as()] },
+                { ad: 'Koşullu sayaç', p: () => { const l = Array.from({ length: 6 }, () => r(1, 9)); l[r(0, 5)] = r(6, 9); return [set('l', Lst(l)), set('c', 0), forIn('x', 'l', iff(op('>', 'x', 5), [set('c', op('+', 'c', 1))])), forR('_', 0, 'c', yu()), sa(), sa()]; } },
+                { ad: 'Harf say', p: () => { const m = [...'abbaba'].sort(() => Math.random() - 0.5).join(''); return [set('s', Str(m)), forIn('c', 's', iff(op('==', 'c', Str('a')), [sa()], [yu()]))]; } },
+                { ad: 'Üçgen döngü', p: () => [forR('i', 0, 3, forR('j', 0, op('+', 'i', 1), sa()), yu())] },
+                { ad: 'Çarpım tablosu', p: () => [forR('i', 1, 3, forR('j', 1, 4, iff(op('==', op('%', op('*', 'i', 'j'), 2), 0), [yu()], [sa()])))] },
+                { ad: 'while ile toplama', p: () => [set('t', 0), set('i', 0), whl(op('<', 't', r(8, 12)), set('i', op('+', 'i', 1)), set('t', op('+', 't', 'i')), sa()), yu()] },
+                { ad: 'return ile değer', p: () => [def('ikikat', ['x'], ret(op('*', 'x', 2))), forR('_', 0, Cagir('ikikat', r(1, 3)), sa()), yu()] },
+                { ad: 'Fonksiyon içinde if', p: () => [def('adim', ['n'], iff(op('>', 'n', 2), [sa()], [yu()])), forR('i', 0, r(4, 6), call('adim', 'i'))] },
+                { ad: '2\'nin kuvvetleri', p: () => [set('p', 1), whl(op('<', 'p', r(10, 30)), set('p', op('*', 'p', 2)), sa()), as()] },
+                { ad: 'Asal mı?', p: () => { const n = sec([7, 9, 11, 15, 13, 21]); return [set('n', n), set('d', 2), set('asal', true), whl(op('<', 'd', 'n'), iff(op('==', op('%', 'n', 'd'), 0), [set('asal', false), brk()]), set('d', op('+', 'd', 1))), iff('asal', [sa(), sa(), sa()], [yu(), yu(), yu()])]; } },
+                { ad: 'Fibonacci', p: () => [set('a', 0), set('b', 1), whl(op('<', 'b', r(8, 20)), set('c', op('+', 'a', 'b')), set('a', 'b'), set('b', 'c'), sa()), yu()] },
+                { ad: 'İç içe while', p: () => [set('i', 0), whl(op('<', 'i', 2), set('j', 0), whl(op('<', 'j', r(2, 3)), sa(), set('j', op('+', 'j', 1))), yu(), set('i', op('+', 'i', 1)))] },
+                { ad: 'Özyineleme: geri dönüş', p: () => [def('f', ['n'], iff(op('==', 'n', 0), [ret()]), yu(), call('f', op('-', 'n', 1)), sa()), call('f', r(2, 4))] },
+                { ad: 'Özyineleme: iki çağrı', yeni: 'Fonksiyon kendini iki kez çağırırsa hamle sayısı her seviyede ikiye katlanır.', p: () => [def('f', ['n'], iff(op('==', 'n', 0), [yu(), ret()]), call('f', op('-', 'n', 1)), sa(), call('f', op('-', 'n', 1))), call('f', r(1, 2))] }
             ]
         }
     ];

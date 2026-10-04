@@ -17,13 +17,13 @@
     const ETKINLIKLER = [
         {
             id: 'sensin', ad: 'Bilgisayar Sensin', url: 'sensin.html', ikon: 'fa-arrows-up-down-left-right', renk: '#0ea5e9', sinif: [0, 12],
-            aciklama: 'Kodu oku, bilgisayarın yerine sen çalıştır: karakteri yön tuşlarıyla kodun söylediği gibi hareket ettir. Her kademeye ayrı kod dili.',
+            aciklama: 'Kodu oku, bilgisayarın yerine sen çalıştır: karakteri yön tuşlarıyla kodun söylediği gibi hareket ettir. 100 bölüm, her kademeye ayrı kod dili; sayılar her seferinde değişir.',
             etiket: ['Kod okuma', 'Algoritma', 'Döngü', 'Koşul', 'Fonksiyon'], kavram: 'Okla (okul öncesi), blokla (ilkokul), Türkçe kodla (ortaokul) ve Python ile (lise) kod izleme', sure: 'Bölüm başı 2–5 dk',
             parcalar: [
-                { id: 'sensin.okuloncesi', ad: 'Okul Öncesi (oklar)', url: 'sensin.html?kademe=okuloncesi', sinif: [0, 1], seviye: 10, yildiz: () => { const k = oku('sensin', {}).okuloncesi || {}; return dizi(10, i => k[i]); } },
-                { id: 'sensin.ilkokul', ad: 'İlkokul (bloklar)', url: 'sensin.html?kademe=ilkokul', sinif: [2, 4], seviye: 10, yildiz: () => { const k = oku('sensin', {}).ilkokul || {}; return dizi(10, i => k[i]); } },
-                { id: 'sensin.ortaokul', ad: 'Ortaokul (Türkçe kod)', url: 'sensin.html?kademe=ortaokul', sinif: [5, 8], seviye: 11, yildiz: () => { const k = oku('sensin', {}).ortaokul || {}; return dizi(11, i => k[i]); } },
-                { id: 'sensin.lise', ad: 'Lise (Python)', url: 'sensin.html?kademe=lise', sinif: [9, 12], seviye: 12, yildiz: () => { const k = oku('sensin', {}).lise || {}; return dizi(12, i => k[i]); } }
+                { id: 'sensin.okuloncesi', ad: 'Okul Öncesi (oklar)', url: 'sensin.html?kademe=okuloncesi', sinif: [0, 1], seviye: 22, yildiz: () => { const k = oku('sensin', {}).okuloncesi || {}; return dizi(22, i => k[i]); } },
+                { id: 'sensin.ilkokul', ad: 'İlkokul (bloklar)', url: 'sensin.html?kademe=ilkokul', sinif: [2, 4], seviye: 23, yildiz: () => { const k = oku('sensin', {}).ilkokul || {}; return dizi(23, i => k[i]); } },
+                { id: 'sensin.ortaokul', ad: 'Ortaokul (Türkçe kod)', url: 'sensin.html?kademe=ortaokul', sinif: [5, 8], seviye: 25, yildiz: () => { const k = oku('sensin', {}).ortaokul || {}; return dizi(25, i => k[i]); } },
+                { id: 'sensin.lise', ad: 'Lise (Python)', url: 'sensin.html?kademe=lise', sinif: [9, 12], seviye: 30, yildiz: () => { const k = oku('sensin', {}).lise || {}; return dizi(30, i => k[i]); } }
             ]
         },
         {
@@ -288,7 +288,8 @@
 
     function raporOlustur(profil, gorevId) {
         const p = {};
-        for (const x of PARCALAR) { const y = x.yildiz(); if (y.some(v => v > 0)) p[x.id] = y.join(''); }
+        // Sondaki sıfırlar yazılmaz (kod kısa kalsın); okurken bölüm sayısına göre geri doldurulur
+        for (const x of PARCALAR) { const y = x.yildiz(); if (y.some(v => v > 0)) p[x.id] = y.join('').replace(/0+$/, ''); }
         const veri = { v: 1, a: profil.ad || '', s: profil.sinif || '', n: profil.no || '', t: Math.floor(Date.now() / 1000), p };
         if (gorevId) veri.g = gorevId;
         const govde = b64(JSON.stringify(veri));
@@ -301,7 +302,9 @@
         if (saglama(m[1]) !== m[2]) return { hata: 'Kod eksik ya da hatalı kopyalanmış' };
         try {
             const v = JSON.parse(b64coz(m[1]));
-            return { ad: v.a, sinif: v.s, no: v.n, zaman: v.t * 1000, gorev: v.g || null, ilerleme: v.p || {} };
+            const ilerleme = {};
+            for (const [id, y] of Object.entries(v.p || {})) { const x = parca(id); ilerleme[id] = x ? String(y).padEnd(x.seviye, '0') : String(y); }
+            return { ad: v.a, sinif: v.s, no: v.n, zaman: v.t * 1000, gorev: v.g || null, ilerleme };
         } catch (e) { return { hata: 'Kod okunamadı' }; }
     }
 
