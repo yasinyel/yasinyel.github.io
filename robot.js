@@ -8,6 +8,11 @@
     const ogretmen = new URLSearchParams(location.search).has('ogretmen');
     const kayit = KL.oku('robot', { yildiz: {}, kod: {} });
     let no = Math.min(kayit.son ?? 0, SEVIYELER.length - 1);
+    // Paylaşılan (tasarlanmış) bölüm: robot.html#ozel=...
+    const ozelKod = (location.hash.match(/^#ozel=([A-Za-z0-9_-]+)/) || [])[1];
+    const ozel = ozelKod && window.RobotTasarim ? RobotTasarim.coz(ozelKod) : null;
+    if (ozel) { SEVIYELER.push(RobotTasarim.seviye(ozel)); no = SEVIYELER.length - 1; }
+    else if (ozelKod) setTimeout(() => KL.bildir('Bu bölüm linki bozuk ya da eksik kopyalanmış.'), 300);
     let gosterilenHarita = 0;
     let calisan = null;   // { derlenmis, haritaNo, dunya, gen, mod }
     let donus = 0;        // robotun toplam dönüş açısı (animasyon için)
@@ -65,7 +70,7 @@
         if (yuklendi) kodKaydet();
         yuklendi = true;
         no = i;
-        kayit.son = i; KL.yaz('robot', kayit);
+        if (!SEVIYELER[i].ozel) { kayit.son = i; KL.yaz('robot', kayit); }
         const s = SEVIYELER[i];
         $('topic').textContent = `Bölüm ${i + 1} · ${s.konu}`;
         $('title').textContent = s.baslik;
@@ -74,7 +79,7 @@
         $('newTags').innerHTML = (s.yeni || []).map(t => `<span>Yeni: ${t}</span>`).join('');
         $('example').hidden = !s.ornek;
         $('example').textContent = s.ornek || '';
-        $('kod').value = kayit.kod[i] ?? s.baslangic ?? '';
+        $('kod').value = s.ozel ? '' : kayit.kod[i] ?? s.baslangic ?? '';
         gosterilenHarita = 0;
         haritaSekmeleri();
         haritaGoster(0);
@@ -213,7 +218,7 @@
 
     let kayitZamani;
     function kodKaydetGecikmeli() { clearTimeout(kayitZamani); kayitZamani = setTimeout(kodKaydet, 400); }
-    function kodKaydet() { kayit.kod[no] = kod.value; KL.yaz('robot', kayit); }
+    function kodKaydet() { if (SEVIYELER[no].ozel) return; kayit.kod[no] = kod.value; KL.yaz('robot', kayit); }
 
     function satirIsaretle(satir, hata = false) {
         const hl = $('hl');
@@ -378,8 +383,7 @@
         satirIsaretle(null);
         kod.readOnly = false;
         dugmeler();
-        const onceki = kayit.yildiz[no] || 0;
-        kayit.yildiz[no] = Math.max(onceki, y);
+        if (!s.ozel) kayit.yildiz[no] = Math.max(kayit.yildiz[no] || 0, y);
         kodKaydet();
         bolumleriCiz();
         durum(`<i class="fas fa-trophy"></i> Bölüm tamamlandı! ${n} komut kullandın.`, 'ok');
@@ -390,9 +394,10 @@
         $('winText').innerHTML = y === 3
             ? `${n} komutla çözdün. Daha kısası zor!`
             : `${n} komut kullandın. ${s.hedef} ya da daha az komutla 3 yıldız alabilirsin. Tekrar eden kısımları döngüyle yazmayı dene.`;
-        const sonuncu = no === SEVIYELER.length - 1;
+        const sonuncu = no === SEVIYELER.length - 1 || s.ozel;
         $('winNext').hidden = sonuncu;
-        if (sonuncu) $('winText').innerHTML += '<br><br><b>Tüm bölümleri bitirdin, tebrikler! 🎉</b>';
+        if (s.ozel) $('winText').innerHTML += '<br><br><a href="tasarla.html">Şimdi sen bir bölüm tasarla ve arkadaşına gönder!</a>';
+        else if (sonuncu) $('winText').innerHTML += '<br><br><b>Tüm bölümleri bitirdin, tebrikler! 🎉</b>';
         setTimeout(() => $('winDialog').showModal(), 500);
     }
 
@@ -402,6 +407,10 @@
     $('stepBtn').addEventListener('click', adimTikla);
     $('resetBtn').addEventListener('click', sifirla);
 
+    if (ozel) {
+        $('levels').hidden = true; $('tasarlaLink').hidden = true; $('ozelBant').hidden = false;
+        $('ozelMetin').textContent = `Paylaşılan bölüm: ${ozel.baslik || 'Arkadaşımın Bölümü'}${ozel.yazar ? ' · ' + ozel.yazar : ''}`;
+    }
     bolumAc(no);
     if (ogretmen) KL.bildir('Öğretmen modu: tüm bölümler açık');
 })();

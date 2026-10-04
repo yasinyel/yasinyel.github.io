@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="Yasin Yel">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#1d5fd6">
+    <link rel="icon" href="ikon/ikon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="ikon/ikon-192.png">
+    <title>Bölüm Tasarlayıcı — Kodlayalım</title>
+    <meta name="description" content="Robot Kodla için kendi bölümünü tasarla, linkini ya da QR kodunu arkadaşlarına gönder.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="ortak.css">
+    <style>
+        main { padding: 20px 0 40px; }
+        .intro p { color: var(--muted); max-width: 70ch; margin-top: 6px; }
+        .duzen { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 16px; margin-top: 16px; align-items: start; }
+        .kart { padding: 18px; }
+        .araclar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+        .arac { display: inline-flex; gap: 8px; align-items: center; border: 2px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 12px; padding: 8px 12px; font-weight: 700; cursor: pointer; }
+        .arac.sel { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+        .arac .ornek { width: 20px; height: 20px; border-radius: 5px; display: grid; place-items: center; font-size: .75rem; }
+        .boyut { display: flex; gap: 10px; align-items: center; margin-top: 12px; color: var(--muted); font-size: .9rem; flex-wrap: wrap; }
+        .boyut select { padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+        .tahta-kap { margin-top: 14px; overflow: auto; display: flex; justify-content: center; padding: 10px; background: var(--bg-alt); border-radius: 14px; }
+        .tahta { display: grid; gap: 3px; touch-action: none; user-select: none; }
+        .tahta .h { width: var(--c); height: var(--c); border-radius: 7px; background: transparent; border: 1px dashed color-mix(in srgb, var(--muted) 35%, transparent); cursor: pointer; display: grid; place-items: center; font-size: calc(var(--c) * .5); color: #f59e0b; }
+        .tahta .h.z { background: var(--surface); border: 1px solid var(--line); }
+        .tahta .h.w { background: #475569; border-color: #334155; }
+        .tahta .h.r svg { width: 80%; height: 80%; transition: transform .2s; }
+        .alan { display: grid; gap: 4px; margin-top: 12px; font-size: .88rem; font-weight: 600; }
+        .alan input, .alan textarea { padding: 8px 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font: inherit; font-weight: 400; }
+        .alan small { color: var(--muted); font-weight: 400; }
+        .sorunlar { margin-top: 12px; display: grid; gap: 6px; font-size: .88rem; }
+        .sorunlar div { display: flex; gap: 8px; align-items: baseline; }
+        .sorunlar .fa-circle-xmark { color: var(--bad); } .sorunlar .fa-circle-check { color: var(--ok); }
+        .dugmeler { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+        .paylas { margin-top: 14px; display: grid; gap: 10px; justify-items: center; text-align: center; }
+        .paylas .kutu { display: flex; gap: 6px; width: 100%; }
+        .paylas input { flex: 1; min-width: 0; font: 500 .75rem var(--mono); padding: 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); }
+        .paylas .qr svg { width: 200px; height: 200px; border-radius: 8px; }
+        @media (max-width: 860px) { .duzen { grid-template-columns: minmax(0, 1fr); } }
+    </style>
+</head>
+<body>
+    <header class="kl-top">
+        <div class="wrap kl-top-inner">
+            <a href="./" class="kl-brand"><span class="kl-logo" aria-hidden="true"></span><span class="kl-ad"><b>Kod</b>layalım</span></a>
+            <span class="kl-crumb"><i class="fas fa-chevron-right" style="font-size:.7em"></i><span>Bölüm Tasarlayıcı</span></span>
+            <span class="kl-spacer"></span>
+            <button class="icon-btn" id="themeBtn" aria-label="Temayı değiştir"><i class="fas fa-circle-half-stroke"></i></button>
+        </div>
+    </header>
+    <main class="wrap">
+        <div class="intro">
+            <h1>Bölüm Tasarlayıcı</h1>
+            <p>Robot Kodla için kendi bölümünü çiz: zemin, yıldızlar, duvarlar ve robot. Bitince linkini ya da QR kodunu arkadaşlarına gönder; onlar senin bölümünü çözsün. Öğretmenler sınıfa özel bölümler hazırlayabilir.</p>
+        </div>
+        <div class="duzen">
+            <section class="card kart">
+                <div class="araclar" id="araclar" role="radiogroup" aria-label="Çizim aracı">
+                    <button class="arac sel" data-a="." role="radio"><span class="ornek" style="background:var(--surface);border:1px solid var(--line)"></span>Zemin</button>
+                    <button class="arac" data-a="*" role="radio"><span class="ornek" style="color:#f59e0b"><i class="fas fa-star"></i></span>Yıldız</button>
+                    <button class="arac" data-a="#" role="radio"><span class="ornek" style="background:#475569"></span>Duvar</button>
+                    <button class="arac" data-a=" " role="radio"><span class="ornek"><i class="fas fa-eraser"></i></span>Silgi</button>
+                    <button class="arac" data-a="r" role="radio"><span class="ornek"><i class="fas fa-robot" style="color:#1d5fd6"></i></span>Robot</button>
+                    <button class="btn btn-sm" id="dondur" title="Robotu döndür"><i class="fas fa-rotate-right"></i> Robotu döndür</button>
+                </div>
+                <div class="boyut">
+                    <label>Genişlik <select id="gen"></select></label>
+                    <label>Yükseklik <select id="yuk"></select></label>
+                    <span>Kareye tıkla ya da sürükleyerek boya.</span>
+                </div>
+                <div class="tahta-kap"><div class="tahta" id="tahta"></div></div>
+            </section>
+            <aside class="card kart">
+                <h3>Bölüm bilgileri</h3>
+                <label class="alan">Bölümün adı <input id="baslik" maxlength="40" placeholder="Örn. Yıldız Labirenti"></label>
+                <label class="alan">Tasarlayan <input id="yazar" maxlength="30" placeholder="Adın (isteğe bağlı)"><small>Gerçek soyadını yazmana gerek yok.</small></label>
+                <label class="alan">İpucu <textarea id="not" maxlength="160" rows="2" placeholder="Çözene bir ipucu (isteğe bağlı)"></textarea></label>
+                <label class="alan">3 yıldız için en fazla komut <input id="hedef" type="number" min="1" max="99" value="8"><small>Kendin çözüp kaç komut kullandığına bak.</small></label>
+                <div class="sorunlar" id="sorunlar" aria-live="polite"></div>
+                <div class="dugmeler">
+                    <button class="btn" id="dene"><i class="fas fa-play"></i> Kendin dene</button>
+                    <button class="btn btn-primary" id="paylasBtn"><i class="fas fa-share-nodes"></i> Paylaş</button>
+                    <button class="btn" id="ornek"><i class="fas fa-wand-magic-sparkles"></i> Örnek</button>
+                    <button class="btn" id="temizle"><i class="fas fa-trash"></i> Temizle</button>
+                </div>
+                <div class="paylas" id="paylas" hidden></div>
+            </aside>
+        </div>
+    </main>
+    <script src="ortak.js"></script>
+    <script src="robot-tasarim.js"></script>
+    <script src="qr.js"></script>
+    <script src="tasarla.js"></script>
+</body>
+</html>
