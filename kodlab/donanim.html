@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="Yasin Yel">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#1d5fd6">
+    <link rel="icon" href="ikon/ikon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="ikon/ikon-192.png">
+    <title>Bilgisayarın İçi — Kodlayalım</title>
+    <meta name="description" content="Bilgisayarın parçalarını tanı: parçaları anakarta tak, girdi ve çıktı birimlerini ayır, veri birimlerini hesapla, arızaları bul.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="ortak.css">
+    <style>
+        main { padding: 28px 0 40px; }
+        .intro h1 { font-size: clamp(1.8rem, 4vw, 2.4rem); }
+        .intro p { color: var(--muted); margin-top: 6px; max-width: 720px; }
+        .bol-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; margin-top: 24px; }
+        .bol { padding: 20px; text-align: left; cursor: pointer; display: flex; flex-direction: column; gap: 6px; transition: transform .15s, border-color .15s; color: var(--ink); }
+        .bol:hover { transform: translateY(-2px); border-color: var(--accent); }
+        .bol .ik { width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center; color: #fff; font-size: 1.2rem; }
+        .bol h3 { font-size: 1.2rem; } .bol p { color: var(--muted); font-size: .9rem; flex: 1; } .bol small { color: var(--accent); font-weight: 700; }
+        .game-top { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .game-top h2 { font-size: 1.25rem; flex: 1; }
+        .dots { display: flex; gap: 6px; flex-wrap: wrap; }
+        .dots span { width: 12px; height: 12px; border-radius: 50%; background: var(--line); }
+        .dots span.ok { background: var(--ok); } .dots span.cur { background: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+        .panel { padding: 22px; }
+        .fb { font-weight: 600; min-height: 1.5em; margin-top: 10px; }
+        .fb.ok { color: var(--ok); } .fb.bad { color: var(--bad); }
+        /* Topla */
+        .topla { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+        .kasa svg { width: 100%; height: auto; display: block; touch-action: none; }
+        .kasa [data-yuva] { cursor: pointer; transition: fill .15s, stroke .15s; }
+        .kasa [data-yuva].uzerinde { stroke: #ffd166; stroke-width: 4; }
+        .kasa [data-yuva].secilebilir { stroke: #93c5fd; stroke-dasharray: 6 4; stroke-width: 2.5; }
+        .tepsi { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .parca { border: 2px solid var(--line); border-radius: 14px; background: var(--surface); padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: grab; touch-action: none; user-select: none; font-weight: 700; font-size: .85rem; text-align: center; color: var(--ink); }
+        .parca svg { width: 72px; height: 48px; }
+        .parca.sec { border-color: var(--accent); background: var(--accent-soft); }
+        .parca.takildi { opacity: .35; cursor: default; }
+        .parca.titre { animation: titre .3s; }
+        @keyframes titre { 0%,100% { translate: 0 } 33% { translate: -4px 0 } 66% { translate: 4px 0 } }
+        .hayalet { position: fixed; pointer-events: none; z-index: 50; opacity: .9; transform: translate(-50%, -50%); }
+        .acilis { position: absolute; inset: 0; background: #020617; color: #4ade80; font-family: var(--mono); padding: 22px; border-radius: 16px; font-size: .95rem; line-height: 1.7; white-space: pre-wrap; }
+        .kasa { position: relative; }
+        /* Eşleştir */
+        .esle { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .esle .sut { display: flex; flex-direction: column; gap: 8px; }
+        .esle button { text-align: left; padding: 12px 14px; border-radius: 12px; border: 2px solid var(--line); background: var(--surface); cursor: pointer; font-weight: 600; font-size: .92rem; color: var(--ink); }
+        .esle button.sec { border-color: var(--accent); background: var(--accent-soft); }
+        .esle button.bitti { border-color: var(--ok); background: var(--ok-soft); cursor: default; }
+        .esle button.titre { animation: titre .3s; border-color: var(--bad); }
+        /* Sınıfla */
+        .cihaz { text-align: center; padding: 26px; }
+        .cihaz .em { font-size: 4.2rem; line-height: 1; }
+        .cihaz h3 { font-size: 1.6rem; margin-top: 10px; }
+        .kovalar { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-top: 18px; }
+        .kovalar button { padding: 14px; border-radius: 14px; border: 2px solid var(--line); background: var(--surface); cursor: pointer; font-weight: 700; color: var(--ink); }
+        .kovalar button small { display: block; font-weight: 500; color: var(--muted); font-size: .78rem; margin-top: 3px; }
+        .kovalar button.dogru { border-color: var(--ok); background: var(--ok-soft); }
+        .kovalar button.yanlis { border-color: var(--bad); background: var(--bad-soft); }
+        /* Soru */
+        .durum-kart { max-width: 780px; margin: 0 auto; }
+        .durum-kart .soru { font-size: 1.2rem; font-weight: 600; margin-bottom: 16px; line-height: 1.5; }
+        .secenekler { display: flex; flex-direction: column; gap: 10px; }
+        .secenekler button { text-align: left; padding: 14px 16px; border-radius: 12px; border: 2px solid var(--line); background: var(--surface); cursor: pointer; font-size: 1rem; font-weight: 600; color: var(--ink); }
+        .secenekler button:hover { border-color: var(--accent); }
+        .secenekler button.dogru { border-color: var(--ok); background: var(--ok-soft); }
+        .secenekler button.yanlis { border-color: var(--bad); background: var(--bad-soft); opacity: .75; }
+        .aciklama { margin-top: 12px; padding: 10px 12px; border-radius: 10px; background: var(--bg-alt); font-size: .93rem; line-height: 1.55; }
+        .sonuc { text-align: center; padding: 36px 22px; max-width: 560px; margin: 0 auto; }
+        .sonuc .big-stars { font-size: 2.6rem; margin: 12px 0; }
+        .sonuc .actions { display: flex; gap: 10px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
+        @media (max-width: 900px) { .topla { grid-template-columns: 1fr; } .tepsi { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 560px) { .esle { grid-template-columns: 1fr; } .tepsi { grid-template-columns: repeat(2, 1fr); } }
+    </style>
+</head>
+<body>
+    <header class="kl-top">
+        <div class="wrap kl-top-inner">
+            <a href="./" class="kl-brand"><span class="kl-logo" aria-hidden="true"></span><span class="kl-ad"><b>Kod</b>layalım</span></a>
+            <span class="kl-crumb"><i class="fas fa-chevron-right" style="font-size:.7em"></i><span>Bilgisayarın İçi</span></span>
+            <span class="kl-spacer"></span>
+            <button class="icon-btn" id="themeBtn" aria-label="Temayı değiştir"><i class="fas fa-circle-half-stroke"></i></button>
+        </div>
+    </header>
+    <main class="wrap">
+        <section id="liste">
+            <div class="intro">
+                <h1>Bilgisayarın İçi</h1>
+                <p>Kasanın kapağını açalım! Bilgisayarı oluşturan parçaları tanı, onları doğru yerlere takıp bilgisayarı çalıştır, girdi ve çıktı birimlerini ayır, veri birimlerini hesapla ve bir bilgisayar doktoru gibi arızaları bul.</p>
+            </div>
+            <div class="bol-grid" id="bolumler"></div>
+        </section>
+        <section id="oyun" hidden>
+            <div class="game-top">
+                <button class="icon-btn" id="geri" aria-label="Geri"><i class="fas fa-arrow-left"></i></button>
+                <h2 id="baslik"></h2>
+                <div class="dots" id="dots"></div>
+            </div>
+            <div id="icerik"></div>
+        </section>
+        <section id="sonuc" hidden>
+            <div class="card sonuc">
+                <h2 id="sBaslik"></h2>
+                <div class="big-stars" id="sYildiz"></div>
+                <p id="sMetin" style="color:var(--muted)"></p>
+                <div class="actions"><button class="btn" id="sListe">Bölümler</button><button class="btn btn-primary" id="sTekrar"><i class="fas fa-rotate-left"></i> Tekrar</button></div>
+            </div>
+        </section>
+    </main>
+    <script src="ortak.js"></script>
+    <script src="donanim-motor.js"></script>
+    <script src="donanim.js"></script>
+</body>
+</html>

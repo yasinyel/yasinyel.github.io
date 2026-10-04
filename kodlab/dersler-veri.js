@@ -13,6 +13,16 @@
             destek: 'İlk dersleri tekrarlatın; ekran klavyesindeki renkli ipuçlarını açık tutun.',
             zenginlestirme: 'Büyük harf, noktalama ve rakam derslerine geçip hız testinde rekor denemesi yapsınlar.'
         },
+        donanim: {
+            hedefler: ['Bilgisayarın temel iç parçalarını ve görevlerini söyler.', 'Çevre birimlerini girdi, çıktı ve depolama olarak sınıflar.', 'Veri birimlerini karşılaştırır ve basit arızaların nedenini bulur.'],
+            giris: 'Eski bir bilgisayar kasasının kapağını açın (ya da fotoğrafını gösterin): "Sizce bu parçaların her biri ne işe yarıyor?"',
+            isinma: 'Tahtaya "Girdi – Çıktı – Depolama" tablosu çizin; öğrenciler sınıftaki cihazları söylesin, birlikte yerleştirin.',
+            adimlar: ['Bilgisayarı Topla bölümünü birlikte yapın; işlemci soğutucusunun neden işlemciden sonra takıldığını tartışın.', 'Ne İşe Yarar? ve Girdi mi Çıktı mı? bölümlerini ikili gruplar yapsın.', 'Ortaokul ve lise: Bit, Bayt, Gigabayt ve Arıza Tespiti bölümleriyle devam edin.'],
+            tartisma: ['RAM ile SSD arasındaki fark nedir? Elektrik kesilince ne olur?', 'Dokunmatik ekran neden hem girdi hem çıktıdır?', 'İnternet hızı neden megabit, dosya boyutu neden megabayt ile yazılır?'],
+            cikis: 'Bilgisayarın üç parçasını ve görevini yazın.',
+            destek: 'Gerçek parçaları ya da büyük resimlerini elden ele dolaştırın.',
+            zenginlestirme: 'Bir bilgisayar satış ilanındaki teknik özellikleri okuyup yorumlasınlar.'
+        },
         oruntu: {
             hedefler: ['Tekrar eden bir örüntüyü fark eder.', 'Örüntünün devamını tahmin eder.', 'Kendi örüntüsünü oluşturur.'],
             giris: 'Sınıfta alkış-şaplak ritmi yapın (alkış, alkış, dizine vur…). "Sırada ne var?" diye sorun.',
