@@ -9,7 +9,9 @@
     const oku = (k, v) => root.KL ? root.KL.oku(k, v) : v;
     const yaz = (k, v) => { if (root.KL && root.KL.yaz) root.KL.yaz(k, v); };
     // Python görev kimlikleri (python-motor.js yüklenmeyen sayfalar için; test/katalog.test.js eşleştiğini denetler)
-    const PYTHON_IDLER = ['merhaba', 'parcalar', 'gb', 'birlestir', 'islemler', 'selam', 'kb', 'sure', 'pilsure', 'sifreuzun', 'cifttek', 'pildurum', 'ipoktet', 'giris', 'gerisay', 'kuvvet', 'sensor', 'piksel', 'bipbop', 'tahminoyun', 'sesli', 'palindrom', 'ping', 'kelime', 'gizle', 'ikilik', 'onluk', 'sezar', 'guc', 'ara', 'sirala', 'asal'];
+    const PYTHON_IDLER = ['merhaba', 'parcalar', 'gb', 'birlestir', 'islemler', 'tb', 'ekranalan', 'tirnak', 'cizgi', 'yuvarla', 'takas', 'selam', 'kb', 'sure', 'pilsure', 'yas', 'ortalama3', 'derece', 'cozunurluk', 'bitbayt', 'fatura', 'sifreuzun', 'cifttek', 'pildurum', 'ipoktet', 'giris', 'buyuk', 'artik', 'harfnot', 'ucgen', 'kota', 'ekransure', 'sifreguc', 'gerisay', 'kuvvet', 'sensor', 'piksel', 'bipbop', 'tahminoyun', 'carpim', 'toplam1n', 'faktoriyel', 'yildizucgen', 'ikikuvvet', 'rakamtop', 'fibonacci', 'ebob', 'ciftler', 'sinirsiz', 'sesli', 'palindrom', 'ping', 'kelime', 'gizle', 'enyuksek', 'kelimesay', 'harfsay', 'tersyaz', 'gecenler', 'listeort', 'tekrarsiz', 'eposta', 'listeters', 'kullaniciadi', 'ikilik', 'onluk', 'sezar', 'guc', 'ara', 'sirala', 'asal', 'karef', 'mutlak', 'enbuyukf', 'harfsayf', 'faktoriyelr', 'ikiliara', 'secmeli', 'hanoi', 'rehber', 'siklik', 'stok', 'secim', 'karnesoz', 'terssoz', 'ortak', 'benzersiz', 'robotsinif', 'hesap', 'nokta', 'dikdortgen', 'sayacsinif', 'kalitim', 'rle', 'rleac', 'pariteekle', 'ipdogrula', 'mors', 'histogram', 'dondur', 'ikilitopla', 'asmaca', 'saatfark'];
+    // Fonksiyonlar ve Algoritmalar ünitesinin görevleri (Algoritma Mimarı rozeti)
+    const PYTHON_FONK = ['ikilik', 'onluk', 'sezar', 'guc', 'ara', 'sirala', 'asal', 'karef', 'mutlak', 'enbuyukf', 'harfsayf', 'faktoriyelr', 'ikiliara', 'secmeli', 'hanoi'];
     const dizi = (n, f) => Array.from({ length: n }, (_, i) => f(i) || 0);
 
     const ETKINLIKLER = [
@@ -152,9 +154,9 @@
         },
         {
             id: 'python', ad: 'Python Laboratuvarı', url: 'python.html', ikon: 'fa-laptop-code', renk: '#2563eb', sinif: [5, 12],
-            aciklama: 'Tarayıcıda gerçek Python yaz ve çalıştır. 32 görev kendiliğinden değerlendirilir, hatalar Türkçe açıklanır. Kurulum gerekmez.',
-            etiket: ['Python', 'Metin tabanlı kodlama', 'Algoritma'], kavram: 'print, değişken, input/int, if/elif/else, for/while, metin ve liste işlemleri, fonksiyon, arama ve sıralama algoritmaları', sure: 'Görev başı 5–15 dk',
-            parcalar: [{ id: 'python', ad: 'Python Laboratuvarı', url: 'python.html', seviye: 32, yildiz: () => { const k = oku('python', { yildiz: {} }).yildiz; return (typeof PythonMotor !== 'undefined' ? PythonMotor.GOREVLER.map(g => g.id) : PYTHON_IDLER).map(id => k[id] || 0); } }]
+            aciklama: 'Tarayıcıda gerçek Python yaz ve çalıştır. 100\'ü aşkın görev kendiliğinden değerlendirilir, hatalar Türkçe açıklanır. Kurulum gerekmez.',
+            etiket: ['Python', 'Metin tabanlı kodlama', 'Algoritma'], kavram: 'print, değişken, input/int, if/elif/else, for/while, metin ve liste işlemleri, fonksiyon, özyineleme, sözlük ve küme, sınıf ve kalıtım, arama/sıralama, sıkıştırma ve veri doğrulama projeleri', sure: 'Görev başı 5–15 dk',
+            parcalar: [{ id: 'python', ad: 'Python Laboratuvarı', url: 'python.html', seviye: PYTHON_IDLER.length, yildiz: () => { const k = oku('python', { yildiz: {} }).yildiz; return (typeof PythonMotor !== 'undefined' ? PythonMotor.GOREVLER.map(g => g.id) : PYTHON_IDLER).map(id => k[id] || 0); } }]
         },
         {
             id: 'tahmin', ad: 'Ne Yazar?', url: 'tahmin.html', ikon: 'fa-terminal', renk: '#7c3aed', sinif: [8, 12],
@@ -252,7 +254,8 @@
         { id: 'yuz', ad: 'Yüz Yıldız', ikon: 'fa-star', aciklama: 'Toplam 100 yıldız topla', kosul: () => PARCALAR.reduce((t, p) => t + toplam(p.id), 0) >= 100 },
         { id: 'oyuncu', ad: 'Oyun Tasarımcısı', ikon: 'fa-gamepad', aciklama: 'Oyun Atölyesi\'nde Yıldız Avcısı oyununu bitir', kosul: () => parca('oyun').yildiz()[4] > 0 },
         { id: 'pythoncu', ad: 'Pythoncu', ikon: 'fa-laptop-code', aciklama: 'Python Laboratuvarı\'nda 16 görev çöz', kosul: () => parca('python').yildiz().filter(x => x > 0).length >= 16 },
-        { id: 'algoritmaci', ad: 'Algoritma Mimarı', ikon: 'fa-cubes', aciklama: 'Python\'da Fonksiyonlar ve Algoritmalar ünitesini bitir', kosul: () => parca('python').yildiz().slice(25).every(x => x > 0) },
+        { id: 'pythonusta', ad: 'Python Ustası', ikon: 'fa-user-graduate', aciklama: 'Python Laboratuvarı\'nda 75 görev çöz', kosul: () => parca('python').yildiz().filter(x => x > 0).length >= 75 },
+        { id: 'algoritmaci', ad: 'Algoritma Mimarı', ikon: 'fa-cubes', aciklama: 'Python\'da Fonksiyonlar ve Algoritmalar ünitesini bitir', kosul: () => { const k = oku('python', { yildiz: {} }).yildiz; return PYTHON_FONK.every(id => k[id] > 0); } },
         { id: 'dedektif', ad: 'Dijital Dedektif', ikon: 'fa-user-secret', aciklama: 'Dijital Dedektif\'in bütün bölümlerini bitir', kosul: () => tamam('dijital') },
         { id: 'veribilimci', ad: 'Veri Bilimci', ikon: 'fa-chart-column', aciklama: 'Veri Bilimi Atölyesi\'nin bütün bölümlerini bitir', kosul: () => tamam('veri') },
         { id: 'donanim', ad: 'Donanım Ustası', ikon: 'fa-microchip', aciklama: 'KodKart\'ın bütün görevlerini bitir', kosul: () => tamam('devre') },
