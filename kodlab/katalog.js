@@ -37,10 +37,10 @@
             parcalar: [{ id: 'piksel', ad: 'Piksel Kodlama', url: 'piksel.html', seviye: 8, yildiz: () => { const k = oku('piksel', { tamam: {} }).tamam; return dizi(8, i => (k[i] ? 3 : 0)); } }]
         },
         {
-            id: 'robot', ad: 'Robot Kodla', url: 'robot.html', ikon: 'fa-robot', renk: '#1d5fd6', sinif: [3, 8],
-            aciklama: 'Robotu Türkçe komutlarla programla, bütün yıldızları topla. Ne kadar kısa kod, o kadar çok yıldız!',
-            etiket: ['Sıralama', 'Döngüler', 'Koşullar', 'Fonksiyonlar'], kavram: 'Kod yazma: sıralı komut, parametre, döngü, koşul, fonksiyon, labirent algoritması', sure: '15–30 dk',
-            parcalar: [{ id: 'robot', ad: 'Robot Kodla', url: 'robot.html', seviye: 14, yildiz: () => { const k = oku('robot', { yildiz: {} }).yildiz; return dizi(14, i => k[i]); } }]
+            id: 'robot', ad: 'Robot Kodla', url: 'robot.html', ikon: 'fa-robot', renk: '#1d5fd6', sinif: [3, 12],
+            aciklama: 'Robotu Türkçe komutlarla programla: 50 bölümde döngüler, koşullar, fonksiyonlar, kuleler ve labirentler. Ne kadar kısa kod, o kadar çok yıldız!',
+            etiket: ['Sıralama', 'Döngüler', 'Koşullar', 'Fonksiyonlar'], kavram: 'Kod yazma: sıralı komut, parametre, döngü, iç içe döngü, koşul, fonksiyon, sensörle karar verme, duvar takibi algoritması', sure: 'Bölüm başı 3–10 dk',
+            parcalar: [{ id: 'robot', ad: 'Robot Kodla', url: 'robot.html', seviye: 50, yildiz: () => { const k = oku('robot', { yildiz: {} }).yildiz; return dizi(50, i => k[i]); } }]
         },
         {
             id: 'hata', ad: 'Hata Avcısı', url: 'hata.html', ikon: 'fa-bug', renk: '#e5484d', sinif: [3, 12],
@@ -231,7 +231,8 @@
         { id: 'kodokur', ad: 'Kod Okuru', ikon: 'fa-code', aciklama: 'Bilgisayar Sensin ortaokul bölümlerini bitir', kosul: () => tamam('sensin.ortaokul') },
         { id: 'python', ad: 'Pythoncu', ikon: 'fa-terminal', aciklama: 'Bilgisayar Sensin lise bölümlerini bitir', kosul: () => tamam('sensin.lise') },
         { id: 'oruntu', ad: 'Örüntü Dedektifi', ikon: 'fa-shapes', aciklama: 'Örüntü Bul\'un bütün seviyelerini bitir', kosul: () => tamam('oruntu') },
-        { id: 'robot', ad: 'Robot Mühendisi', ikon: 'fa-robot', aciklama: 'Robot Kodla\'nın 14 bölümünü bitir', kosul: () => tamam('robot') },
+        { id: 'robot', ad: 'Robot Mühendisi', ikon: 'fa-robot', aciklama: 'Robot Kodla\'nın ilk 14 bölümünü bitir', kosul: () => parca('robot').yildiz().slice(0, 14).every(x => x > 0) },
+        { id: 'robotusta', ad: 'Robot Ustası', ikon: 'fa-gears', aciklama: 'Robot Kodla\'nın 50 bölümünün hepsini bitir', kosul: () => tamam('robot') },
         { id: 'labirent', ad: 'Labirent Kaşifi', ikon: 'fa-route', aciklama: 'Robot Kodla labirent bölümünü 3 yıldızla geç', kosul: () => parca('robot').yildiz()[13] === 3 },
         { id: 'hata', ad: 'Hata Avcısı', ikon: 'fa-bug', aciklama: 'Hata Avcısı\'nda bir turu kusursuz bitir', kosul: () => parca('hata').yildiz().some(x => x === 3) },
         { id: 'bit', ad: 'Bit Bilgini', ikon: 'fa-toggle-on', aciklama: 'İkilik Kartlar\'da 1 bayt seviyesini geç', kosul: () => parca('ikilik').yildiz()[3] > 0 },
