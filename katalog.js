@@ -58,9 +58,9 @@
         },
         {
             id: 'algoritma', ad: 'Algoritma Sensin', url: 'algoritma.html', ikon: 'fa-arrow-down-wide-short', renk: '#8b5cf6', sinif: [3, 12],
-            aciklama: 'Arama ve sıralama algoritmalarını işlemci gibi adım adım kendin yürüt. Sonunda kaç adımda bitirdiğini karşılaştır.',
-            etiket: ['Arama', 'Sıralama', 'Verimlilik'], kavram: 'En büyüğü bulma, doğrusal ve ikili arama, kabarcık, seçmeli ve eklemeli sıralama', sure: 'Algoritma başı 3–6 dk',
-            parcalar: [{ id: 'algoritma', ad: 'Algoritma Sensin', url: 'algoritma.html', seviye: 6, yildiz: () => { const k = oku('algoritma', {}); return ['enbuyuk', 'dogrusal', 'ikili', 'kabarcik', 'secmeli', 'eklemeli'].map(x => k[x] || 0); } }]
+            aciklama: '15 algoritmayı işlemci gibi adım adım kendin yürüt: arama, sıralama, birleştirme, pivot, iki işaretçi… Sonunda kaç adımda bitirdiğini karşılaştır.',
+            etiket: ['Arama', 'Sıralama', 'Verimlilik'], kavram: 'En büyük/en küçük, sayaç ve toplam, doğrusal ve ikili arama, kabarcık, seçmeli ve eklemeli sıralama, iki işaretçi, küme ile tekrar bulma, birleştirme, pivotla bölme', sure: 'Algoritma başı 3–6 dk',
+            parcalar: [{ id: 'algoritma', ad: 'Algoritma Sensin', url: 'algoritma.html', seviye: 15, yildiz: () => { const k = oku('algoritma', {}); return ['enbuyuk', 'dogrusal', 'ikili', 'kabarcik', 'secmeli', 'eklemeli', 'enkucuk', 'ciftsay', 'toplam', 'ters', 'palindrom', 'tekrar', 'birlestir', 'pivot', 'ikitoplam'].map(x => k[x] || 0); } }]
         },
         {
             id: 'mantik', ad: 'Mantık Kapıları', url: 'mantik.html', ikon: 'fa-microchip', renk: '#0891b2', sinif: [5, 12],
