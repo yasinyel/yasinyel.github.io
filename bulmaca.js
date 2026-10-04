@@ -238,7 +238,8 @@
 
     // Bağlantıyla açma: #tur-zorluk-numara
     const m = /^#(piksel|ikili|ag|isik)(?:-(\d)(?:-(\d+))?)?$/.exec(location.hash);
-    if (m) ac(m[1], Math.min(2, Math.max(0, (+m[2] || 1) - 1)), m[3] ? +m[3] : undefined);
+    if (location.hash === '#gunun') { const g = gununBulmacasi(); ac(g.tur, g.zorluk, g.tohum, true); }
+    else if (m) ac(m[1], Math.min(2, Math.max(0, (+m[2] || 1) - 1)), m[3] ? +m[3] : undefined);
     else listeCiz();
     window.__bulmaca = { durum: () => ({ tur, zorluk, tohum, b, durum, bitti }) };
 })();
