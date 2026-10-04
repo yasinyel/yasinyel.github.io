@@ -122,7 +122,7 @@
         if (!document.querySelector('.kl-imza') && !document.body.hasAttribute('data-imzasiz')) {
             const f = document.createElement('footer');
             f.className = 'kl-imza';
-            f.innerHTML = '<div class="wrap"><span><span class="kl-logo" aria-hidden="true"></span><span><b>Kodlayalım</b> · Bilişim Teknolojileri için ücretsiz etkinlikler</span></span><span>Tasarım ve geliştirme: <a href="https://yasinyel.com" rel="author">Yasin Yel</a></span></div>';
+            f.innerHTML = '<div class="wrap"><span><span class="kl-logo" aria-hidden="true"></span><span><b>Kodlayalım</b> · Anasınıfından liseye bilişim etkinlikleri</span></span><span>Tasarım ve geliştirme: <a href="https://yasinyel.com" rel="author">Yasin Yel</a></span></div>';
             document.body.appendChild(f);
         }
         const b = document.getElementById('themeBtn');

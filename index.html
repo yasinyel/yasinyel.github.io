@@ -9,7 +9,7 @@
     <link rel="icon" href="ikon/ikon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="ikon/ikon-192.png">
     <title>Kodlayalım — Bilişim Etkinlikleri</title>
-    <meta name="description" content="Anasınıfından liseye Bilişim Teknolojileri dersleri için ücretsiz, Türkçe, internetsiz de çalışan kodlama ve bilgisayar bilimi etkinlikleri. Öğretmen paneli ve sunucusuz sınıf takibi.">
+    <meta name="description" content="Anasınıfından liseye Bilişim Teknolojileri dersleri için Türkçe, internetsiz de çalışan kodlama ve bilgisayar bilimi etkinlikleri. Öğretmen paneli ve sunucusuz sınıf takibi.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
@@ -258,7 +258,7 @@
                 <a class="btn ${profil.ad ? '' : 'btn-primary'}" href="profil.html"><i class="fas fa-medal"></i> ${profil.ad ? 'Profilim ve rozetlerim' : 'Profil oluştur'}</a>`;
 
             const bolumSayisi = K.PARCALAR.reduce((t, p) => t + p.seviye, 0);
-            $('istat').innerHTML = `<div><b>${K.ETKINLIKLER.length}</b><span>etkinlik</span></div><div><b>${bolumSayisi}+</b><span>bölüm ve görev</span></div><div><b>0</b><span>üyelik, reklam, ücret</span></div><div><b>%100</b><span>Türkçe</span></div>`;
+            $('istat').innerHTML = `<div><b>${K.ETKINLIKLER.length}</b><span>etkinlik</span></div><div><b>${bolumSayisi}+</b><span>bölüm ve görev</span></div><div><b>4</b><span>kademe: okul öncesinden liseye</span></div><div><b>%100</b><span>Türkçe</span></div>`;
 
             let secili = KL.oku('kademe', 'hepsi');
             function ciz() {
