@@ -1,4 +1,4 @@
-// Çalıştır: node kodlab/test/tasarim.test.js — Robot Kodla bölüm tasarlayıcı
+// Çalıştır: node test/tasarim.test.js — Robot Kodla bölüm tasarlayıcı
 const T = require('../robot-tasarim.js');
 const M = require('../robot-motor.js');
 let hata = 0;

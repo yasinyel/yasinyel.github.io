@@ -1,4 +1,4 @@
-// Çalıştır: node kodlab/test/guvenlik.test.js
+// Çalıştır: node test/guvenlik.test.js
 const assert = require('assert');
 const G = require('../guvenlik-motor.js');
 let hata = 0;

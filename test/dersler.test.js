@@ -1,4 +1,4 @@
-// Çalıştır: node kodlab/test/dersler.test.js — her etkinliğin eksiksiz bir ders planı olmalı
+// Çalıştır: node test/dersler.test.js — her etkinliğin eksiksiz bir ders planı olmalı
 const K = require('../katalog.js'), D = require('../dersler-veri.js'), G = require('../kagit-motor.js');
 let hata = 0;
 const hatali = (m) => { hata++; console.log('  ✗ ' + m); };

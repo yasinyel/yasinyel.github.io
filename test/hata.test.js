@@ -1,4 +1,4 @@
-// Çalıştır: node kodlab/test/hata.test.js (python3 gerekir)
+// Çalıştır: node test/hata.test.js (python3 gerekir)
 // Üretilen her hatalı programın gerçekten farklı yol izlediğini, doğru seçeneğin yolu
 // düzelttiğini ve hatalı programın Python'da da motorla aynı davrandığını doğrular.
 const { execFileSync } = require('child_process');

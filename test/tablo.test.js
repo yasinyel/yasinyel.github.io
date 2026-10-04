@@ -1,4 +1,4 @@
-// Çalıştır: node kodlab/test/tablo.test.js — Tablo Atölyesi formül motoru ve görev denetimi
+// Çalıştır: node test/tablo.test.js — Tablo Atölyesi formül motoru ve görev denetimi
 const T = require('../tablo-motor.js');
 let hata = 0;
 const hatali = (m) => { hata++; console.log('  ✗ ' + m); };

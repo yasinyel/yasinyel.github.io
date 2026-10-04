@@ -1,4 +1,4 @@
-// Çalıştır: node kodlab/test/yz.test.js
+// Çalıştır: node test/yz.test.js
 // Etkinliklerin öğretmek istediği sonuçların gerçekten ortaya çıktığını yüzlerce rastgele veriyle doğrular.
 const assert = require('assert');
 const Y = require('../yz-motor.js');

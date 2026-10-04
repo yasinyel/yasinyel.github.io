@@ -1,4 +1,4 @@
-// Çalıştır: node kodlab/test/donanim.test.js — Bilgisayarın İçi içerik ve kuralları
+// Çalıştır: node test/donanim.test.js — Bilgisayarın İçi içerik ve kuralları
 const D = require('../donanim-motor.js');
 let hata = 0;
 const hatali = (m) => { hata++; console.log('  ✗ ' + m); };

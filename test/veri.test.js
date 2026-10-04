@@ -1,4 +1,4 @@
-// Çalıştır: node kodlab/test/veri.test.js — istatistikler Python'un statistics modülüyle karşılaştırılır
+// Çalıştır: node test/veri.test.js — istatistikler Python'un statistics modülüyle karşılaştırılır
 const V = require('../veri-motor.js');
 const { execFileSync } = require('child_process');
 let hata = 0;

@@ -1,4 +1,4 @@
-// Çalıştır: node kodlab/test/kagit.test.js — çalışma kağıtlarının cevap anahtarları doğru mu?
+// Çalıştır: node test/kagit.test.js — çalışma kağıtlarının cevap anahtarları doğru mu?
 const K = require('../kagit-motor.js');
 const { execFileSync } = require('child_process');
 let hata = 0;

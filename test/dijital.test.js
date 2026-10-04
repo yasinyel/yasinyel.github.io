@@ -1,4 +1,4 @@
-// Çalıştır: node kodlab/test/dijital.test.js — Dijital Dedektif içeriklerinin tutarlılığı
+// Çalıştır: node test/dijital.test.js — Dijital Dedektif içeriklerinin tutarlılığı
 const D = require('../dijital-motor.js');
 let hata = 0;
 const hatali = (m) => { hata++; console.log('  ✗ ' + m); };

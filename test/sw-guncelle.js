@@ -1,4 +1,4 @@
-// Çalıştır: node kodlab/test/sw-guncelle.js — sw.js dosya listesini yeniden üretir ve SURUM'u bir artırır.
+// Çalıştır: node test/sw-guncelle.js — sw.js dosya listesini yeniden üretir ve SURUM'u bir artırır.
 const fs = require('fs'), path = require('path');
 const kok = path.join(__dirname, '..');
 const dosya = path.join(kok, 'sw.js');

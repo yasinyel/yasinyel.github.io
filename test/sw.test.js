@@ -1,4 +1,4 @@
-// Çalıştır: node kodlab/test/sw.test.js
+// Çalıştır: node test/sw.test.js
 // Çevrimdışı önbellek listesi kodlab klasöründeki bütün dosyaları içermeli.
 const fs = require('fs'), path = require('path');
 const kok = path.join(__dirname, '..');

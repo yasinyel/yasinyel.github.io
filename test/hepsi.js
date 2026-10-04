@@ -1,4 +1,4 @@
-// Bütün Kodlayalım testlerini çalıştırır: node kodlab/test/hepsi.js
+// Bütün Kodlayalım testlerini çalıştırır: node test/hepsi.js
 // Gerekenler: Node.js, python3 (Python karşılaştırmaları), opencv-python-headless (QR), Playwright + Chromium (Web Atölyesi)
 const { spawnSync } = require('child_process');
 const fs = require('fs'), path = require('path');

@@ -1,4 +1,4 @@
-// Çalıştır: node kodlab/test/web.test.js  (Playwright + Chromium gerekir)
+// Çalıştır: node test/web.test.js  (Playwright + Chromium gerekir)
 // Her bölümde: örnek çözüm bütün görevleri geçmeli, başlangıç kodu geçmemeli. Denetimler gerçek tarayıcıda çalışır.
 const path = require('path'), http = require('http'), fs = require('fs');
 const { chromium } = require(require('child_process').execSync('npm root -g').toString().trim() + '/playwright');

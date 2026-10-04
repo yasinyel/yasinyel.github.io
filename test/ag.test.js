@@ -1,4 +1,4 @@
-// Çalıştır: node kodlab/test/ag.test.js
+// Çalıştır: node test/ag.test.js
 const assert = require('assert');
 const A = require('../ag-motor.js');
 let hata = 0;

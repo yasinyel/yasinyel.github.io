@@ -1,4 +1,4 @@
-// Çalıştır: node kodlab/test/algoritma.test.js
+// Çalıştır: node test/algoritma.test.js
 const { ALGORITMALAR } = require('../algoritma-motor.js');
 let hata = 0;
 for (const a of ALGORITMALAR) {

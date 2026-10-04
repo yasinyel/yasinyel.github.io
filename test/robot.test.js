@@ -1,4 +1,4 @@
-// Çalıştır: node kodlab/test/robot.test.js
+// Çalıştır: node test/robot.test.js
 const assert = require('assert');
 const M = require('../robot-motor.js');
 const SEVIYELER = require('../robot-seviyeler.js');

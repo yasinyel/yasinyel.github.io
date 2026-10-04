@@ -1,4 +1,4 @@
-// Çalıştır: node kodlab/test/sensin.test.js  (python3 gerekir)
+// Çalıştır: node test/sensin.test.js  (python3 gerekir)
 // Her bölümü rastgele parametrelerle defalarca üretir; motorun beklediği hamleleri
 // aynı programın gerçek Python'da çalışan haliyle karşılaştırır.
 const { execFileSync } = require('child_process');

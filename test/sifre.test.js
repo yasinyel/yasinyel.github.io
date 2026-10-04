@@ -1,4 +1,4 @@
-// Çalıştır: node kodlab/test/sifre.test.js
+// Çalıştır: node test/sifre.test.js
 const assert = require('assert');
 const S = require('../sifre-motor.js');
 let hata = 0;

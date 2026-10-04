@@ -1,4 +1,4 @@
-// Çalıştır: node kodlab/test/klavye.test.js — Klavye Ustası dersleri ve metin üretici
+// Çalıştır: node test/klavye.test.js — Klavye Ustası dersleri ve metin üretici
 const K = require('../klavye-motor.js');
 let hata = 0;
 const hatali = (m) => { hata++; console.log('  ✗ ' + m); };

@@ -1,4 +1,4 @@
-// Çalıştır: node kodlab/test/katalog.test.js
+// Çalıştır: node test/katalog.test.js
 const assert = require('assert');
 const store = {};
 global.KL = { oku: (k, v) => (k in store ? JSON.parse(JSON.stringify(store[k])) : v), yaz: (k, v) => { store[k] = JSON.parse(JSON.stringify(v)); }, ipucuOzeti: () => store.ipucuOzeti || {} };

@@ -1,4 +1,4 @@
-// Çalıştır: node kodlab/test/bulmaca.test.js — Bilişim Bulmacaları üreticileri ve çözücüleri
+// Çalıştır: node test/bulmaca.test.js — Bilişim Bulmacaları üreticileri ve çözücüleri
 const B = require('../bulmaca-motor.js');
 let hata = 0;
 const hatali = (m) => { hata++; console.log('  ✗ ' + m); };

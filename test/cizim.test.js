@@ -1,4 +1,4 @@
-// Çalıştır: node kodlab/test/cizim.test.js  (python3 gerekir)
+// Çalıştır: node test/cizim.test.js  (python3 gerekir)
 const assert = require('assert');
 const { execFileSync } = require('child_process');
 const C = require('../cizim-motor.js');

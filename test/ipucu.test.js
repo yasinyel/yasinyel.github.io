@@ -1,4 +1,4 @@
-// Çalıştır: node kodlab/test/ipucu.test.js — her bölümün ipucu metni var mı, örnek çözümü var mı
+// Çalıştır: node test/ipucu.test.js — her bölümün ipucu metni var mı, örnek çözümü var mı
 let hata = 0;
 const hatali = (m) => { hata++; console.log('  ✗ ' + m); };
 const denetle = (ad, ipuclari, bolumSayisi, cozumVar) => {

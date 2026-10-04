@@ -1,4 +1,4 @@
-// Çalıştır: node kodlab/test/tahmin.test.js  (python3 gerekir)
+// Çalıştır: node test/tahmin.test.js  (python3 gerekir)
 // Her üreticiden çok sayıda soru üretip cevabı gerçek Python çıktısıyla karşılaştırır.
 const { execFileSync } = require('child_process');
 const { SEVIYELER, normalize, kontrol } = require('../tahmin-sorular.js');

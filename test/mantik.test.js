@@ -1,4 +1,4 @@
-// Çalıştır: node kodlab/test/mantik.test.js
+// Çalıştır: node test/mantik.test.js
 const M = require('../mantik-motor.js');
 let hata = 0;
 M.BOLUMLER.forEach((b, i) => {

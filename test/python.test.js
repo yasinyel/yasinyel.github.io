@@ -1,4 +1,4 @@
-// Çalıştır: node kodlab/test/python.test.js
+// Çalıştır: node test/python.test.js
 // Görevler gerçek Python'da (Pyodide, sitedeki aynı dosyalar) denetlenir:
 // örnek çözüm bütün testleri geçmeli, başlangıç kodu geçmemeli, hata açıklamaları Türkçe olmalı.
 const path = require('path');

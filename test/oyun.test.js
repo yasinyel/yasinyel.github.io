@@ -1,4 +1,4 @@
-// Çalıştır: node kodlab/test/oyun.test.js
+// Çalıştır: node test/oyun.test.js
 // Her görev için: örnek çözüm bütün denetimleri geçmeli; boş ve yarım çözümler geçmemeli.
 const assert = require('assert');
 const M = require('../oyun-motor.js');

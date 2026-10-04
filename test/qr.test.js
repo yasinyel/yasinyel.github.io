@@ -1,4 +1,4 @@
-// Çalıştır: node kodlab/test/qr.test.js  (python3 + opencv gerekir: pip install opencv-python-headless)
+// Çalıştır: node test/qr.test.js  (python3 + opencv gerekir: pip install opencv-python-headless)
 // Farklı uzunluktaki metinleri QR'a çevirir, OpenCV ile okuyup aynı metni geri aldığını doğrular.
 // (Klasik QRCodeDetector bazı geçerli kodlarda bulma adımında takılabildiği için önce Aruco okuyucu denenir.)
 const { execFileSync } = require('child_process');

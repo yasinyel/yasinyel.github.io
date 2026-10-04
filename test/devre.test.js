@@ -1,4 +1,4 @@
-// Çalıştır: node kodlab/test/devre.test.js — KodKart motoru ve görev denetimleri
+// Çalıştır: node test/devre.test.js — KodKart motoru ve görev denetimleri
 const D = require('../devre-motor.js');
 let hata = 0;
 const hatali = (m) => { hata++; console.log('  ✗ ' + m); };
