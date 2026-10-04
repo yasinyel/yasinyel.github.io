@@ -89,6 +89,10 @@
             .editor-panel { position: static; }
             .editor { height: 260px; }
         }
+            .ozel-bant { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 12px 16px; margin-bottom: 14px; background: color-mix(in srgb, var(--accent) 10%, var(--surface)); }
+        .ozel-bant span { flex: 1; min-width: 200px; }
+        .tasarla-link { text-align: right; margin: -6px 0 10px; font-size: .88rem; }
+        .tasarla-link a { color: var(--accent); font-weight: 600; text-decoration: none; }
     </style>
 </head>
 <body>
@@ -103,6 +107,8 @@
 
     <main class="wrap">
         <nav class="levels" id="levels" aria-label="Bölümler"></nav>
+        <div class="card ozel-bant" id="ozelBant" hidden><i class="fas fa-share-nodes"></i><span id="ozelMetin"></span><a class="btn btn-sm" href="robot.html"><i class="fas fa-list"></i> Bölümlere dön</a><a class="btn btn-sm btn-primary" href="tasarla.html"><i class="fas fa-pen-ruler"></i> Kendi bölümünü tasarla</a></div>
+        <p class="tasarla-link" id="tasarlaLink"><a href="tasarla.html"><i class="fas fa-pen-ruler"></i> Kendi bölümünü tasarla ve arkadaşlarına gönder</a></p>
 
         <div class="layout">
             <section class="card panel">
@@ -158,6 +164,7 @@
     <script src="ortak.js"></script>
     <script src="robot-motor.js"></script>
     <script src="robot-seviyeler.js"></script>
+    <script src="robot-tasarim.js"></script>
     <script src="robot.js"></script>
 </body>
 </html>
