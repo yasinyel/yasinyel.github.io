@@ -49,8 +49,8 @@ test('Rozet ve unvan', () => {
 test('Python görev listesi motorla aynı', () => {
     const M = require('../python-motor.js');
     assert.strictEqual(K.parca('python').yildiz().length, M.GOREVLER.length);
-    assert.strictEqual(M.GOREVLER.findIndex(g => g.unite === 'fonk'), 25);
     const src = require('fs').readFileSync(require('path').join(__dirname, '../katalog.js'), 'utf8');
+    assert.deepStrictEqual(JSON.parse(src.match(/PYTHON_FONK = (\[.*?\]);/)[1].replace(/'/g, '"')), M.GOREVLER.filter(g => g.unite === 'fonk').map(g => g.id));
     assert.deepStrictEqual(JSON.parse(src.match(/PYTHON_IDLER = (\[.*?\]);/)[1].replace(/'/g, '"')), M.GOREVLER.map(g => g.id));
 });
 test('KodKart görev listesi motorla aynı', () => {
