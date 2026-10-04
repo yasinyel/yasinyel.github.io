@@ -136,9 +136,9 @@
         },
         {
             id: 'devre', ad: 'KodKart Simülatörü', url: 'devre.html', ikon: 'fa-microchip', renk: '#0f766e', sinif: [3, 12],
-            aciklama: '5×5 LED ekranlı, düğmeli ve sensörlü sanal eğitim kartını bloklarla programla: atan kalp, zar, termometre, gece lambası, kapı zili.',
+            aciklama: '5×5 LED ekranlı, düğmeli ve sensörlü sanal eğitim kartını bloklarla programla: 30 görevde atan kalp, roket fırlatma, hırsız alarmı, şifreli kilit, kronometre, müzik kutusu…',
             etiket: ['Fiziksel programlama', 'Sensörler', 'Olaylar'], kavram: 'Girdi-işlem-çıktı, olaylar (düğme, sallama), sensör okuma, LED koordinatları, değişken, rastgele sayı, koşul, sonsuz döngü, ses', sure: 'Görev başı 10 dk',
-            parcalar: [{ id: 'devre', ad: 'KodKart Simülatörü', url: 'devre.html', seviye: 8, yildiz: () => { const k = oku('devre', { yildiz: {} }).yildiz; return ['kalp', 'isim', 'sayac', 'zar', 'termo', 'gece', 'tkm', 'zil'].map(g => k[g] || 0); } }]
+            parcalar: [{ id: 'devre', ad: 'KodKart Simülatörü', url: 'devre.html', seviye: 30, yildiz: () => { const k = oku('devre', { yildiz: {} }).yildiz; return ['kalp', 'isim', 'sayac', 'zar', 'termo', 'gece', 'tkm', 'zil', 'duygu', 'yon', 'gerisayim', 'yanson', 'kose', 'skor', 'sensoroku', 'alarm', 'sihirli', 'yazitura', 'doremi', 'muzikkutusu', 'adimhedef', 'gerisayac', 'ciftzar', 'isikolcer', 'sicaklikalarm', 'kilit', 'kronometre', 'zamanlayici', 'gecegunduz', 'robotselam'].map(g => k[g] || 0); } }]
         },
         {
             id: 'veri', ad: 'Veri Bilimi Atölyesi', url: 'veri.html', ikon: 'fa-chart-column', renk: '#0369a1', sinif: [3, 12],
@@ -260,7 +260,8 @@
         { id: 'algoritmaci', ad: 'Algoritma Mimarı', ikon: 'fa-cubes', aciklama: 'Python\'da Fonksiyonlar ve Algoritmalar ünitesini bitir', kosul: () => { const k = oku('python', { yildiz: {} }).yildiz; return PYTHON_FONK.every(id => k[id] > 0); } },
         { id: 'dedektif', ad: 'Dijital Dedektif', ikon: 'fa-user-secret', aciklama: 'Dijital Dedektif\'in bütün bölümlerini bitir', kosul: () => tamam('dijital') },
         { id: 'veribilimci', ad: 'Veri Bilimci', ikon: 'fa-chart-column', aciklama: 'Veri Bilimi Atölyesi\'nin bütün bölümlerini bitir', kosul: () => tamam('veri') },
-        { id: 'donanim', ad: 'Donanım Ustası', ikon: 'fa-microchip', aciklama: 'KodKart\'ın bütün görevlerini bitir', kosul: () => tamam('devre') },
+        { id: 'donanim', ad: 'Donanım Ustası', ikon: 'fa-microchip', aciklama: 'KodKart\'ın ilk 8 görevini bitir', kosul: () => parca('devre').yildiz().slice(0, 8).every(x => x > 0) },
+        { id: 'kodkartusta', ad: 'KodKart Mucidi', ikon: 'fa-lightbulb', aciklama: 'KodKart\'ın 30 görevinin hepsini bitir', kosul: () => tamam('devre') },
         { id: 'onparmak', ad: 'On Parmak', ikon: 'fa-keyboard', aciklama: 'Klavye Ustası\'nın 20 dersini bitir', kosul: () => tamam('klavye') },
         { id: 'kararli', ad: 'Kararlı Kodcu', ikon: 'fa-fire', aciklama: 'Günün görevlerini 7 gün üst üste tamamla', kosul: () => (oku('seri', {}).enUzun || 0) >= 7 },
         { id: 'bulmacaci', ad: 'Bulmaca Ustası', ikon: 'fa-puzzle-piece', aciklama: 'Bilişim Bulmacaları\'nın her türünü her zorlukta çöz', kosul: () => tamam('bulmaca') },
