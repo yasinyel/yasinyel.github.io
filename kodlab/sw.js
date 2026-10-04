@@ -1,7 +1,7 @@
 // Kodlayalım — çevrimdışı çalışma (service worker)
 // Bütün Kodlayalım sayfaları ilk ziyarette önbelleğe alınır; internet kesilse de etkinlikler açılır.
 // Dosya eklendiğinde DOSYALAR listesine eklenmeli ve SURUM artırılmalı (test/sw.test.js denetler).
-const SURUM = 'kodlab-v30';
+const SURUM = 'kodlab-v31';
 const DOSYALAR = [
         './',
         'ag-motor.js',
@@ -21,6 +21,7 @@ const DOSYALAR = [
         'cizim.js',
         'dersler-veri.js',
         'dersler.html',
+        'devre-ipucu.js',
         'devre-motor.js',
         'devre.html',
         'devre.js',
