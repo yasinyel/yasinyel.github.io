@@ -158,9 +158,20 @@
         balon: { id: 'balon', ad: 'Balon', emoji: '🎈', x: 0, y: 0 },
         robot: { id: 'robot', ad: 'Robot', emoji: '🤖', x: -150, y: -100 },
         yildiz: { id: 'yildiz', ad: 'Yıldız', emoji: '⭐', x: 120, y: 80 },
-        dusman: { id: 'dusman', ad: 'Uzaylı', emoji: '👾', x: -200, y: 120 }
+        dusman: { id: 'dusman', ad: 'Uzaylı', emoji: '👾', x: -200, y: 120 },
+        kedi: { id: 'kedi', ad: 'Kedi', emoji: '🐱', x: 0, y: -140 },
+        elma: { id: 'elma', ad: 'Elma', emoji: '🍎', x: 0, y: 150 },
+        kurbaga: { id: 'kurbaga', ad: 'Kurbağa', emoji: '🐸', x: -100, y: 0 },
+        bomba: { id: 'bomba', ad: 'Ateş topu', emoji: '🔥', x: 100, y: 0 },
+        roket: { id: 'roket', ad: 'Roket', emoji: '🚀', x: -180, y: 0 },
+        meteor: { id: 'meteor', ad: 'Meteor', emoji: '☄️', x: 210, y: 0 },
+        hayalet: { id: 'hayalet', ad: 'Hayalet', emoji: '👻', x: 150, y: 100 },
+        duvar: { id: 'duvar', ad: 'Duvar', emoji: '🧱', x: 0, y: 0, boyut: 220 },
+        top: { id: 'top', ad: 'Top', emoji: '⚽', x: -150, y: 0 },
+        kale: { id: 'kale', ad: 'Kale', emoji: '🥅', x: 200, y: 0 },
+        kalp: { id: 'kalp', ad: 'Kalp', emoji: '❤️', x: 100, y: -100 }
     };
-    const yeniKar = (k) => ({ ...k, boyut: 100, betikler: [] });
+    const yeniKar = (k) => ({ ...k, boyut: k.boyut || 100, betikler: [] });
     const sayiliKopya = (p) => JSON.parse(JSON.stringify(p));
 
     // Denetim yardımcıları: öğrencinin projesini arka planda oynatır
@@ -184,7 +195,7 @@
             ]
         },
         {
-            id: 'hareket', ad: 'Yıldız Avcısı 1: Hareket', sinif: [3, 12],
+            id: 'hareket', seri: 'avci', ad: 'Yıldız Avcısı 1: Hareket', sinif: [3, 12],
             anlatim: 'Yıldız Avcısı oyununu adım adım yapacağız. Önce robotu ok tuşlarıyla hareket ettir. <b>x</b> sağa-sola, <b>y</b> yukarı-aşağı konumdur: sağa gitmek için x\'i artır, sola için azalt.',
             karakterler: ['robot'], bloklar: ['tus_basili', 'baslayinca', 'x_degistir', 'y_degistir', 'git'],
             denetimler: [
@@ -194,7 +205,7 @@
             ]
         },
         {
-            id: 'yildiz', ad: 'Yıldız Avcısı 2: Yıldız Topla', sinif: [3, 12],
+            id: 'yildiz', seri: 'avci', ad: 'Yıldız Avcısı 2: Yıldız Topla', sinif: [3, 12],
             anlatim: 'Oyuna bir yıldız ekledik. Karakter listesinden <b>yıldızı</b> seçip ona kod yaz: robota değince puan artsın ve yıldız başka yere gitsin. (İpucu: "karakterine değince" olayı.)',
             karakterler: ['robot', 'yildiz'], bloklar: ['tus_basili', 'baslayinca', 'degince', 'x_degistir', 'y_degistir', 'git', 'rastgele_git', 'puan_degistir', 'ses', 'soyle'],
             denetimler: [
@@ -204,7 +215,7 @@
             ]
         },
         {
-            id: 'dusman', ad: 'Yıldız Avcısı 3: Uzaylı', sinif: [4, 12],
+            id: 'dusman', seri: 'avci', ad: 'Yıldız Avcısı 3: Uzaylı', sinif: [4, 12],
             anlatim: 'Bir uzaylı geldi! Uzaylı kendi kendine hareket etsin ("her an" olayı), robota değince robotun canı azalsın. Can 0 olunca oyun kaybedilsin. (İpucu: "eğer can = sayı" koşulu.)',
             karakterler: ['robot', 'yildiz', 'dusman'], bloklar: ['tus_basili', 'baslayinca', 'surekli', 'degince', 'x_degistir', 'y_degistir', 'git', 'rastgele_git', 'puan_degistir', 'can_degistir', 'can_yap', 'eger', 'eger_degilse', 'kaybet', 'ses', 'soyle'],
             denetimler: [
@@ -215,13 +226,179 @@
             ]
         },
         {
-            id: 'kazan', ad: 'Yıldız Avcısı 4: Zafer', sinif: [4, 12],
+            id: 'kazan', seri: 'avci', ad: 'Yıldız Avcısı 4: Zafer', sinif: [4, 12],
             anlatim: 'Son adım: 10 yıldız toplayan oyunu kazansın! Oyunun başında puanı 0, canı 3 yap. Oyunun bitti, şimdi arkadaşlarına oynat!',
             karakterler: ['robot', 'yildiz', 'dusman'], bloklar: ['tus_basili', 'baslayinca', 'surekli', 'degince', 'x_degistir', 'y_degistir', 'git', 'rastgele_git', 'puan_degistir', 'puan_yap', 'can_degistir', 'can_yap', 'eger', 'eger_degilse', 'kazan', 'kaybet', 'ses', 'soyle', 'boyut'],
             denetimler: [
                 { ad: '10 yıldız toplayınca oyun kazanılsın', f: (p) => { const o = oyunKur(p); for (let i = 0; i < 12 && o.durum === 'oynuyor'; i++) { uzaklastir(o, 'dusman', 'robot'); ustune(o, 'yildiz', 'robot'); bekle(o, 1); const y = o.kar('yildiz'); if (y) { y.x = o.kar('robot').x + 200 > 220 ? -200 : 200; } bekle(o, 1); } return o.durum === 'kazandi'; } },
                 { ad: '9 yıldızda henüz kazanılmasın', f: (p) => { const o = oyunKur(p); for (let i = 0; i < 9; i++) { uzaklastir(o, 'dusman', 'robot'); ustune(o, 'yildiz', 'robot'); bekle(o, 1); const y = o.kar('yildiz'); if (y) y.x = 200; bekle(o, 1); } return o.durum === 'oynuyor'; } },
                 { ad: 'Uzaylı hâlâ can azaltıyor', f: (p) => { const o = oyunKur(p); const c = o.can; ustune(o, 'dusman', 'robot'); bekle(o, 1); return o.can < c || o.durum === 'kaybetti'; } }
+            ]
+        },
+        // ---- Elma Yağmuru ----
+        {
+            id: 'elma1', seri: 'elma', ad: 'Elma Yağmuru 1: Kedi', sinif: [3, 12],
+            anlatim: 'Yeni oyun: gökten elmalar yağacak, kedi onları yakalayacak! Önce kediyi ok tuşlarıyla <b>yalnızca sağa ve sola</b> hareket ettir. Kedi zıplamasın: yukarı-aşağı gitmesin.',
+            karakterler: ['kedi'], bloklar: ['tus_basili', 'baslayinca', 'x_degistir', 'git'],
+            denetimler: [
+                { ad: 'Sağ ok ile kedi sağa gitsin', f: (p) => { const o = oyunKur(p); const k = o.kar('kedi'), x = k.x; bekle(o, 10, new Set(['sag'])); return k.x > x + 20; } },
+                { ad: 'Sol ok ile kedi sola gitsin', f: (p) => { const o = oyunKur(p); const k = o.kar('kedi'), x = k.x; bekle(o, 10, new Set(['sol'])); return k.x < x - 20; } },
+                { ad: 'Kedi yukarı ya da aşağı gitmesin', f: (p) => { const o = oyunKur(p); const k = o.kar('kedi'), y = k.y; bekle(o, 10, new Set(['sag', 'yukari', 'asagi'])); bekle(o, 10, new Set(['sol'])); return k.y === y; } }
+            ]
+        },
+        {
+            id: 'elma2', seri: 'elma', ad: 'Elma Yağmuru 2: Düşen Elma', sinif: [3, 12],
+            anlatim: 'Elmayı seç. "Her an" olayıyla elma sürekli aşağı düşsün (y\'yi eksi bir sayıyla değiştir). Yere (kenara) değince yukarıya geri gitsin: <b>git x: 0 y: 150</b>.',
+            karakterler: ['kedi', 'elma'], bloklar: ['tus_basili', 'baslayinca', 'surekli', 'x_degistir', 'y_degistir', 'git', 'rastgele_git', 'eger'],
+            denetimler: [
+                { ad: 'Elma kendi kendine aşağı düşsün', f: (p) => { const o = oyunKur(p); const e = o.kar('elma'), y = e.y; bekle(o, 10); return e.y < y - 15; } },
+                { ad: 'Elma yere değince yukarıdan tekrar düşsün', f: (p) => { const o = oyunKur(p); const e = o.kar('elma'); e.y = -170; bekle(o, 3); return e.y > 100; } },
+                { ad: 'Kedi hâlâ sağa-sola gidiyor', f: (p) => { const o = oyunKur(p); const k = o.kar('kedi'), x = k.x; bekle(o, 10, new Set(['sag'])); return k.x > x + 20; } }
+            ]
+        },
+        {
+            id: 'elma3', seri: 'elma', ad: 'Elma Yağmuru 3: Yakala!', sinif: [3, 12],
+            anlatim: 'Elma kediye değince puan 1 artsın ve elma yukarıya dönsün. 5 elma yakalayan oyunu kazansın.',
+            karakterler: ['kedi', 'elma'], bloklar: ['tus_basili', 'baslayinca', 'surekli', 'degince', 'x_degistir', 'y_degistir', 'git', 'rastgele_git', 'eger', 'puan_degistir', 'kazan', 'ses'],
+            denetimler: [
+                { ad: 'Elma kediye değince puan 1 artsın', f: (p) => { const o = oyunKur(p); ustune(o, 'elma', 'kedi'); bekle(o, 1); return o.puan === 1; } },
+                { ad: 'Yakalanan elma yukarı dönsün', f: (p) => { const o = oyunKur(p); ustune(o, 'elma', 'kedi'); bekle(o, 1); return o.kar('elma').y > 100; } },
+                { ad: '5 elma yakalayınca oyun kazanılsın', f: (p) => { const o = oyunKur(p); for (let i = 0; i < 6 && o.durum === 'oynuyor'; i++) { ustune(o, 'elma', 'kedi'); bekle(o, 1); o.kar('elma').y = 150; bekle(o, 1); } return o.durum === 'kazandi'; } },
+                { ad: '4 elmada henüz kazanılmasın', f: (p) => { const o = oyunKur(p); for (let i = 0; i < 4; i++) { ustune(o, 'elma', 'kedi'); bekle(o, 1); o.kar('elma').y = 150; bekle(o, 1); } return o.durum === 'oynuyor'; } }
+            ]
+        },
+        // ---- Kurbağa Avı ----
+        {
+            id: 'kurbaga1', seri: 'kurbaga', ad: 'Kurbağa Avı 1: Saklambaç', sinif: [3, 12],
+            anlatim: 'Kurbağaya tıklayınca puan 1 artsın ve kurbağa <b>gizlensin</b>. "Her an" olayında "%2 şansla" koşulunu kullan: şans gelince kurbağa rastgele bir yere gitsin ve <b>görünsün</b>.',
+            karakterler: ['kurbaga'], bloklar: ['tiklaninca', 'baslayinca', 'surekli', 'puan_degistir', 'gizle', 'goster', 'rastgele_git', 'eger', 'ses'],
+            denetimler: [
+                { ad: 'Tıklanınca puan 1 artsın', f: (p) => { const o = oyunKur(p); tikla(o, 'kurbaga'); return o.puan === 1; } },
+                { ad: 'Tıklanınca kurbağa gizlensin', f: (p) => { const o = oyunKur(p); tikla(o, 'kurbaga'); return o.kar('kurbaga').gorunur === false; } },
+                { ad: 'Gizlenen kurbağa bir süre sonra başka yerde görünsün', f: (p) => { const o = oyunKur(p); const k = o.kar('kurbaga'), x = k.x, y = k.y; tikla(o, 'kurbaga'); bekle(o, 400); return k.gorunur && Math.hypot(k.x - x, k.y - y) > 5; } },
+                { ad: 'Kurbağa her an ışınlanmasın (şans kullan)', f: (p) => { const o = oyunKur(p); const k = o.kar('kurbaga'); let n = 0, x = k.x; for (let i = 0; i < 100; i++) { bekle(o, 1); if (k.x !== x) { n++; x = k.x; } } return n < 30; } }
+            ]
+        },
+        {
+            id: 'kurbaga2', seri: 'kurbaga', ad: 'Kurbağa Avı 2: Bombaya Dikkat', sinif: [4, 12],
+            anlatim: 'Oyuna bir ateş topu ekledik: ona tıklayan bir can kaybetsin ve ateş topu başka yere gitsin. Can 0 olunca oyun kaybedilsin, 10 kurbağa yakalayan kazansın.',
+            karakterler: ['kurbaga', 'bomba'], bloklar: ['tiklaninca', 'baslayinca', 'surekli', 'puan_degistir', 'can_degistir', 'gizle', 'goster', 'rastgele_git', 'eger', 'kazan', 'kaybet', 'ses'],
+            denetimler: [
+                { ad: 'Ateş topuna tıklanınca can 1 azalsın', f: (p) => { const o = oyunKur(p); const c = o.can; tikla(o, 'bomba'); return o.can === c - 1; } },
+                { ad: 'Can 0 olunca oyun kaybedilsin', f: (p) => { const o = oyunKur(p); for (let i = 0; i < 5 && o.durum === 'oynuyor'; i++) { o.kar('bomba').gorunur = true; tikla(o, 'bomba'); bekle(o, 1); } return o.durum === 'kaybetti'; } },
+                { ad: '10 kurbağa yakalayınca oyun kazanılsın', f: (p) => { const o = oyunKur(p); for (let i = 0; i < 11 && o.durum === 'oynuyor'; i++) { o.kar('kurbaga').gorunur = true; tikla(o, 'kurbaga'); bekle(o, 1); } return o.durum === 'kazandi'; } },
+                { ad: 'Kurbağaya tıklamak hâlâ puan veriyor', f: (p) => { const o = oyunKur(p); tikla(o, 'kurbaga'); return o.puan === 1; } }
+            ]
+        },
+        // ---- Meteor Yağmuru ----
+        {
+            id: 'meteor1', seri: 'meteor', ad: 'Meteor Yağmuru 1: Uçuş', sinif: [4, 12],
+            anlatim: 'Roketin uzayda ilerliyor gibi görünmesi için meteorlar sağdan sola akacak. Roket yukarı ve aşağı oklarla hareket etsin. Meteor her an sola gitsin ve sol kenara değince sağ tarafa dönsün: <b>git x: 210</b>.',
+            karakterler: ['roket', 'meteor'], bloklar: ['tus_basili', 'baslayinca', 'surekli', 'x_degistir', 'y_degistir', 'git', 'rastgele_git', 'eger'],
+            denetimler: [
+                { ad: 'Yukarı ve aşağı ok roketi hareket ettirsin', f: (p) => { const o = oyunKur(p); const r = o.kar('roket'); r.y = 0; bekle(o, 10, new Set(['yukari'])); const a = r.y; bekle(o, 20, new Set(['asagi'])); return a > 20 && r.y < a - 40; } },
+                { ad: 'Meteor kendi kendine sola gitsin', f: (p) => { const o = oyunKur(p); const m = o.kar('meteor'), x = m.x; bekle(o, 10); return m.x < x - 20; } },
+                { ad: 'Meteor sol kenara gelince sağdan tekrar gelsin', f: (p) => { const o = oyunKur(p); const m = o.kar('meteor'); m.x = -225; bekle(o, 3); return m.x > 150; } }
+            ]
+        },
+        {
+            id: 'meteor2', seri: 'meteor', ad: 'Meteor Yağmuru 2: Çarpışma', sinif: [4, 12],
+            anlatim: 'Meteor rokete değince can 1 azalsın ve meteor sağ tarafa dönsün. Can 0 olunca oyun kaybedilsin.',
+            karakterler: ['roket', 'meteor'], bloklar: ['tus_basili', 'baslayinca', 'surekli', 'degince', 'x_degistir', 'y_degistir', 'git', 'rastgele_git', 'eger', 'can_degistir', 'can_yap', 'kaybet', 'ses'],
+            denetimler: [
+                { ad: 'Meteor rokete değince can 1 azalsın', f: (p) => { const o = oyunKur(p); const c = o.can; ustune(o, 'meteor', 'roket'); bekle(o, 1); return o.can === c - 1; } },
+                { ad: 'Çarpan meteor sağ tarafa dönsün', f: (p) => { const o = oyunKur(p); ustune(o, 'meteor', 'roket'); bekle(o, 1); return o.kar('meteor').x > 150; } },
+                { ad: 'Can 0 olunca oyun kaybedilsin', f: (p) => { const o = oyunKur(p); for (let i = 0; i < 5 && o.durum === 'oynuyor'; i++) { ustune(o, 'meteor', 'roket'); bekle(o, 1); o.kar('meteor').x = 200; bekle(o, 1); } return o.durum === 'kaybetti'; } },
+                { ad: 'Meteor hâlâ sola akıyor', f: (p) => { const o = oyunKur(p); const m = o.kar('meteor'), x = m.x; bekle(o, 10); return m.x < x - 20; } }
+            ]
+        },
+        {
+            id: 'meteor3', seri: 'meteor', ad: 'Meteor Yağmuru 3: Dayanıklılık', sinif: [4, 12],
+            anlatim: 'Bu oyunda puan zamanla artar: roket her an puanı 1 artırsın. Puan 600\'ü geçince (yaklaşık 20 saniye) oyun kazanılsın.',
+            karakterler: ['roket', 'meteor'], bloklar: ['tus_basili', 'baslayinca', 'surekli', 'degince', 'x_degistir', 'y_degistir', 'git', 'rastgele_git', 'eger', 'can_degistir', 'can_yap', 'puan_degistir', 'puan_yap', 'kaybet', 'kazan', 'ses'],
+            denetimler: [
+                { ad: 'Puan zamanla artsın', f: (p) => { const o = oyunKur(p); o.kar('meteor').gorunur = false; bekle(o, 60); return o.puan >= 50; } },
+                { ad: 'Puan 600\'ü geçince kazanılsın', f: (p) => { const o = oyunKur(p); o.kar('meteor').gorunur = false; bekle(o, 800); return o.durum === 'kazandi'; } },
+                { ad: 'Kısa sürede kazanılmasın', f: (p) => { const o = oyunKur(p); o.kar('meteor').gorunur = false; bekle(o, 300); return o.durum === 'oynuyor'; } },
+                { ad: 'Çarpışma hâlâ can azaltıyor', f: (p) => { const o = oyunKur(p); const c = o.can; ustune(o, 'meteor', 'roket'); bekle(o, 1); return o.can < c || o.durum === 'kaybetti'; } }
+            ]
+        },
+        // ---- Hayaletten Kaç ----
+        {
+            id: 'hayalet1', seri: 'hayalet', ad: 'Hayaletten Kaç 1: Işınlanan Hayalet', sinif: [4, 12],
+            anlatim: 'Hayalet arada bir ışınlansın: "her an" içinde "%3 şansla" koşulu ve "rastgele bir yere git". Hayalet robota değince can 1 azalsın ve hayalet başka yere ışınlansın. Robotu ok tuşlarıyla hareket ettir.',
+            karakterler: ['robot', 'hayalet'], bloklar: ['tus_basili', 'baslayinca', 'surekli', 'degince', 'x_degistir', 'y_degistir', 'git', 'rastgele_git', 'eger', 'can_degistir', 'ses'],
+            denetimler: [
+                { ad: 'Hayalet arada bir ışınlansın (her an değil)', f: (p) => { const o = oyunKur(p); const h = o.kar('hayalet'); let n = 0, x = h.x; for (let i = 0; i < 300; i++) { bekle(o, 1); if (h.x !== x) { n++; x = h.x; } } return n >= 2 && n <= 60; } },
+                { ad: 'Hayalet robota değince can 1 azalsın', f: (p) => { const o = oyunKur(p); const c = o.can; for (let i = 0; i < 5 && o.can === c; i++) { ustune(o, 'hayalet', 'robot'); bekle(o, 1); } return o.can === c - 1; } },
+                { ad: 'Robota değen hayalet uzaklaşsın', f: (p) => { const o = oyunKur(p); ustune(o, 'hayalet', 'robot'); bekle(o, 1); return uzaklik(o.kar('hayalet'), o.kar('robot')) > 40; } },
+                { ad: 'Robot ok tuşlarıyla hareket etsin', f: (p) => { const o = oyunKur(p); const r = o.kar('robot'); r.x = 0; r.y = 0; bekle(o, 10, new Set(['sag', 'yukari'])); return r.x > 20 && r.y > 20; } }
+            ]
+        },
+        {
+            id: 'hayalet2', seri: 'hayalet', ad: 'Hayaletten Kaç 2: Kurallar', sinif: [4, 12],
+            anlatim: 'Oyunun kurallarını tamamla: başlayınca can 3 ve puan 0 olsun, robot her an 1 puan kazansın, can 0 olunca oyun kaybedilsin, puan 900\'ü geçince kazanılsın.',
+            karakterler: ['robot', 'hayalet'], bloklar: ['tus_basili', 'baslayinca', 'surekli', 'degince', 'x_degistir', 'y_degistir', 'git', 'rastgele_git', 'eger', 'can_degistir', 'can_yap', 'puan_degistir', 'puan_yap', 'kazan', 'kaybet', 'ses', 'soyle'],
+            denetimler: [
+                { ad: 'Başlayınca can 3, puan 0 olsun', f: (p) => { const o = new Oyun(sayiliKopya(p), 42); o.can = 9; o.puan = 7; o.baslat(); return o.can === 3 && o.puan === 0; } },
+                { ad: 'Can 0 olunca oyun kaybedilsin', f: (p) => { const o = oyunKur(p); for (let i = 0; i < 5 && o.durum === 'oynuyor'; i++) { ustune(o, 'hayalet', 'robot'); bekle(o, 1); uzaklastir(o, 'hayalet', 'robot'); bekle(o, 1); } return o.durum === 'kaybetti'; } },
+                { ad: 'Puan 900\'ü geçince kazanılsın', f: (p) => { const o = oyunKur(p); o.kar('hayalet').gorunur = false; bekle(o, 1000); return o.durum === 'kazandi'; } },
+                { ad: 'Kısa sürede kazanılmasın', f: (p) => { const o = oyunKur(p); o.kar('hayalet').gorunur = false; bekle(o, 400); return o.durum === 'oynuyor'; } }
+            ]
+        },
+        // ---- Tek bölümlük oyunlar ----
+        {
+            id: 'sohbet', ad: 'Konuşan Robot', sinif: [3, 12],
+            anlatim: 'Robot oyun başlayınca kendini tanıtsın ("söyle" bloğu). Boşluk tuşuna basılınca bir şaka söylesin. Robota tıklanınca görünümü değişsin (ör. 🐱).',
+            karakterler: ['robot'], bloklar: ['baslayinca', 'tus_basilinca', 'tiklaninca', 'soyle', 'kostum', 'ses'],
+            denetimler: [
+                { ad: 'Oyun başlayınca robot bir şey söylesin', f: (p) => { const o = oyunKur(p); const s = o.kar('robot').soz; return !!(s && s.metin.trim()); } },
+                { ad: 'Boşluk tuşuna basılınca robot bir şey söylesin', f: (p) => { const o = oyunKur(p); const r = o.kar('robot'); r.soz = null; bekle(o, 1, new Set(['bosluk'])); return !!(r.soz && r.soz.metin.trim()); } },
+                { ad: 'Tıklanınca robotun görünümü değişsin', f: (p) => { const o = oyunKur(p); const r = o.kar('robot'), e = r.emoji; tikla(o, 'robot'); return r.emoji !== e; } }
+            ]
+        },
+        {
+            id: 'duvar', ad: 'Duvara Dokunma', sinif: [3, 12],
+            anlatim: 'Robotu ok tuşlarıyla yıldıza götür ama ortadaki duvara dokunursa başlangıç noktasına (<b>x: -180, y: -120</b>) geri dönsün! Yıldıza ulaşınca oyun kazanılsın.',
+            karakterler: ['robot', 'duvar', 'yildiz'], bloklar: ['tus_basili', 'baslayinca', 'degince', 'x_degistir', 'y_degistir', 'git', 'kazan', 'ses', 'soyle'],
+            denetimler: [
+                { ad: 'Robot dört yöne hareket etsin', f: (p) => { const o = oyunKur(p); const r = o.kar('robot'); r.x = 0; r.y = -100; bekle(o, 8, new Set(['sag', 'yukari'])); const a = { x: r.x, y: r.y }; bekle(o, 16, new Set(['sol', 'asagi'])); return a.x > 20 && a.y > -80 && r.x < a.x - 20 && r.y < a.y - 20; } },
+                { ad: 'Duvara değen robot başlangıca dönsün', f: (p) => { const o = oyunKur(p); ustune(o, 'robot', 'duvar'); bekle(o, 1); const r = o.kar('robot'); return Math.abs(r.x + 180) < 15 && Math.abs(r.y + 120) < 15; } },
+                { ad: 'Yıldıza ulaşınca oyun kazanılsın', f: (p) => { const o = oyunKur(p); ustune(o, 'robot', 'yildiz'); bekle(o, 1); return o.durum === 'kazandi'; } }
+            ]
+        },
+        {
+            id: 'penalti', ad: 'Penaltı', sinif: [4, 12],
+            anlatim: 'Boşluk tuşuna basınca top kaleye doğru fırlasın: "tekrarla 10 kez: x\'i 20 değiştir". Top kaleye değince gol olsun (puan +1) ve top başlangıca dönsün (<b>git x: -150 y: 0</b>). 3 gol atan kazansın. Topu yukarı-aşağı oklarla nişan al.',
+            karakterler: ['top', 'kale'], bloklar: ['tus_basili', 'tus_basilinca', 'baslayinca', 'degince', 'tekrar', 'x_degistir', 'y_degistir', 'git', 'eger', 'puan_degistir', 'kazan', 'ses'],
+            denetimler: [
+                { ad: 'Boşluğa basınca top hızla sağa gitsin', f: (p) => { const o = oyunKur(p); const t = o.kar('top'), x = t.x; bekle(o, 1, new Set(['bosluk'])); return t.x > x + 150; } },
+                { ad: 'Top kaleye değince puan 1 artsın ve top başa dönsün', f: (p) => { const o = oyunKur(p); ustune(o, 'top', 'kale'); bekle(o, 1); return o.puan === 1 && o.kar('top').x < -100; } },
+                { ad: '3 gol atınca oyun kazanılsın', f: (p) => { const o = oyunKur(p); for (let i = 0; i < 4 && o.durum === 'oynuyor'; i++) { ustune(o, 'top', 'kale'); bekle(o, 1); o.kar('top').x = -150; bekle(o, 1); } return o.durum === 'kazandi'; } },
+                { ad: 'Yukarı-aşağı oklarla nişan alınsın', f: (p) => { const o = oyunKur(p); const t = o.kar('top'), y = t.y; bekle(o, 10, new Set(['yukari'])); return t.y > y + 20; } }
+            ]
+        },
+        {
+            id: 'kalp', ad: 'Can Topla', sinif: [4, 12],
+            anlatim: 'Uzaylıdan kaçarken kalpleri topla! Kalp robota değince can 1 artsın ve kalp başka yere gitsin. Ama can en fazla 5 olabilir: "eğer can &lt; 5" koşulunu kullan.',
+            karakterler: ['robot', 'kalp', 'dusman'], bloklar: ['tus_basili', 'baslayinca', 'surekli', 'degince', 'x_degistir', 'y_degistir', 'git', 'rastgele_git', 'eger', 'can_degistir', 'can_yap', 'kaybet', 'ses'],
+            denetimler: [
+                { ad: 'Kalp robota değince can 1 artsın', f: (p) => { const o = oyunKur(p); const c = o.can; ustune(o, 'kalp', 'robot'); bekle(o, 1); return o.can === c + 1; } },
+                { ad: 'Toplanan kalp başka yere gitsin', f: (p) => { const o = oyunKur(p); ustune(o, 'kalp', 'robot'); bekle(o, 1); return uzaklik(o.kar('kalp'), o.kar('robot')) > 40; } },
+                { ad: 'Can 5\'i geçmesin', f: (p) => { const o = oyunKur(p); o.can = 5; ustune(o, 'kalp', 'robot'); bekle(o, 1); return o.can === 5; } },
+                { ad: 'Uzaylı değince can 1 azalsın', f: (p) => { const o = oyunKur(p); const c = o.can; ustune(o, 'dusman', 'robot'); bekle(o, 1); return o.can === c - 1; } }
+            ]
+        },
+        {
+            id: 'final', ad: 'Final: Zorlaşan Oyun', sinif: [5, 12],
+            anlatim: 'İyi oyunlar ilerledikçe zorlaşır! Yıldız Avcısı\'nı yeniden kur ve bir kural ekle: puan 5\'i geçince uzaylı büyüsün (boyut 150). Puan 10 olunca oyun kazanılsın.',
+            karakterler: ['robot', 'yildiz', 'dusman'], bloklar: ['tus_basili', 'baslayinca', 'surekli', 'degince', 'x_degistir', 'y_degistir', 'git', 'rastgele_git', 'puan_degistir', 'puan_yap', 'can_degistir', 'can_yap', 'eger', 'eger_degilse', 'kazan', 'kaybet', 'ses', 'soyle', 'boyut'],
+            denetimler: [
+                { ad: 'Yıldız robota değince puan 1 artsın', f: (p) => { const o = oyunKur(p); uzaklastir(o, 'dusman', 'robot'); ustune(o, 'yildiz', 'robot'); bekle(o, 1); return o.puan === 1; } },
+                { ad: 'Puan 5\'i geçince uzaylı büyüsün', f: (p) => { const o = oyunKur(p); const u = o.kar('dusman'); const b0 = u.boyut; for (let i = 0; i < 6; i++) { uzaklastir(o, 'dusman', 'robot'); ustune(o, 'yildiz', 'robot'); bekle(o, 1); o.kar('yildiz').x = 200; bekle(o, 1); } return u.boyut >= 140 && b0 < 140; } },
+                { ad: 'Puan 5 ya da altındayken uzaylı büyümesin', f: (p) => { const o = oyunKur(p); for (let i = 0; i < 4; i++) { uzaklastir(o, 'dusman', 'robot'); ustune(o, 'yildiz', 'robot'); bekle(o, 1); o.kar('yildiz').x = 200; bekle(o, 1); } return o.kar('dusman').boyut < 140; } },
+                { ad: 'Puan 10 olunca oyun kazanılsın', f: (p) => { const o = oyunKur(p); for (let i = 0; i < 12 && o.durum === 'oynuyor'; i++) { uzaklastir(o, 'dusman', 'robot'); ustune(o, 'yildiz', 'robot'); bekle(o, 1); o.kar('yildiz').x = 200; o.kar('dusman').x = -200; bekle(o, 1); } return o.durum === 'kazandi'; } },
+                { ad: 'Uzaylı can azaltıyor', f: (p) => { const o = oyunKur(p); const c = o.can; ustune(o, 'dusman', 'robot'); bekle(o, 1); return o.can < c || o.durum === 'kaybetti'; } }
             ]
         },
         {

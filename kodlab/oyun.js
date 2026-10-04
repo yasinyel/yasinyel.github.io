@@ -42,7 +42,7 @@
         durdur();
         gorevNo = i; gorev = M.GOREVLER[i];
         // Yıldız Avcısı görevleri bir öncekinin projesinden devam eder
-        const onceki = i > 0 && !gorev.serbest && M.GOREVLER[i - 1].id !== 'balon' ? kayit.proje[M.GOREVLER[i - 1].id] : null;
+        const onceki = i > 0 && gorev.seri && M.GOREVLER[i - 1].seri === gorev.seri ? kayit.proje[M.GOREVLER[i - 1].id] : null;
         proje = kayit.proje[gorev.id] ? JSON.parse(JSON.stringify(kayit.proje[gorev.id])) : M.baslangicProjesi(gorev, gorev.serbest ? kayit.proje.kazan : onceki);
         // Görevin gerektirdiği karakterler her zaman olsun
         for (const id of gorev.karakterler) if (!proje.karakterler.some(k => k.id === id)) proje.karakterler.push(M.yeniKar(M.KAR[id]));

@@ -106,9 +106,9 @@
         },
         {
             id: 'oyun', ad: 'Oyun Atölyesi', url: 'oyun.html', ikon: 'fa-gamepad', renk: '#db2777', sinif: [3, 12],
-            aciklama: 'Bloklarla kendi oyununu yap: tuşla hareket, puan, can, çarpışma. Bitirince linkini arkadaşlarına gönder, onlar da oynasın.',
+            aciklama: 'Bloklarla 20 görevde 7 oyun yap: Yıldız Avcısı, Elma Yağmuru, Meteor Yağmuru, Penaltı… Sonra kendi oyununu tasarla, linkini arkadaşlarına gönder.',
             etiket: ['Oyun tasarımı', 'Olaylar', 'Değişkenler'], kavram: 'Olay tabanlı programlama, koordinat sistemi, değişken (puan/can), koşul, çarpışma, paralel betikler', sure: 'Görev başı 10–15 dk',
-            parcalar: [{ id: 'oyun', ad: 'Oyun Atölyesi', url: 'oyun.html', seviye: 5, yildiz: () => { const k = oku('oyun', { yildiz: {} }).yildiz; return ['balon', 'hareket', 'yildiz', 'dusman', 'kazan'].map(g => k[g] || 0); } }]
+            parcalar: [{ id: 'oyun', ad: 'Oyun Atölyesi', url: 'oyun.html', seviye: 20, yildiz: () => { const k = oku('oyun', { yildiz: {} }).yildiz; return ['balon', 'hareket', 'yildiz', 'dusman', 'kazan', 'elma1', 'elma2', 'elma3', 'kurbaga1', 'kurbaga2', 'meteor1', 'meteor2', 'meteor3', 'hayalet1', 'hayalet2', 'sohbet', 'duvar', 'penalti', 'kalp', 'final'].map(g => k[g] || 0); } }]
         },
         {
             id: 'donanim', ad: 'Bilgisayarın İçi', url: 'donanim.html', ikon: 'fa-screwdriver-wrench', renk: '#475569', sinif: [1, 12],
@@ -254,6 +254,7 @@
         { id: 'jsci', ad: 'JavaScript Geliştirici', ikon: 'fa-file-code', aciklama: 'Web Atölyesi\'nin JavaScript bölümlerinin hepsini bitir', kosul: () => parca('web').yildiz().slice(25).every(x => x > 0) },
         { id: 'yuz', ad: 'Yüz Yıldız', ikon: 'fa-star', aciklama: 'Toplam 100 yıldız topla', kosul: () => PARCALAR.reduce((t, p) => t + toplam(p.id), 0) >= 100 },
         { id: 'oyuncu', ad: 'Oyun Tasarımcısı', ikon: 'fa-gamepad', aciklama: 'Oyun Atölyesi\'nde Yıldız Avcısı oyununu bitir', kosul: () => parca('oyun').yildiz()[4] > 0 },
+        { id: 'oyunusta', ad: 'Oyun Ustası', ikon: 'fa-trophy', aciklama: 'Oyun Atölyesi\'nin 20 görevinin hepsini bitir', kosul: () => tamam('oyun') },
         { id: 'pythoncu', ad: 'Pythoncu', ikon: 'fa-laptop-code', aciklama: 'Python Laboratuvarı\'nda 16 görev çöz', kosul: () => parca('python').yildiz().filter(x => x > 0).length >= 16 },
         { id: 'pythonusta', ad: 'Python Ustası', ikon: 'fa-user-graduate', aciklama: 'Python Laboratuvarı\'nda 75 görev çöz', kosul: () => parca('python').yildiz().filter(x => x > 0).length >= 75 },
         { id: 'algoritmaci', ad: 'Algoritma Mimarı', ikon: 'fa-cubes', aciklama: 'Python\'da Fonksiyonlar ve Algoritmalar ünitesini bitir', kosul: () => { const k = oku('python', { yildiz: {} }).yildiz; return PYTHON_FONK.every(id => k[id] > 0); } },
