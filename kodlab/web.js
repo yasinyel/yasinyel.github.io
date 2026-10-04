@@ -6,6 +6,8 @@
     const ogretmen = new URLSearchParams(location.search).has('ogretmen');
     const kayit = KL.oku('web', { yildiz: {}, kod: {}, cozumBakti: {} });
     let no = 0, sekme = 'html', kod = { html: '', css: '' }, bitti = false, zaman = null;
+    const jsVar = () => W.BOLUMLER[no].js !== undefined;
+    const baslangic = (b) => b.js !== undefined ? { html: b.html, css: b.css, js: b.js } : { html: b.html, css: b.css };
 
     const acikMi = (i) => ogretmen || i === 0 || (kayit.yildiz[i - 1] || 0) > 0;
     function bolumleriCiz() {
@@ -25,8 +27,11 @@
         const b = W.BOLUMLER[i];
         $('baslik').textContent = `${i + 1}. ${b.ad}`;
         $('anlatim').innerHTML = b.anlatim;
-        kod = kayit.kod[i] ? { ...kayit.kod[i] } : { html: b.html, css: b.css };
-        sekmeSec(kod.css || b.css ? sekme : 'html');
+        kod = kayit.kod[i] ? { ...baslangic(b), ...kayit.kod[i] } : baslangic(b);
+        $('jsSekme').hidden = b.js === undefined;
+        $('onizBaslik').textContent = b.js === undefined ? 'Önizleme (JavaScript kapalı)' : 'Önizleme (JavaScript açık)';
+        $('onizleme').setAttribute('sandbox', b.js === undefined ? 'allow-same-origin' : 'allow-same-origin allow-scripts');
+        sekmeSec(b.js !== undefined ? (sekme === 'css' ? 'css' : sekme === 'js' ? 'js' : 'html') : sekme === 'js' ? 'html' : (kod.css || b.css ? sekme : 'html'));
         bolumleriCiz();
         onizle();
     }
@@ -45,9 +50,13 @@
             .replace(/([^{}\n][^{}]*?)(\s*\{)/g, (m, sec, p) => /t-yorum/.test(sec) ? m : `<span class="t-secici">${sec}</span>${p}`)
             .replace(/([a-z-]+)(\s*:\s*)([^;{}\n]+)(;?)/g, '<span class="t-css-ozn">$1</span>$2<span class="t-css-deger">$3</span>$4');
     }
+    function renklendirJS(s) {
+        return kacis(s).replace(/(\/\/[^\n]*)|("(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*')|\b(const|let|var|function|if|else|for|of|in|while|return|true|false|null|new)\b|\b(\d+(?:\.\d+)?)\b/g, (m, yorum, metin, anahtar, sayi) =>
+            yorum ? `<span class="t-yorum">${yorum}</span>` : metin ? `<span class="t-deger">${metin}</span>` : anahtar ? `<span class="t-etiket">${anahtar}</span>` : `<span class="t-css-deger">${sayi}</span>`);
+    }
     function editorCiz() {
         const v = $('kod').value;
-        $('renkli').innerHTML = (sekme === 'html' ? renklendirHTML(v) : renklendirCSS(v)) + '\n';
+        $('renkli').innerHTML = (sekme === 'html' ? renklendirHTML(v) : sekme === 'js' ? renklendirJS(v) : renklendirCSS(v)) + '\n';
         const satir = v.split('\n').length;
         $('no').innerHTML = Array.from({ length: satir }, (_, i) => `<div>${i + 1}</div>`).join('');
     }
@@ -81,7 +90,7 @@
                 ta.dispatchEvent(new Event('input'));
             }
         }
-        if (e.key === '{' && sekme === 'css') {
+        if (e.key === '{' && (sekme === 'css' || sekme === 'js')) {
             e.preventDefault();
             const yer = ta.selectionStart;
             ta.setRangeText('{\n  \n}', yer, ta.selectionEnd, 'start');
@@ -93,15 +102,43 @@
     // ---------- Önizleme ve denetim ----------
     function onizle() {
         const f = $('onizleme');
-        f.onload = denetle;
-        f.srcdoc = W.belge(kod.html, kod.css);
+        const belge = W.belge(kod.html, kod.css, jsVar() ? kod.js : undefined);
+        if (jsVar()) {
+            // JavaScript bölümlerinde denetimler düğmelere tıklar; öğrencinin önizlemesi bozulmasın diye görünmez bir kopyada çalışır
+            f.onload = null;
+            let g = $('denetimCerceve');
+            if (!g) {
+                g = document.createElement('iframe'); g.id = 'denetimCerceve'; g.setAttribute('aria-hidden', 'true'); g.tabIndex = -1;
+                g.style.cssText = `position:fixed;left:-10000px;top:0;width:${f.clientWidth || 600}px;height:300px;border:0;visibility:hidden`;
+                document.body.appendChild(g);
+            }
+            g.setAttribute('sandbox', 'allow-same-origin allow-scripts');
+            g.onload = denetle;
+            g.srcdoc = belge;
+        } else f.onload = denetle;
+        f.srcdoc = belge;
+    }
+    // Sık görülen JavaScript hatalarını Türkçe açıklar
+    function jsHataTr(m) {
+        let x;
+        if ((x = /(\w+) is not defined/.exec(m))) return `"${x[1]}" tanımlı değil. Yazımını kontrol et ya da önce const/let ile tanımla.`;
+        if (/Cannot read properties of null|Cannot set properties of null/.test(m)) return 'Öğe bulunamadı: getElementById içindeki id, HTML\'deki id ile aynı mı?';
+        if ((x = /(\S+) is not a function/.exec(m))) return `${x[1]} bir fonksiyon değil. Yazımını kontrol et.`;
+        if (/Assignment to constant/.test(m)) return 'const ile tanımlanan değişken değiştirilemez; değişecekse let kullan.';
+        if (/SyntaxError/.test(m)) return 'Yazım hatası: parantez, tırnak ya da süslü parantez eksik olabilir.';
+        return m;
     }
     function denetle() {
         const b = W.BOLUMLER[no];
         let d, w;
-        try { d = $('onizleme').contentDocument; w = $('onizleme').contentWindow; } catch (e) { return; }
+        const cerceve = jsVar() ? $('denetimCerceve') : $('onizleme');
+        try { d = cerceve.contentDocument; w = cerceve.contentWindow; } catch (e) { return; }
         if (!d) return;
+        const hatalar = jsVar() ? [...(w.__hatalar || [])] : [];
         const sonuc = b.gorevler.map(g => { try { return !!g.kontrol(d, w); } catch (e) { return false; } });
+        $('jsHata').hidden = !hatalar.length;
+        $('jsHata').textContent = hatalar.length ? '⚠ ' + jsHataTr(hatalar[0]) : '';
+        $('jsHata').title = hatalar[0] || '';
         const onceki = [...document.querySelectorAll('#gorevler li')].map(li => li.classList.contains('tamam'));
         $('gorevler').innerHTML = b.gorevler.map((g, i) => `<li class="${sonuc[i] ? 'tamam' : ''}"><i class="fas ${sonuc[i] ? 'fa-circle-check' : 'fa-circle'}"></i><span>${g.ad}</span></li>`).join('');
         if (sonuc.some((s, i) => s && onceki.length && !onceki[i])) KL.ses('tik');
@@ -123,7 +160,7 @@
     $('sifirla').onclick = () => {
         if (!confirm('Bu bölümdeki kodun başlangıç haline dönsün mü?')) return;
         const b = W.BOLUMLER[no];
-        kod = { html: b.html, css: b.css }; kayit.kod[no] = kod; KL.yaz('web', kayit);
+        kod = baslangic(b); kayit.kod[no] = kod; KL.yaz('web', kayit);
         bitti = false; sekmeSec(sekme); onizle();
     };
     $('cozum').onclick = () => {
@@ -137,5 +174,5 @@
 
     const ilk = Object.keys(kayit.yildiz).length ? Math.min(Math.max(...Object.keys(kayit.yildiz).map(Number)) + 1, W.BOLUMLER.length - 1) : 0;
     ac(ilk);
-    window.__web = { yaz: (h, c) => { kod = { html: h, css: c }; sekmeSec(sekme); onizle(); } };
+    window.__web = { yaz: (h, c, j) => { kod = j === undefined ? { html: h, css: c } : { html: h, css: c, js: j }; sekmeSec(sekme); onizle(); } };
 })();

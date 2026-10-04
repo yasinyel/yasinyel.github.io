@@ -16,14 +16,14 @@ const sunucu = http.createServer((q, s) => {
     for (let i = 0; i < n; i++) {
         const sonuc = await p.evaluate(async (i) => {
             const b = Web.BOLUMLER[i];
-            const dene = (html, css) => new Promise(ok => {
+            const dene = (html, css, js) => new Promise(ok => {
                 const f = document.createElement('iframe');
-                f.setAttribute('sandbox', 'allow-same-origin'); f.style.cssText = 'width:800px;height:600px';
+                f.setAttribute('sandbox', b.js === undefined ? 'allow-same-origin' : 'allow-same-origin allow-scripts'); f.style.cssText = 'width:800px;height:600px';
                 f.onload = () => { const r = b.gorevler.map(g => { try { return !!g.kontrol(f.contentDocument, f.contentWindow); } catch (e) { return false; } }); f.remove(); ok(r); };
-                f.srcdoc = Web.belge(html, css); document.body.appendChild(f);
+                f.srcdoc = Web.belge(html, css, b.js === undefined ? undefined : (js || '')); document.body.appendChild(f);
             });
-            const cozum = await dene(b.cozum.html, b.cozum.css);
-            const bas = await dene(b.html, b.css);
+            const cozum = await dene(b.cozum.html, b.cozum.css, b.cozum.js);
+            const bas = await dene(b.html, b.css, b.js);
             // Çözümün yarısı (CSS'siz ya da HTML'in ilk satırları) her görevi geçmemeli
             const yarim = await dene(b.cozum.html.split('\n').slice(0, 1).join('\n'), '');
             return { cozum, bas, yarim };

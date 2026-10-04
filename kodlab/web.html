@@ -44,6 +44,7 @@
         .onizleme { overflow: hidden; }
         .onizleme .bar { display: flex; align-items: center; gap: 6px; padding: 8px 12px; background: var(--bg-alt); border-bottom: 1px solid var(--line); font-size: .82rem; color: var(--muted); }
         .onizleme .bar i.d { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+        .onizleme .js-hata { margin-left: auto; color: var(--bad); font-weight: 600; font-family: var(--mono); font-size: .75rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 60%; }
         .onizleme iframe { width: 100%; height: 300px; border: 0; background: #fff; display: block; }
         .gorevler { padding: 16px; }
         .gorevler h3 { font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-family: var(--body); margin-bottom: 10px; }
@@ -73,13 +74,14 @@
                 <div class="sekmeler" id="sekmeler">
                     <button data-s="html" class="sel"><i class="fab fa-html5"></i> HTML</button>
                     <button data-s="css"><i class="fab fa-css3-alt"></i> CSS</button>
+                    <button data-s="js" id="jsSekme" hidden><i class="fab fa-js"></i> JavaScript</button>
                     <span class="kl-spacer"></span>
                 </div>
                 <div class="kod"><div class="no" id="no"></div><pre id="renkli" aria-hidden="true"></pre><textarea id="kod" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Kod"></textarea></div>
             </section>
             <div class="sag">
                 <section class="card onizleme">
-                    <div class="bar"><i class="d" style="background:#ff5f57"></i><i class="d" style="background:#febc2e"></i><i class="d" style="background:#28c840"></i><span style="margin-left:8px">Önizleme (JavaScript kapalı)</span></div>
+                    <div class="bar"><i class="d" style="background:#ff5f57"></i><i class="d" style="background:#febc2e"></i><i class="d" style="background:#28c840"></i><span style="margin-left:8px" id="onizBaslik">Önizleme</span><span id="jsHata" class="js-hata" hidden></span></div>
                     <iframe id="onizleme" sandbox="allow-same-origin" title="Önizleme"></iframe>
                 </section>
                 <section class="card gorevler">
