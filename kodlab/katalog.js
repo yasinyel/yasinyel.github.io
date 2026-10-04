@@ -7,6 +7,7 @@
 (function (root) {
     'use strict';
     const oku = (k, v) => root.KL ? root.KL.oku(k, v) : v;
+    const yaz = (k, v) => { if (root.KL && root.KL.yaz) root.KL.yaz(k, v); };
     // Python görev kimlikleri (python-motor.js yüklenmeyen sayfalar için; test/katalog.test.js eşleştiğini denetler)
     const PYTHON_IDLER = ['merhaba', 'parcalar', 'gb', 'birlestir', 'islemler', 'selam', 'kb', 'sure', 'pilsure', 'sifreuzun', 'cifttek', 'pildurum', 'ipoktet', 'giris', 'gerisay', 'kuvvet', 'sensor', 'piksel', 'bipbop', 'tahminoyun', 'sesli', 'palindrom', 'ping', 'kelime', 'gizle', 'ikilik', 'onluk', 'sezar', 'guc', 'ara', 'sirala', 'asal'];
     const dizi = (n, f) => Array.from({ length: n }, (_, i) => f(i) || 0);
@@ -166,6 +167,60 @@
     const PARCALAR = ETKINLIKLER.flatMap(e => e.parcalar.map(p => ({ ...p, etkinlik: e, sinif: p.sinif || e.sinif })));
     const parca = (id) => PARCALAR.find(p => p.id === id);
 
+
+    // ---------- Günün görevleri ve gün serisi ----------
+    // Her gün tarihe göre herkes için aynı (kademeye göre) üç görev: günün bulmacası + yıldızı eksik iki bölüm
+    const tarihMetni = (d) => { d = new Date(d); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
+    const dun = (t) => { const d = new Date(t + 'T12:00:00'); d.setDate(d.getDate() - 1); return tarihMetni(d); };
+    function tarihTohumu(t) { let h = 2166136261; for (const c of t) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) >>> 0; } return h || 1; }
+    // Bir bölümdeki ilerleme ölçüsü: toplam yıldız (sonsuz etkinliklerde çözülen sayısı da eklenir)
+    function olcu(id) {
+        let n = toplam(id);
+        if (id === 'bulmaca') n += Object.values(oku('bulmaca', {}).cozulen || {}).reduce((a, b) => a + b, 0);
+        return n;
+    }
+    function gununGorevleri(tarih, aralik = [0, 12]) {
+        let s = tarihTohumu(tarih + aralik.join('-'));
+        const r = () => { s ^= s << 13; s >>>= 0; s ^= s >> 17; s ^= s << 5; s >>>= 0; return s / 4294967296; };
+        const aday = PARCALAR.filter(p => p.id !== 'bulmaca' && p.sinif[0] <= aralik[1] && p.sinif[1] >= aralik[0] && p.yildiz().some(y => y < 3));
+        const secilen = [];
+        while (secilen.length < 2 && aday.length) {
+            const p = aday.splice(Math.floor(r() * aday.length), 1)[0];
+            // Aynı etkinlikten iki bölüm gelmesin
+            if (!secilen.some(x => x.etkinlik === p.etkinlik)) secilen.push(p);
+        }
+        return ['bulmaca', ...secilen.map(p => p.id)];
+    }
+    // Bugünün görev kaydını oluşturur/günceller; tamamlananları ve seriyi döndürür
+    function gunluk(simdi = Date.now(), aralik = [0, 12]) {
+        const bugun = tarihMetni(simdi);
+        let g = oku('gunluk', null);
+        if (!g || g.tarih !== bugun) {
+            g = { tarih: bugun, gorevler: gununGorevleri(bugun, aralik).map(id => ({ id, bas: olcu(id) })), bitti: false };
+            yaz('gunluk', g);
+        }
+        const seri = oku('seri', { son: null, gun: 0, enUzun: 0 });
+        const gunlukBulmaca = !!(oku('bulmaca', {}).gunluk || {})[bugun];
+        const liste = g.gorevler.filter(x => parca(x.id)).map(x => ({ ...x, parca: parca(x.id), tamam: x.id === 'bulmaca' ? gunlukBulmaca : olcu(x.id) > x.bas }));
+        let yeniBitti = false;
+        if (!g.bitti && liste.length && liste.every(x => x.tamam)) {
+            g.bitti = true; yeniBitti = true;
+            seri.gun = seri.son === dun(bugun) ? seri.gun + 1 : seri.son === bugun ? seri.gun : 1;
+            seri.son = bugun; seri.enUzun = Math.max(seri.enUzun || 0, seri.gun);
+            yaz('gunluk', g); yaz('seri', seri);
+        }
+        // Dün tamamlanmadıysa seri bozulur (gösterimde)
+        const guncelSeri = seri.son === bugun || seri.son === dun(bugun) ? seri.gun : 0;
+        return { tarih: bugun, gorevler: liste, bitti: g.bitti, yeniBitti, seri: guncelSeri, enUzun: seri.enUzun || 0 };
+    }
+    // Sürpriz: kademeye uygun, henüz bitmemiş rastgele bir bölüm
+    function surpriz(aralik = [0, 12], rastgele = Math.random) {
+        const aday = PARCALAR.filter(p => p.sinif[0] <= aralik[1] && p.sinif[1] >= aralik[0]);
+        const eksik = aday.filter(p => p.yildiz().some(y => y < 3));
+        const l = eksik.length ? eksik : aday;
+        return l[Math.floor(rastgele() * l.length)];
+    }
+
     // ---------- Rozetler ----------
     const toplam = (id) => parca(id).yildiz().reduce((a, b) => a + b, 0);
     const tamam = (id) => parca(id).yildiz().every(x => x > 0);
@@ -200,6 +255,7 @@
         { id: 'veribilimci', ad: 'Veri Bilimci', ikon: 'fa-chart-column', aciklama: 'Veri Bilimi Atölyesi\'nin bütün bölümlerini bitir', kosul: () => tamam('veri') },
         { id: 'donanim', ad: 'Donanım Ustası', ikon: 'fa-microchip', aciklama: 'KodKart\'ın bütün görevlerini bitir', kosul: () => tamam('devre') },
         { id: 'onparmak', ad: 'On Parmak', ikon: 'fa-keyboard', aciklama: 'Klavye Ustası\'nın 20 dersini bitir', kosul: () => tamam('klavye') },
+        { id: 'kararli', ad: 'Kararlı Kodcu', ikon: 'fa-fire', aciklama: 'Günün görevlerini 7 gün üst üste tamamla', kosul: () => (oku('seri', {}).enUzun || 0) >= 7 },
         { id: 'bulmacaci', ad: 'Bulmaca Ustası', ikon: 'fa-puzzle-piece', aciklama: 'Bilişim Bulmacaları\'nın her türünü her zorlukta çöz', kosul: () => tamam('bulmaca') },
         { id: 'tablocu', ad: 'Formül Ustası', ikon: 'fa-table-cells', aciklama: 'Tablo Atölyesi\'nin bütün görevlerini bitir', kosul: () => tamam('tablo') },
         { id: 'teknisyen', ad: 'Teknisyen', ikon: 'fa-screwdriver-wrench', aciklama: 'Bilgisayarın İçi\'nin bütün bölümlerini bitir', kosul: () => tamam('donanim') },
@@ -245,7 +301,7 @@
     function gorevKodla(g) { return b64(JSON.stringify(g)); }
     function gorevCoz(s) { try { return JSON.parse(b64coz(s)); } catch (e) { return null; } }
 
-    const api = { ETKINLIKLER, PARCALAR, parca, ROZETLER, unvan, raporOlustur, raporOku, gorevKodla, gorevCoz, b64, b64coz };
+    const api = { ETKINLIKLER, PARCALAR, parca, tarihMetni, gununGorevleri, gunluk, surpriz, olcu, ROZETLER, unvan, raporOlustur, raporOku, gorevKodla, gorevCoz, b64, b64coz };
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     else root.Katalog = api;
 })(typeof window !== 'undefined' ? window : globalThis);

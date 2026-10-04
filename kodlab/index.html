@@ -97,6 +97,24 @@
         .karsilama b { font-size: 1.1rem; }
         .karsilama small { color: var(--muted); display: block; }
         .karsilama .ybar { height: 8px; background: var(--bg-alt); border-radius: 99px; overflow: hidden; margin-top: 6px; max-width: 360px; }
+        .gunluk { margin-top: 14px; padding: 16px 20px; }
+        .gunluk .gl-bas { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+        .gunluk .alev { width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center; font-size: 1.4rem; color: #fff; background: linear-gradient(135deg, #f97316, #e11d48); flex: 0 0 auto; position: relative; }
+        .gunluk .alev.sonuk { background: var(--bg-alt); color: var(--muted); }
+        .gunluk .alev small { position: absolute; bottom: -6px; right: -6px; background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 99px; font: 800 .72rem var(--body); padding: 1px 6px; }
+        .gunluk .gl-bas div { flex: 1; min-width: 180px; }
+        .gunluk .gl-bas b { font-size: 1.1rem; }
+        .gunluk .gl-bas small { color: var(--muted); display: block; }
+        .gunluk .gl-liste { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin-top: 14px; }
+        .gl-gorev { display: flex; gap: 12px; align-items: center; padding: 12px; border-radius: 14px; border: 1px solid var(--line); text-decoration: none; color: var(--ink); background: var(--surface); transition: border-color .15s, transform .15s; }
+        .gl-gorev:hover { border-color: var(--c); transform: translateY(-1px); }
+        .gl-gorev .ik { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; color: #fff; background: var(--c); flex: 0 0 auto; }
+        .gl-gorev span { flex: 1; min-width: 0; }
+        .gl-gorev b { display: block; font-size: .95rem; }
+        .gl-gorev small { color: var(--muted); font-size: .8rem; }
+        .gl-gorev .tik { color: var(--line); font-size: 1.3rem; }
+        .gl-gorev.tamam { background: var(--ok-soft); border-color: color-mix(in srgb, var(--ok) 40%, transparent); }
+        .gl-gorev.tamam .tik { color: var(--ok); }
         .karsilama .ybar div { height: 100%; background: linear-gradient(90deg, var(--accent), #8b5cf6); }
         .gorevler { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
         .gorevler a { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); text-decoration: none; color: var(--ink); font-weight: 600; }
@@ -170,6 +188,7 @@
         </section>
 
         <section class="card karsilama" id="karsilama"></section>
+        <section class="card gunluk" id="gunluk"></section>
 
         <h2 class="section-title" id="etkinlikler" style="scroll-margin-top:80px">Etkinlikler</h2>
         <div class="filters" id="filters" role="tablist" aria-label="Kademe"></div>
@@ -256,6 +275,25 @@
                 </div>
                 <a class="btn ${profil.ad ? '' : 'btn-primary'}" href="profil.html"><i class="fas fa-medal"></i> ${profil.ad ? 'Profilim ve rozetlerim' : 'Profil oluştur'}</a>`;
 
+            // Günün görevleri ve seri
+            const kdGun = KADEMELER.find(k => k.id === KL.oku('kademe', 'hepsi')) || KADEMELER[0];
+            const gun = K.gunluk(Date.now(), kdGun.aralik);
+            const seriMetni = gun.bitti ? `Bugünün görevleri tamam! ${gun.seri} günlük serin var; yarın yeni görevler gelecek.`
+                : gun.seri ? `${gun.seri} günlük serin var. Bugünkü üç görevi bitir, serin uzasın.` : 'Her gün üç kısa görev. Hepsini bitir, gün serini başlat!';
+            $('gunluk').innerHTML = `<div class="gl-bas">
+                    <span class="alev ${gun.seri ? '' : 'sonuk'}"><i class="fas fa-fire"></i>${gun.seri ? `<small>${gun.seri}</small>` : ''}</span>
+                    <div><b>Günün görevleri</b><small>${seriMetni}${kdGun.id === 'hepsi' ? ' Kademe seçersen görevler sana göre gelir.' : ''}</small></div>
+                    <button class="btn" id="surpriz"><i class="fas fa-dice"></i> Sürpriz etkinlik</button>
+                </div>
+                <div class="gl-liste">${gun.gorevler.map(x => {
+                    const e = x.parca.etkinlik;
+                    const ad = x.id === 'bulmaca' ? 'Günün bulmacası' : x.parca.ad;
+                    const alt = x.id === 'bulmaca' ? 'Herkes bugün aynı bulmacayı çözüyor' : 'Yeni bir yıldız kazan';
+                    return `<a class="gl-gorev ${x.tamam ? 'tamam' : ''}" href="${x.id === 'bulmaca' ? 'bulmaca.html#gunun' : x.parca.url}" style="--c:${e.renk}"><span class="ik" style="background:${e.renk}"><i class="fas ${e.ikon}"></i></span><span><b>${kacis(ad)}</b><small>${alt}</small></span><i class="fas fa-circle-check tik" aria-label="${x.tamam ? 'tamamlandı' : 'yapılmadı'}"></i></a>`;
+                }).join('')}</div>`;
+            if (gun.yeniBitti) { KL.konfeti(); KL.bildir(`Günün görevleri tamam! Serin: ${gun.seri} gün`); }
+            $('surpriz').onclick = () => { const p = K.surpriz(kdGun.aralik); location.href = p.url; };
+
             const bolumSayisi = K.PARCALAR.reduce((t, p) => t + p.seviye, 0);
             $('istat').innerHTML = `<div><b>${K.ETKINLIKLER.length}</b><span>etkinlik</span></div><div><b>${bolumSayisi}+</b><span>bölüm ve görev</span></div><div><b>4</b><span>kademe: okul öncesinden liseye</span></div><div><b>%100</b><span>Türkçe</span></div>`;
 
@@ -301,7 +339,7 @@
 
             $('sifirla').addEventListener('click', () => {
                 if (!confirm('Bu cihazdaki tüm Kodlayalım ilerlemesi, profil ve görevler silinsin mi?')) return;
-                ['robot', 'tahmin', 'ikilik', 'piksel', 'sensin', 'oruntu', 'algoritma', 'mantik', 'hata', 'cizim', 'sifre', 'guvenlik', 'yz', 'ag', 'ag.yonlendir', 'web', 'oyun', 'python', 'python.son', 'dijital', 'veri', 'devre', 'klavye', 'donanim', 'tablo', 'bulmaca', 'profil', 'gorevler'].forEach(KL.sil);
+                ['robot', 'tahmin', 'ikilik', 'piksel', 'sensin', 'oruntu', 'algoritma', 'mantik', 'hata', 'cizim', 'sifre', 'guvenlik', 'yz', 'ag', 'ag.yonlendir', 'web', 'oyun', 'python', 'python.son', 'dijital', 'veri', 'devre', 'klavye', 'donanim', 'tablo', 'bulmaca', 'gunluk', 'seri', 'profil', 'gorevler'].forEach(KL.sil);
                 location.reload();
             });
         })();
