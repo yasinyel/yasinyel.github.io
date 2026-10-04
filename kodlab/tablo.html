@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="Yasin Yel">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#1d5fd6">
+    <link rel="icon" href="ikon/ikon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="ikon/ikon-192.png">
+    <title>Tablo Atölyesi — Kodlayalım</title>
+    <meta name="description" content="Hesap tablosu formüllerini öğren: TOPLA, ORTALAMA, EĞER, EĞERSAY, sabit başvurular ve doldurma. Görevler kendiliğinden denetlenir.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="ortak.css">
+    <style>
+        main { padding: 20px 0 40px; }
+        .duzen { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 16px; align-items: start; }
+        .gorevler { padding: 8px; max-height: calc(100vh - 160px); overflow-y: auto; position: sticky; top: 76px; }
+        .gorevler button { display: flex; width: 100%; gap: 8px; align-items: center; border: 0; background: none; padding: 7px 8px; border-radius: 8px; cursor: pointer; text-align: left; font-size: .88rem; color: var(--ink); }
+        .gorevler button:hover { background: var(--bg-alt); }
+        .gorevler button.sel { background: var(--accent-soft); color: var(--accent); font-weight: 700; }
+        .gorevler button .no { width: 22px; height: 22px; border-radius: 7px; background: var(--bg-alt); display: grid; place-items: center; font-size: .75rem; font-weight: 700; flex: 0 0 auto; }
+        .gorevler button.ok .no { background: var(--ok); color: #fff; }
+        .gorevler button .stars { margin-left: auto; font-size: 8px; }
+        .kart { padding: 20px; }
+        .gorev-bas h1 { font-size: 1.35rem; display: flex; gap: 10px; align-items: center; }
+        .gorev-bas h1 .sinif { font: 600 .75rem var(--body); color: var(--muted); background: var(--bg-alt); padding: 3px 8px; border-radius: 99px; }
+        .gorev-bas p { margin-top: 6px; line-height: 1.6; }
+        .gorev-bas code, .yardim code { font-family: var(--mono); background: var(--bg-alt); padding: 1px 6px; border-radius: 6px; font-size: .9em; white-space: nowrap; }
+        .cubuk { display: flex; gap: 8px; margin-top: 16px; align-items: stretch; }
+        .cubuk .ad { width: 64px; flex: 0 0 auto; display: grid; place-items: center; font: 700 .95rem var(--mono); background: var(--bg-alt); border-radius: 10px; border: 1px solid var(--line); }
+        .cubuk .fx { display: grid; place-items: center; color: var(--muted); font-style: italic; font-weight: 700; width: 26px; }
+        .cubuk input { flex: 1; min-width: 0; font: 500 1rem var(--mono); padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+        .cubuk input:focus { outline: 2px solid var(--accent); border-color: var(--accent); }
+        .cubuk input[readonly] { background: var(--bg-alt); color: var(--muted); }
+        .cubuk .icon-btn { flex: 0 0 auto; }
+        .fonklar { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+        .fonklar button { font: 600 .78rem var(--mono); border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 8px; padding: 4px 8px; cursor: pointer; }
+        .fonklar button:hover { border-color: var(--accent); color: var(--accent); }
+        .izgara-kap { margin-top: 12px; overflow: auto; border: 1px solid var(--line); border-radius: 12px; max-height: 470px; background: var(--surface); }
+        table.izgara { border-collapse: separate; border-spacing: 0; font-size: .9rem; user-select: none; touch-action: manipulation; }
+        .izgara th { position: sticky; background: var(--bg-alt); color: var(--muted); font: 600 .75rem var(--body); z-index: 2; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+        .izgara thead th { top: 0; height: 26px; }
+        .izgara tbody th { left: 0; width: 38px; min-width: 38px; z-index: 1; }
+        .izgara thead th:first-child { left: 0; z-index: 3; }
+        .izgara th.vurgu { background: var(--accent-soft); color: var(--accent); }
+        .izgara td { min-width: 104px; max-width: 160px; height: 32px; padding: 0 8px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: cell; position: relative; }
+        .izgara td.sayi { text-align: right; font-variant-numeric: tabular-nums; }
+        .izgara td.veri { background: color-mix(in srgb, var(--bg-alt) 55%, var(--surface)); }
+        .izgara td.baslik { font-weight: 700; }
+        .izgara td.hedef { background: color-mix(in srgb, var(--gold) 13%, var(--surface)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--gold) 55%, transparent); }
+        .izgara td.formul { color: var(--accent); }
+        .izgara td.hata { color: var(--bad); font-weight: 700; }
+        .izgara td.gecti { background: var(--ok-soft); box-shadow: inset 0 0 0 2px var(--ok); }
+        .izgara td.kaldi { background: var(--bad-soft); box-shadow: inset 0 0 0 2px var(--bad); }
+        .izgara td.secim { background: color-mix(in srgb, var(--accent) 14%, transparent); }
+        .izgara td.aktif { outline: 2px solid var(--accent); outline-offset: -2px; }
+        .izgara td.basvuru { outline: 2px dashed #7c3aed; outline-offset: -3px; }
+        .izgara td .tutamac { position: absolute; right: 0; bottom: 0; width: 9px; height: 9px; background: var(--accent); border: 2px solid var(--surface); cursor: crosshair; touch-action: none; }
+        .araclar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+        .araclar .btn { padding: 8px 14px; }
+        .sonuclar { margin-top: 14px; display: grid; gap: 6px; }
+        .sonuclar div { display: flex; gap: 8px; align-items: baseline; font-size: .9rem; }
+        .sonuclar .fa-circle-check { color: var(--ok); } .sonuclar .fa-circle-xmark { color: var(--bad); }
+        .sonuclar b { font-family: var(--mono); }
+        .ipucu-k { margin-top: 12px; padding: 10px 14px; border-radius: 12px; background: var(--accent-soft); font-size: .9rem; }
+        details.yardim { margin-top: 16px; }
+        details.yardim summary { cursor: pointer; font-weight: 700; }
+        details.yardim table { margin-top: 8px; border-collapse: collapse; font-size: .85rem; width: 100%; }
+        details.yardim td { padding: 5px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+        @media (max-width: 860px) { .duzen { grid-template-columns: minmax(0, 1fr); } .gorevler { position: static; max-height: none; display: flex; overflow-x: auto; gap: 4px; } .gorevler button { width: auto; white-space: nowrap; flex: 0 0 auto; } .gorevler button .stars { display: none; } }
+        @media (max-width: 560px) { .kart { padding: 14px; } .izgara td { min-width: 84px; } .cubuk .ad { width: 52px; } .cubuk .fx { display: none; } }
+    </style>
+</head>
+<body>
+    <header class="kl-top">
+        <div class="wrap kl-top-inner">
+            <a href="./" class="kl-brand"><span class="kl-logo" aria-hidden="true"></span><span class="kl-ad"><b>Kod</b>layalım</span></a>
+            <span class="kl-crumb"><i class="fas fa-chevron-right" style="font-size:.7em"></i><span>Tablo Atölyesi</span></span>
+            <span class="kl-spacer"></span>
+            <button class="icon-btn" id="themeBtn" aria-label="Temayı değiştir"><i class="fas fa-circle-half-stroke"></i></button>
+        </div>
+    </header>
+    <main class="wrap">
+        <div class="duzen">
+            <nav class="card gorevler" id="gorevler" aria-label="Görevler"></nav>
+            <section class="card kart">
+                <div class="gorev-bas">
+                    <h1 id="baslik"></h1>
+                    <p id="anlatim"></p>
+                </div>
+                <div class="cubuk">
+                    <div class="ad" id="hAd">A1</div>
+                    <span class="fx">fx</span>
+                    <input id="giris" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Hücre içeriği ya da formül" placeholder="Bir hücre seç, sayı, metin ya da =formül yaz">
+                    <button class="icon-btn" id="onay" aria-label="Onayla"><i class="fas fa-check"></i></button>
+                </div>
+                <div class="fonklar" id="fonklar"></div>
+                <div class="izgara-kap" id="kap"><table class="izgara" id="izgara"></table></div>
+                <div class="araclar">
+                    <button class="btn btn-primary" id="kontrol"><i class="fas fa-circle-check"></i> Kontrol et</button>
+                    <button class="btn" id="doldurAsagi" title="Ctrl+D"><i class="fas fa-arrow-down"></i> Aşağı doldur</button>
+                    <button class="btn" id="doldurSag" title="Ctrl+R"><i class="fas fa-arrow-right"></i> Sağa doldur</button>
+                    <button class="btn" id="temizle"><i class="fas fa-eraser"></i> Hücreyi sil</button>
+                    <button class="btn" id="sifirla"><i class="fas fa-rotate-left"></i> Baştan</button>
+                </div>
+                <div class="sonuclar" id="sonuclar" aria-live="polite"></div>
+                <div class="ipucu-k" id="ipucu" hidden></div>
+                <details class="yardim">
+                    <summary>Formül rehberi</summary>
+                    <table>
+                        <tr><td><code>=A1+B1</code></td><td>Hücreleri topla. İşlemler: <code>+ - * / ^</code>, metin birleştirme <code>&amp;</code></td></tr>
+                        <tr><td><code>A1:A5</code></td><td>Aralık: A1'den A5'e kadar bütün hücreler</td></tr>
+                        <tr><td><code>$B$1</code></td><td>Sabit (mutlak) başvuru: doldururken kaymaz</td></tr>
+                        <tr><td><code>=TOPLA(A1:A5)</code></td><td>Toplam · <code>ORTALAMA</code> · <code>MAK</code> · <code>MİN</code> · <code>BAĞ_DEĞ_SAY</code> (sayı adedi) · <code>BAĞ_DEĞ_DOLU_SAY</code> (dolu hücre adedi)</td></tr>
+                        <tr><td><code>=EĞER(koşul;doğruysa;yanlışsa)</code></td><td>Karar verir. Koşullarda <code>= &lt;&gt; &lt; &gt; &lt;= &gt;=</code>, birden fazla koşul için <code>VE</code>, <code>YADA</code></td></tr>
+                        <tr><td><code>=EĞERSAY(aralık;ölçüt)</code></td><td>Koşula uyan hücreleri sayar, ör. <code>"&gt;=50"</code> ya da <code>"Geçti"</code>. <code>ETOPLA(aralık;ölçüt;toplanacak)</code> koşula uyanları toplar</td></tr>
+                        <tr><td><code>=YUVARLA(sayı;basamak)</code></td><td>Yuvarlar · <code>UZUNLUK</code> · <code>BİRLEŞTİR</code> · <code>BÜYÜKHARF</code> · <code>MUTLAK</code> · <code>KAREKÖK</code></td></tr>
+                        <tr><td><code>#BÖL/0!</code> <code>#AD?</code> <code>#DEĞER!</code> <code>#DÖNGÜ!</code></td><td>Hatalar: sıfıra bölme, yazım hatası ya da bilinmeyen ad, metinle işlem, hücre kendine başvuruyor</td></tr>
+                    </table>
+                    <p style="color:var(--muted);font-size:.85rem;margin-top:8px">İpucu: Formül yazarken <b>=</b>, işlem işareti, <b>(</b> ya da <b>;</b> yazdıktan sonra bir hücreye tıklarsan başvurusu formüle eklenir; sürükleyerek aralık seçebilirsin. Seçili hücrenin köşesindeki kareyi sürükleyerek formülü kopyalayabilirsin.</p>
+                </details>
+            </section>
+        </div>
+    </main>
+    <script src="ortak.js"></script>
+    <script src="tablo-motor.js"></script>
+    <script src="tablo.js"></script>
+</body>
+</html>
