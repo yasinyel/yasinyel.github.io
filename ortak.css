@@ -129,3 +129,35 @@ dialog.kl-dialog::backdrop { background: rgba(10, 15, 25, 0.5); }
     .kl-brand { font-size: 1.1rem; gap: 8px; }
     .kl-logo { width: 32px; height: 32px; }
 }
+
+/* ---------- İpucu Asistanı ---------- */
+.kl-ipucu { position: relative; display: inline-block; }
+.kl-ipucu-btn { gap: 6px; border-color: color-mix(in srgb, var(--gold) 60%, var(--line)); background: color-mix(in srgb, var(--gold) 14%, var(--surface)); color: var(--ink); }
+.kl-ipucu-btn .fa-lightbulb { color: var(--gold); }
+.kl-ipucu-say { font: 600 .72rem var(--mono); color: var(--muted); }
+.kl-ipucu-say:empty { display: none; }
+.kl-ipucu-btn.dikkat { animation: klIpucuNabiz 1.4s ease-in-out infinite; }
+@keyframes klIpucuNabiz { 0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--gold) 55%, transparent); } 50% { box-shadow: 0 0 0 8px transparent; } }
+@media (prefers-reduced-motion: reduce) { .kl-ipucu-btn.dikkat { animation: none; outline: 3px solid var(--gold); } }
+.kl-ipucu-balon { position: absolute; bottom: calc(100% + 10px); left: 0; z-index: 30; width: max-content; max-width: 240px; background: var(--ink); color: var(--bg); font-size: .85rem; font-weight: 600; padding: 8px 30px 8px 12px; border-radius: 12px; box-shadow: var(--shadow); }
+.kl-ipucu-balon::after { content: ''; position: absolute; top: 100%; left: 22px; border: 7px solid transparent; border-top-color: var(--ink); }
+.kl-ipucu-balon .kl-ipucu-kapat { position: absolute; right: 6px; top: 4px; color: var(--bg); }
+.kl-ipucu-panel { position: fixed; right: 16px; bottom: 16px; z-index: 60; width: min(400px, calc(100vw - 32px)); max-height: min(78vh, 600px); overflow: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 12px 40px rgba(0, 0, 0, .22); text-align: left; }
+.kl-ipucu-ust { z-index: 1; display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--surface); }
+.kl-ipucu-ust .kl-logo { width: 26px; height: 26px; }
+.kl-ipucu-ust b { flex: 1; font-family: var(--display); }
+.kl-ipucu-kapat { border: 0; background: none; font-size: 1.3rem; line-height: 1; cursor: pointer; color: var(--muted); padding: 2px 6px; }
+.kl-ipucu-icerik { padding: 12px; display: grid; gap: 10px; font-size: .92rem; line-height: 1.55; color: var(--ink); }
+.kl-ipucu-adim { border-radius: 12px; padding: 10px 12px; background: var(--bg-alt); display: grid; gap: 6px; animation: klIpucuGir .25s ease-out; }
+.kl-ipucu-adim.a0 { background: color-mix(in srgb, var(--accent) 9%, var(--surface)); }
+.kl-ipucu-adim.a1 { background: color-mix(in srgb, var(--gold) 13%, var(--surface)); }
+.kl-ipucu-adim.a2 { background: color-mix(in srgb, var(--ok) 11%, var(--surface)); }
+.kl-ipucu-etiket { font-size: .72rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); display: flex; gap: 6px; align-items: center; }
+.kl-ipucu-adim code, .kl-ipucu-adim pre { font-family: var(--mono); font-size: .86em; background: var(--surface); border-radius: 6px; padding: 1px 5px; }
+.kl-ipucu-adim pre { padding: 8px 10px; white-space: pre-wrap; margin: 0; border: 1px solid var(--line); }
+.kl-ipucu-adim .btn { justify-self: start; }
+.kl-ipucu-sonraki { display: grid; gap: 6px; justify-items: start; }
+.kl-ipucu-sonraki small { color: var(--muted); }
+.kl-ipucu-son { color: var(--muted); font-size: .85rem; }
+@keyframes klIpucuGir { from { opacity: 0; transform: translateY(6px); } }
+@media (max-width: 560px) { .kl-ipucu-panel { left: 12px; right: 12px; bottom: 12px; width: auto; } }

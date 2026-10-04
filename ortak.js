@@ -108,6 +108,69 @@
             return '';
         },
 
+        // ---------- İpucu Asistanı ----------
+        // Üç basamaklı yardım: 1) düşündüren soru (yıldız düşmez), 2) ipucu (en fazla 2 yıldız), 3) örnek çözüm (en fazla 1 yıldız).
+        // ayar: { etkinlik, bolum, yer: düğmenin ekleneceği öğe, basamaklar: [metin, metin, { metin, uygula?, uygulaYazi? }] }
+        // Kullanım kaydı 'ipucu' anahtarında tutulur (öğretmen raporu için).
+        ipucu(ayar) {
+            const BASLIK = ['Düşün', 'İpucu', 'Örnek çözüm'], IKON = ['fa-circle-question', 'fa-lightbulb', 'fa-key'];
+            const NOT = ['', 'Bu ipucunu açarsan bu denemede en fazla 2 yıldız alırsın.', 'Çözümü görürsen bu denemede en fazla 1 yıldız alırsın. Önce bir kez daha denemek ister misin?'];
+            const basamak = (ayar.basamaklar || []).filter(Boolean).map(b => typeof b === 'string' ? { metin: b } : b);
+            let acik = 0, yanlis = 0, durtuldu = false;
+            const eski = ayar.yer.querySelector('.kl-ipucu'); if (eski) eski.remove();
+            const kok = document.createElement('div'); kok.className = 'kl-ipucu';
+            kok.innerHTML = `<button type="button" class="btn kl-ipucu-btn" aria-expanded="false"><i class="fas fa-lightbulb"></i> İpucu <span class="kl-ipucu-say"></span></button>
+                <div class="kl-ipucu-balon" hidden>Takıldın mı? Bir ipucu ister misin? <button type="button" class="kl-ipucu-kapat" aria-label="Kapat">×</button></div>
+                <div class="kl-ipucu-panel" hidden role="dialog" aria-label="İpucu Asistanı"><div class="kl-ipucu-ust"><span class="kl-logo" aria-hidden="true"></span><b>Kodi yardıma geldi</b><button type="button" class="kl-ipucu-kapat" aria-label="Kapat">×</button></div><div class="kl-ipucu-icerik"></div></div>`;
+            ayar.yer.appendChild(kok);
+            const $ = (s) => kok.querySelector(s);
+            const kaydet = () => {
+                const k = KL.oku('ipucu', {});
+                const e = k[ayar.etkinlik] || (k[ayar.etkinlik] = {});
+                e[ayar.bolum] = Math.max(e[ayar.bolum] || 0, acik);
+                KL.yaz('ipucu', k);
+            };
+            const ciz = () => {
+                $('.kl-ipucu-say').textContent = basamak.length ? `${acik}/${basamak.length}` : '';
+                let h = basamak.slice(0, acik).map((b, i) => `<div class="kl-ipucu-adim a${i}" data-seslendir="${String(b.metin).replace(/<[^>]+>/g, ' ').replace(/"/g, '&quot;')}"><div class="kl-ipucu-etiket"><i class="fas ${IKON[i]}"></i> ${BASLIK[i]}</div><div>${b.metin}</div>${b.uygula ? `<button type="button" class="btn btn-sm kl-ipucu-uygula" data-i="${i}"><i class="fas fa-wand-magic-sparkles"></i> ${b.uygulaYazi || 'Çözümü yükle'}</button>` : ''}</div>`).join('');
+                if (acik < basamak.length) h += `<div class="kl-ipucu-sonraki">${NOT[acik] ? `<small>${NOT[acik]}</small>` : ''}<button type="button" class="btn btn-sm ${acik ? '' : 'btn-primary'} kl-ipucu-ac"><i class="fas ${IKON[acik]}"></i> ${acik ? (acik === 1 ? 'Daha fazla ipucu' : 'Örnek çözümü göster') : 'İlk ipucunu göster'}</button></div>`;
+                else h += '<p class="kl-ipucu-son">Çözümü anladıktan sonra kendin yazmayı dene; bir dahaki sefere ipucusuz 3 yıldız alabilirsin!</p>';
+                $('.kl-ipucu-icerik').innerHTML = h;
+            };
+            const panelAc = (ac) => {
+                $('.kl-ipucu-panel').hidden = !ac; $('.kl-ipucu-btn').setAttribute('aria-expanded', ac);
+                if (ac) { $('.kl-ipucu-balon').hidden = true; ciz(); }
+            };
+            $('.kl-ipucu-btn').onclick = () => panelAc($('.kl-ipucu-panel').hidden);
+            kok.querySelectorAll('.kl-ipucu-kapat').forEach(b => { b.onclick = () => { panelAc(false); $('.kl-ipucu-balon').hidden = true; }; });
+            $('.kl-ipucu-icerik').addEventListener('click', (e) => {
+                if (e.target.closest('.kl-ipucu-ac')) { acik = Math.min(basamak.length, acik + 1); kaydet(); ciz(); KL.ses('tik'); if (ayar.acilinca) ayar.acilinca(acik); }
+                const u = e.target.closest('.kl-ipucu-uygula');
+                if (u) { const b = basamak[+u.dataset.i]; if (b.uygula) { b.uygula(); panelAc(false); KL.bildir('Örnek çözüm yüklendi. Çalıştırıp nasıl çalıştığını incele.'); } }
+            });
+            ciz();
+            return {
+                // Açılan basamak sayısı ve buna göre bu denemede alınabilecek en fazla yıldız
+                acik: () => acik,
+                yildizSiniri: () => (acik >= 3 ? 1 : acik >= 2 ? 2 : 3),
+                // Yanlış denemeleri bildir: 2. yanlıştan sonra düğme dikkat çeker ve bir kez öneri balonu çıkar
+                yanlis() {
+                    yanlis++;
+                    if (yanlis >= 2 && acik < basamak.length) {
+                        $('.kl-ipucu-btn').classList.add('dikkat');
+                        if (!durtuldu && $('.kl-ipucu-panel').hidden) { durtuldu = true; $('.kl-ipucu-balon').hidden = false; }
+                    }
+                },
+                kaldir() { kok.remove(); }
+            };
+        },
+        // Bütün etkinliklerde açılan ipucu basamaklarının toplamı (öğretmen raporu için)
+        ipucuOzeti() {
+            const k = KL.oku('ipucu', {}), o = {};
+            for (const [e, b] of Object.entries(k)) { const v = Object.values(b); if (v.length) o[e] = [v.filter(x => x >= 1).length, v.filter(x => x >= 3).length]; }
+            return o;
+        },
+
         rastgele(a, b) { return a + Math.floor(Math.random() * (b - a + 1)); },
         sec(dizi) { return dizi[Math.floor(Math.random() * dizi.length)]; },
         karistir(dizi) {

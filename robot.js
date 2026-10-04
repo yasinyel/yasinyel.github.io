@@ -17,6 +17,7 @@
     let calisan = null;   // { derlenmis, haritaNo, dunya, gen, mod }
     let donus = 0;        // robotun toplam dönüş açısı (animasyon için)
     let yuklendi = false; // ilk bölüm açılmadan editördeki boş kod kaydedilmesin
+    let ipucuKont = null; // İpucu Asistanı
 
     // Komut paleti: [metin, eklenecek kod, hangi bölümde açılır, tür]
     const PALET = [
@@ -80,6 +81,13 @@
         $('example').hidden = !s.ornek;
         $('example').textContent = s.ornek || '';
         $('kod').value = s.ozel ? '' : kayit.kod[i] ?? s.baslangic ?? '';
+        // İpucu Asistanı: düşündüren soru, ipucu, örnek çözüm
+        const ip = window.ROBOT_IPUCLARI, metinler = s.ozel ? ip.GENEL : (ip.IPUCLARI[i] || ip.GENEL);
+        const kacisla = (x) => x.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+        ipucuKont = KL.ipucu({
+            etkinlik: 'robot', bolum: s.ozel ? 'ozel' : i, yer: $('ipucuYer'),
+            basamaklar: [metinler[0], metinler[1], s.cozum ? { metin: `Bu kod bölümü çözer. Satır satır okuyup robotun ne yapacağını önce kafanda canlandır:<pre>${kacisla(s.cozum)}</pre>`, uygula: () => { durdur(); kod.value = s.cozum; editorGuncelle(); kodKaydet(); }, uygulaYazi: 'Bu kodu editöre yaz' } : null]
+        });
         gosterilenHarita = 0;
         haritaSekmeleri();
         haritaGoster(0);
@@ -247,6 +255,7 @@
             if (!(e instanceof M.KodHatasi)) throw e;
             durum(`<i class="fas fa-bug"></i> Satır ${e.satir}: ${e.message}`, 'err');
             satirIsaretle(e.satir, true);
+            if (ipucuKont) ipucuKont.yanlis();
             return false;
         }
         if (derlenmis.komutSayisi === 0) { durum('Önce robota birkaç komut yaz.', 'err'); return false; }
@@ -275,12 +284,14 @@
             if (!(e instanceof M.KodHatasi)) throw e;
             durum(`<i class="fas fa-triangle-exclamation"></i> Satır ${e.satir}: ${e.message}` + haritaEki(), 'err');
             satirIsaretle(e.satir, true);
+            if (ipucuKont) ipucuKont.yanlis();
             return 'dur';
         }
         if (r.done) {
             if (calisan.dunya.kalan > 0) {
                 durum(`<i class="fas fa-circle-info"></i> Kod bitti ama ${calisan.dunya.kalan} yıldız toplanmadı.` + haritaEki(), 'err');
                 satirIsaretle(null);
+                if (ipucuKont) ipucuKont.yanlis();
                 return 'dur';
             }
             return calisan.haritaNo < SEVIYELER[no].haritalar.length - 1 ? 'harita' : 'bitti';
@@ -377,7 +388,8 @@
     function kazandi() {
         const s = SEVIYELER[no];
         const n = calisan.derlenmis.komutSayisi;
-        const y = M.yildizHesapla(n, s.hedef);
+        const sinir = ipucuKont ? ipucuKont.yildizSiniri() : 3;
+        const y = Math.min(M.yildizHesapla(n, s.hedef), sinir);
         calisan.mod = 'bitti';
         haritaSekmeleri(s.haritalar.length - 1);
         satirIsaretle(null);
@@ -391,7 +403,9 @@
 
         $('winTitle').textContent = y === 3 ? 'Mükemmel!' : 'Başardın!';
         $('winStars').innerHTML = KL.yildizHTML(y);
-        $('winText').innerHTML = y === 3
+        $('winText').innerHTML = sinir < 3 && M.yildizHesapla(n, s.hedef) > y
+            ? `${n} komutla çözdün! İpucu kullandığın için ${y} yıldız. Bölümü tekrar açıp kendin çözersen 3 yıldız alabilirsin.`
+            : y === 3
             ? `${n} komutla çözdün. Daha kısası zor!`
             : `${n} komut kullandın. ${s.hedef} ya da daha az komutla 3 yıldız alabilirsin. Tekrar eden kısımları döngüyle yazmayı dene.`;
         const sonuncu = no === SEVIYELER.length - 1 || s.ozel;
