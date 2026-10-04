@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="Yasin Yel">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#1d5fd6">
+    <link rel="icon" href="ikon/ikon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="ikon/ikon-192.png">
+    <title>Bilişim Bulmacaları — Kodlayalım</title>
+    <meta name="description" content="Bitmeyen bilişim bulmacaları: piksel resim (nonogram), ikili bulmaca, ağı kur ve ışıkları söndür. Her biri üç zorlukta, mantıkla çözülebilir.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="ortak.css">
+    <style>
+        main { padding: 20px 0 40px; }
+        .intro p { color: var(--muted); max-width: 70ch; margin-top: 6px; }
+        .tur-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; margin-top: 18px; }
+        .tur { text-align: left; padding: 18px; cursor: pointer; border: 1px solid var(--line); color: var(--ink); display: flex; flex-direction: column; gap: 8px; transition: transform .15s, box-shadow .15s; }
+        .tur:hover { transform: translateY(-2px); box-shadow: 0 10px 30px color-mix(in srgb, var(--c) 22%, transparent); }
+        .tur .ik { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; color: #fff; font-size: 1.25rem; background: var(--c); }
+        .tur h3 { font-size: 1.15rem; }
+        .tur p { color: var(--muted); font-size: .9rem; line-height: 1.5; }
+        .tur .sev { display: flex; gap: 6px; flex-wrap: wrap; margin-top: auto; }
+        .tur .sev span { font-size: .75rem; background: var(--bg-alt); border-radius: 99px; padding: 3px 9px; display: inline-flex; gap: 5px; align-items: center; }
+        .tur .sev .stars { font-size: 7px; }
+        .gunluk { margin-top: 18px; padding: 16px 18px; display: flex; gap: 14px; align-items: center; flex-wrap: wrap; background: linear-gradient(120deg, color-mix(in srgb, #7c3aed 14%, var(--surface)), color-mix(in srgb, #2563eb 12%, var(--surface))); }
+        .gunluk .ik { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; background: #7c3aed; color: #fff; font-size: 1.2rem; }
+        .gunluk div { flex: 1; min-width: 200px; }
+        .gunluk small { color: var(--muted); }
+        .ust { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .ust h2 { font-size: 1.3rem; }
+        .ust .no { font: 600 .85rem var(--mono); color: var(--muted); }
+        .ust .bosluk { flex: 1; }
+        .zor { display: flex; gap: 4px; background: var(--bg-alt); padding: 4px; border-radius: 12px; }
+        .zor button { border: 0; background: none; padding: 6px 12px; border-radius: 9px; font-weight: 700; cursor: pointer; color: var(--muted); }
+        .zor button.sel { background: var(--surface); color: var(--ink); box-shadow: var(--shadow); }
+        .oyun-duzen { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 16px; margin-top: 14px; align-items: start; }
+        .tahta-kart { padding: 18px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+        .tahta { touch-action: none; user-select: none; -webkit-user-select: none; }
+        .durum { font-weight: 600; color: var(--muted); text-align: center; min-height: 1.5em; }
+        .araclar { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+        .araclar .btn { padding: 8px 14px; }
+        .araclar .btn.sel { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+        .yan { padding: 16px; display: grid; gap: 10px; font-size: .9rem; line-height: 1.55; }
+        .yan h3 { font-size: 1rem; display: flex; gap: 8px; align-items: center; }
+        .yan .kural { color: var(--muted); }
+        .yan .bilisim { background: var(--accent-soft); border-radius: 12px; padding: 10px 12px; }
+        /* Piksel */
+        .np { display: grid; gap: 0; }
+        .np .ip { font: 700 .78rem var(--mono); color: var(--ink); display: flex; gap: 5px; align-items: center; justify-content: flex-end; padding: 0 6px; }
+        .np .ip.sut { flex-direction: column; justify-content: flex-end; padding: 4px 0; gap: 1px; }
+        .np .ip.tamam { color: var(--muted); opacity: .45; }
+        .np .h { width: var(--h); height: var(--h); border: 1px solid var(--line); background: var(--surface); cursor: pointer; display: grid; place-items: center; color: var(--muted); }
+        .np .h.d { background: var(--ink); border-color: var(--ink); }
+        .np .h.x::after { content: '×'; font-size: calc(var(--h) * .6); line-height: 1; }
+        .np .h.k5 { border-right: 2px solid var(--muted); }
+        .np .h.a5 { border-bottom: 2px solid var(--muted); }
+        .np .h.ipucu { animation: parla 1s 2; }
+        .np.bitti .h { border-color: transparent; }
+        .np.bitti .h.x::after { content: ''; }
+        @keyframes parla { 50% { box-shadow: 0 0 0 4px var(--gold); } }
+        /* İkili */
+        .ik-tahta { display: grid; gap: 4px; }
+        .ik-tahta button { width: var(--h); height: var(--h); border-radius: 10px; border: 1px solid var(--line); background: var(--surface); font: 800 calc(var(--h) * .45) var(--mono); color: var(--ink); cursor: pointer; }
+        .ik-tahta button.v0 { background: color-mix(in srgb, #0891b2 16%, var(--surface)); color: #0e7490; }
+        .ik-tahta button.v1 { background: color-mix(in srgb, #7c3aed 18%, var(--surface)); color: #6d28d9; }
+        .ik-tahta button.sabit { cursor: default; box-shadow: inset 0 -3px 0 color-mix(in srgb, var(--ink) 25%, transparent); }
+        .ik-tahta button.hata { border: 2px solid var(--bad); color: var(--bad); }
+        .ik-tahta button.ipucu { animation: parla 1s 2; }
+        :root[data-theme="dark"] .ik-tahta button.v0 { color: #67e8f9; } :root[data-theme="dark"] .ik-tahta button.v1 { color: #c4b5fd; }
+        @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .ik-tahta button.v0 { color: #67e8f9; } :root:not([data-theme="light"]) .ik-tahta button.v1 { color: #c4b5fd; } }
+        /* Ağ */
+        .ag-tahta { display: grid; gap: 0; background: var(--bg-alt); border-radius: 14px; padding: 6px; }
+        .ag-tahta button { width: var(--h); height: var(--h); border: 0; background: none; padding: 0; cursor: pointer; border-radius: 8px; }
+        .ag-tahta button:hover { background: color-mix(in srgb, var(--accent) 8%, transparent); }
+        .ag-tahta svg { width: 100%; height: 100%; display: block; }
+        .ag-tahta .don { transform-origin: 50px 50px; transition: transform .18s ease-out; }
+        .ag-tahta .kablo { stroke: var(--muted); stroke-width: 14; stroke-linecap: round; fill: none; }
+        .ag-tahta .bagli .kablo { stroke: #16a34a; }
+        .ag-tahta .cihaz { fill: var(--surface); stroke: var(--muted); stroke-width: 6; }
+        .ag-tahta .bagli .cihaz { stroke: #16a34a; fill: color-mix(in srgb, #16a34a 20%, var(--surface)); }
+        .ag-tahta .sunucu { fill: #1d4ed8; stroke: #1e3a8a; stroke-width: 4; }
+        .ag-tahta button.kilit { background: color-mix(in srgb, var(--gold) 18%, transparent); }
+        /* Işık */
+        .isik-tahta { display: grid; gap: 8px; }
+        .isik-tahta button { width: var(--h); height: var(--h); border-radius: 50%; border: 0; cursor: pointer; background: color-mix(in srgb, var(--ink) 12%, var(--surface)); transition: background .15s, box-shadow .15s; display: grid; place-items: center; color: var(--muted); font-size: calc(var(--h) * .35); }
+        .isik-tahta button.acik { background: radial-gradient(circle at 40% 35%, #fff7c2, #facc15 55%, #d97706); box-shadow: 0 0 18px #facc15aa; color: #92400e; }
+        .isik-tahta button.ipucu { outline: 3px dashed var(--accent); outline-offset: 3px; }
+        .sonuc-kutu { text-align: center; display: grid; gap: 8px; justify-items: center; }
+        .sonuc-kutu .big-stars { font-size: 26px; }
+        @media (max-width: 860px) { .oyun-duzen { grid-template-columns: minmax(0, 1fr); } }
+        @media (max-width: 560px) { .tahta-kart { padding: 12px 6px; } .ust h2 { font-size: 1.1rem; } }
+    </style>
+</head>
+<body>
+    <header class="kl-top">
+        <div class="wrap kl-top-inner">
+            <a href="./" class="kl-brand"><span class="kl-logo" aria-hidden="true"></span><span class="kl-ad"><b>Kod</b>layalım</span></a>
+            <span class="kl-crumb"><i class="fas fa-chevron-right" style="font-size:.7em"></i><span>Bilişim Bulmacaları</span></span>
+            <span class="kl-spacer"></span>
+            <button class="icon-btn" id="themeBtn" aria-label="Temayı değiştir"><i class="fas fa-circle-half-stroke"></i></button>
+        </div>
+    </header>
+    <main class="wrap">
+        <section id="liste">
+            <div class="intro">
+                <h1>Bilişim Bulmacaları</h1>
+                <p>Bilgisayar bilimcileri gibi düşün: piksellerle gizli resimler, 0 ve 1'lerle ikilik tablolar, ağ kabloları ve mantık lambaları. Her bulmaca bir numarayla üretilir; bitmek bilmeyen bulmacalar seni bekliyor.</p>
+            </div>
+            <div class="card gunluk">
+                <span class="ik"><i class="fas fa-calendar-day"></i></span>
+                <div><b>Günün bulmacası</b><br><small id="gunMetin"></small></div>
+                <button class="btn btn-primary" id="gunBtn"><i class="fas fa-play"></i> Çöz</button>
+            </div>
+            <div class="tur-grid" id="turler"></div>
+        </section>
+        <section id="oyun" hidden>
+            <div class="ust">
+                <button class="icon-btn" id="geri" aria-label="Geri"><i class="fas fa-arrow-left"></i></button>
+                <h2 id="baslik"></h2>
+                <span class="no" id="no"></span>
+                <span class="bosluk"></span>
+                <div class="zor" id="zorluk" role="group" aria-label="Zorluk"></div>
+            </div>
+            <div class="oyun-duzen">
+                <div class="card tahta-kart">
+                    <div class="tahta" id="tahta"></div>
+                    <div class="durum" id="durum" aria-live="polite"></div>
+                    <div class="araclar" id="araclar">
+                        <button class="btn" id="mod" hidden></button>
+                        <button class="btn" id="ipucuBtn"><i class="fas fa-lightbulb"></i> İpucu</button>
+                        <button class="btn" id="bastan"><i class="fas fa-rotate-left"></i> Baştan</button>
+                        <button class="btn btn-primary" id="yeni"><i class="fas fa-shuffle"></i> Yeni bulmaca</button>
+                    </div>
+                    <div class="sonuc-kutu" id="sonuc" hidden></div>
+                </div>
+                <aside class="card yan">
+                    <h3><i class="fas fa-circle-question"></i> Nasıl oynanır?</h3>
+                    <div class="kural" id="kural"></div>
+                    <div class="bilisim" id="bilisim"></div>
+                    <div class="araclar" style="justify-content:flex-start">
+                        <button class="btn" id="numara"><i class="fas fa-hashtag"></i> Numarayla aç</button>
+                        <button class="btn" id="paylas"><i class="fas fa-link"></i> Bağlantıyı kopyala</button>
+                    </div>
+                </aside>
+            </div>
+        </section>
+    </main>
+    <script src="ortak.js"></script>
+    <script src="bulmaca-motor.js"></script>
+    <script src="bulmaca.js"></script>
+</body>
+</html>

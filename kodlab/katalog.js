@@ -114,6 +114,12 @@
             parcalar: [{ id: 'donanim', ad: 'Bilgisayarın İçi', url: 'donanim.html', seviye: 5, yildiz: () => { const k = oku('donanim', { yildiz: {} }).yildiz; return ['topla', 'eslestir', 'sinifla', 'birim', 'ariza'].map(b => k[b] || 0); } }]
         },
         {
+            id: 'bulmaca', ad: 'Bilişim Bulmacaları', url: 'bulmaca.html', ikon: 'fa-puzzle-piece', renk: '#7c3aed', sinif: [1, 12],
+            aciklama: 'Bitmeyen bulmacalar: piksel resim, 0-1 ikili bulmaca, ağı kur ve ışıkları söndür. Her gün herkese aynı "günün bulmacası".',
+            etiket: ['Mantık', 'Problem çözme', 'Sonsuz'], kavram: 'Piksel ve RLE sıkıştırma, ikilik sistem ve kural denetimi, ağ topolojisi (ağaç), XOR mantığı; tümdengelim ve sistematik deneme', sure: 'Bulmaca başı 2–15 dk',
+            parcalar: [{ id: 'bulmaca', ad: 'Bilişim Bulmacaları', url: 'bulmaca.html', seviye: 12, yildiz: () => { const k = oku('bulmaca', { yildiz: {} }).yildiz; return ['piksel', 'ikili', 'ag', 'isik'].flatMap(t => [0, 1, 2].map(z => k[`${t}-${z}`] || 0)); } }]
+        },
+        {
             id: 'tablo', ad: 'Tablo Atölyesi', url: 'tablo.html', ikon: 'fa-table-cells', renk: '#15803d', sinif: [5, 12],
             aciklama: 'Gerçek bir hesap tablosunda formül yaz: TOPLA, ORTALAMA, EĞER, EĞERSAY, sabit başvurular ve doldurma. Görevler kendiliğinden denetlenir.',
             etiket: ['Hesap tablosu', 'Formül', 'Veri'], kavram: 'Hücre ve aralık başvurusu, formül, fonksiyon, göreli ve mutlak ($) başvuru, doldurma, koşullu fonksiyonlar, yüzde ve yuvarlama', sure: 'Görev başı 3–8 dk',
@@ -194,6 +200,7 @@
         { id: 'veribilimci', ad: 'Veri Bilimci', ikon: 'fa-chart-column', aciklama: 'Veri Bilimi Atölyesi\'nin bütün bölümlerini bitir', kosul: () => tamam('veri') },
         { id: 'donanim', ad: 'Donanım Ustası', ikon: 'fa-microchip', aciklama: 'KodKart\'ın bütün görevlerini bitir', kosul: () => tamam('devre') },
         { id: 'onparmak', ad: 'On Parmak', ikon: 'fa-keyboard', aciklama: 'Klavye Ustası\'nın 20 dersini bitir', kosul: () => tamam('klavye') },
+        { id: 'bulmacaci', ad: 'Bulmaca Ustası', ikon: 'fa-puzzle-piece', aciklama: 'Bilişim Bulmacaları\'nın her türünü her zorlukta çöz', kosul: () => tamam('bulmaca') },
         { id: 'tablocu', ad: 'Formül Ustası', ikon: 'fa-table-cells', aciklama: 'Tablo Atölyesi\'nin bütün görevlerini bitir', kosul: () => tamam('tablo') },
         { id: 'teknisyen', ad: 'Teknisyen', ikon: 'fa-screwdriver-wrench', aciklama: 'Bilgisayarın İçi\'nin bütün bölümlerini bitir', kosul: () => tamam('donanim') },
         { id: 'ucyuz', ad: 'Üç Yüz Yıldız', ikon: 'fa-crown', aciklama: 'Toplam 300 yıldız topla', kosul: () => PARCALAR.reduce((t, p) => t + toplam(p.id), 0) >= 300 }
