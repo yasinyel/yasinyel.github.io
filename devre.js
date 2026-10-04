@@ -36,11 +36,37 @@
         if (!acikMi(+b.dataset.i)) { KL.bildir('Önce önceki görevi bitir!'); return; }
         gorevAc(+b.dataset.i);
     };
+    // Blok programını okunur metne çevirir (İpucu Asistanı'ndaki örnek program için)
+    function programMetni(liste, g = 0) {
+        const satir = (d) => {
+            if (d.t === 'eger' || d.t === 'eger_degilse') { const k = (D.KOSULLAR.find(x => x[0] === d.k) || [d.k, d.k])[1]; return 'eğer ' + (k.includes('sayı') ? k.replace('sayı', d.n) : k); }
+            return satirGenel(d);
+        };
+        const satirGenel = (d) => (tanim[d.t] ? tanim[d.t].parca : []).map(p => {
+            if (p[0] === 'm') return p[1];
+            const v = d[p[1]];
+            if (p[0] === 's') { const ops = typeof p[3] === 'function' ? p[3]() : p[3]; const o = (ops || []).find(x => x[0] === v); return o ? o[1] : v; }
+            return v;
+        }).join(' ');
+        return liste.map(d => '  '.repeat(g) + satir(d) + '\n' + (d.govde ? programMetni(d.govde, g + 1) : '') + (d.govde2 ? '  '.repeat(g) + 'değilse\n' + programMetni(d.govde2, g + 1) : '')).join('');
+    }
+    let ipucuKont = null; // İpucu Asistanı
     function gorevAc(i) {
         durdur();
         gorevNo = i; gorev = D.GOREVLER[i];
         ed.izinliAyarla(gorev.bloklar || Object.keys(tanim));
         ed.yukle(kayit.proje[gorev.id] || []);
+        // İpucu Asistanı (serbest atölyede yok)
+        if (ipucuKont) { ipucuKont.kaldir(); ipucuKont = null; }
+        const t = (window.DEVRE_IPUCLARI || {})[gorev.id], cozum = D.COZUMLER[gorev.id];
+        if (!gorev.serbest && t) ipucuKont = KL.ipucu({
+            etkinlik: 'devre', bolum: gorev.id, yer: $('ipucuYer'),
+            basamaklar: [t[0], t[1], cozum ? {
+                metin: `Örnek program:<pre>${programMetni(cozum).replace(/&/g, '&amp;').replace(/</g, '&lt;')}</pre>`,
+                uygulaYazi: 'Bu programı yükle',
+                uygula: () => { durdur(); ed.yukle(JSON.parse(JSON.stringify(cozum))); kayit.proje[gorev.id] = JSON.parse(JSON.stringify(cozum)); KL.yaz('devre', kayit); }
+            } : null]
+        });
         gorevKartCiz();
         gorevBarCiz();
         ekranCiz(null);
@@ -60,12 +86,13 @@
         const s = D.denetle(gorev, { betikler: model });
         gorevKartCiz(s);
         if (s.every(x => x.gecti)) {
-            const d = kayit.deneme[gorev.id] || 0, y = d <= 1 ? 3 : d <= 3 ? 2 : 1;
+            const d = kayit.deneme[gorev.id] || 0, normal = d <= 1 ? 3 : d <= 3 ? 2 : 1;
+            const y = Math.min(normal, ipucuKont ? ipucuKont.yildizSiniri() : 3);
             kayit.yildiz[gorev.id] = Math.max(kayit.yildiz[gorev.id] || 0, y);
             KL.yaz('devre', kayit); gorevBarCiz();
             $('kBaslik').textContent = y === 3 ? 'Harika bir mühendis!' : 'Görev tamam!';
             $('kYildiz').innerHTML = KL.yildizHTML(y);
-            $('kMetin').textContent = y === 3 ? 'Programın bütün denemeleri geçti.' : `Programın ${d + 1}. kontrolde geçti. Daha az denemeyle 3 yıldız alabilirsin.`;
+            $('kMetin').textContent = y < normal ? `Programın çalışıyor! İpucu kullandığın için ${y} yıldız. Görevi kendi başına tekrar yaparsan 3 yıldız alabilirsin.` : y === 3 ? 'Programın bütün denemeleri geçti.' : `Programın ${d + 1}. kontrolde geçti. Daha az denemeyle 3 yıldız alabilirsin.`;
             $('kSonraki').hidden = gorevNo === D.GOREVLER.length - 1;
             if (y === 3) KL.konfeti(); else KL.ses('kazan');
             $('kazandi').showModal();
@@ -73,6 +100,7 @@
             kayit.deneme[gorev.id] = (kayit.deneme[gorev.id] || 0) + 1; KL.yaz('devre', kayit);
             KL.ses('yanlis');
             KL.bildir(`${s.filter(x => !x.gecti).length} kontrol geçmedi. Kırmızı olanlara bak, kartı çalıştırıp kendin dene.`);
+            if (ipucuKont) ipucuKont.yanlis();
         }
     }
     $('kKal').onclick = () => $('kazandi').close();
