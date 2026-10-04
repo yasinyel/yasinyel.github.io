@@ -42,6 +42,7 @@
     const fonksiyonlar = () => program.filter(s => s.t === 'tanim').map(s => s.ad);
 
     // ---------- Durum ----------
+    let ipucuKont = null; // İpucu Asistanı
     let no = 0, bolum = null, program = [], mod = kayit.mod || 'blok', calisiyor = false, animasyon = null;
     const bolumAcik = (i) => i === SERBEST || ogretmen || i === 0 || (kayit.yildiz[i - 1] || 0) > 0;
 
@@ -73,6 +74,25 @@
         bolumleriCiz();
         modUygula();
         hedefCiz();
+        // İpucu Asistanı (serbest çizimde yok)
+        if (ipucuKont) { ipucuKont.kaldir(); ipucuKont = null; }
+        if (i !== SERBEST) {
+            const t = (window.CIZIM_IPUCLARI || [])[i] || ['Tuvaldeki soluk hedef çizime bak: robot nereden başlıyor, nerede dönüyor?', 'Tekrar eden parçaları "tekrarla" bloğuna koy.'];
+            const cozum = bolum.cozum, py = C.pythonYaz(cozum).replace('from turtle import *\n\n', '');
+            ipucuKont = KL.ipucu({
+                etkinlik: 'cizim', bolum: i, yer: $('ipucuYer'),
+                basamaklar: [t[0], t[1], {
+                    metin: `Örnek çözümün Python hali (bloklarla da aynısı):<pre>${py.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</pre>`,
+                    uygulaYazi: 'Çözümü yükle',
+                    uygula: () => {
+                        durdur();
+                        if (mod === 'blok') { program = JSON.parse(JSON.stringify(cozum)); kayit.prog[no] = program; KL.yaz('cizim', kayit); alanCiz(); }
+                        else { $('py').value = C.pythonYaz(cozum); $('py').dispatchEvent(new Event('input')); }
+                        sayacGuncelle();
+                    }
+                }]
+            });
+        }
         sahneSifirla();
         durum('');
     }
@@ -362,12 +382,12 @@
     function calistir() {
         if (calisiyor) { durdur(); return; }
         const h = programHazirla();
-        if (h.hata) { durum(h.hata, 'bad'); KL.ses('yanlis'); return; }
+        if (h.hata) { durum(h.hata, 'bad'); KL.ses('yanlis'); if (ipucuKont) ipucuKont.yanlis(); return; }
         let sonuc;
         try { sonuc = C.calistir(h.program, bolum.bas); }
         catch (e) {
             if (!(e instanceof C.CizimHatasi)) throw e;
-            durum((e.satir ? `Satır ${e.satir}: ` : '') + e.message, 'bad'); KL.ses('yanlis'); return;
+            durum((e.satir ? `Satır ${e.satir}: ` : '') + e.message, 'bad'); KL.ses('yanlis'); if (ipucuKont) ipucuKont.yanlis(); return;
         }
         sahneSifirla();
         durum('');
@@ -425,18 +445,21 @@
             else if (bolum.renkOnemli && C.karsilastir(hedefCizgiler, sonuc.cizgiler, false).tamam) m = 'Şekil doğru ama renkler farklı!';
             else m += 'Uzunluklara ve dönüş açılarına bak.';
             durum(m, 'bad');
+            if (ipucuKont) ipucuKont.yanlis();
             return;
         }
         const n = C.blokSayisi(prog);
         const hedef = bolum.enFazla || C.blokSayisi(bolum.cozum);
-        const y = n <= hedef ? 3 : n <= hedef + 3 ? 2 : 1;
+        const normal = n <= hedef ? 3 : n <= hedef + 3 ? 2 : 1;
+        const y = Math.min(normal, ipucuKont ? ipucuKont.yildizSiniri() : 3);
         kayit.yildiz[no] = Math.max(kayit.yildiz[no] || 0, y);
         KL.yaz('cizim', kayit);
         bolumleriCiz();
         durum('Çizim hedefle aynı!', 'ok');
         $('kBaslik').textContent = y === 3 ? 'Mükemmel!' : 'Başardın!';
         $('kYildiz').innerHTML = KL.yildizHTML(y);
-        $('kMetin').textContent = y === 3 ? `${n} ${mod === 'blok' ? 'blokla' : 'komutla'} çizdin. Tam bir sanatçı gibi!`
+        $('kMetin').textContent = y < normal ? `Çizim tamam! İpucu kullandığın için ${y} yıldız. Bölümü tekrar açıp kendin çizersen 3 yıldız alabilirsin.`
+            : y === 3 ? `${n} ${mod === 'blok' ? 'blokla' : 'komutla'} çizdin. Tam bir sanatçı gibi!`
             : `${n} ${mod === 'blok' ? 'blok' : 'komut'} kullandın. ${hedef} ya da daha azıyla 3 yıldız alabilirsin; tekrar eden kısımları döngüye al.`;
         $('kSonraki').hidden = no === C.BOLUMLER.length - 1;
         if (y === 3) KL.konfeti(); else KL.ses('kazan');
