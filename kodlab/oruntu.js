@@ -35,6 +35,18 @@
         { ad: 'Büyüyen örüntü', buyuyen: true }
     ];
 
+    // İpucu Asistanı: [düşündüren soru, ipucu]; üçüncü basamak yanlış bir seçeneği eler
+    const IPUCLARI = [
+        ['Hangi iki şey sırayla tekrar ediyor?', 'Parmağınla göster ve sesli söyle: "elma, muz, elma, muz…" Sıradaki ne?'],
+        ['Kaç farklı şey var? Hangisi hep en sonda geliyor?', 'Üç şey sırayla tekrar ediyor. Üçerli gruplara ayır, son grubu tamamla.'],
+        ['Aynı şeyden yan yana kaç tane var?', 'Örüntü: iki tane aynı, bir tane farklı. İkişerli ve tekli grupları say.'],
+        ['Bu kez hangisi iki kez geliyor?', 'Örüntü: bir tane, sonra aynı şeyden iki tane. Son grubu tamamla.'],
+        ['Her şeyden yan yana kaç tane var?', 'İkişer ikişer: iki tane biri, iki tane diğeri. Son ikiliyi tamamla.'],
+        ['Soru işaretinin solunda ve sağında ne var?', 'Önce tekrar eden parçayı bul. Sonra soru işaretinden önceki ve sonraki şeylere bakarak boşluğu doldur.'],
+        ['Şekil ve renk aynı kurala mı uyuyor? Önce yalnızca şekillere bak.', 'Şekil ve renk ayrı ayrı tekrar ediyor. Önce sıradaki şekli bul, sonra sıradaki rengi. İkisini birleştir.'],
+        ['Her grupta mavi kaç tane? 1, 2, 3, …', 'Her seferinde bir tane daha ekleniyor. Son gruptaki ikinci şeyden kaç tane var, bir sonrakinde kaç olmalı?']
+    ];
+    let ipucuKont = null;
     let sv = 0, tur = 0, hata = 0, soru = null, kilit = false;
 
     function goster(id) { ['liste', 'oyun', 'sonuc'].forEach(s => { $(s).hidden = s !== id; }); window.scrollTo(0, 0); }
@@ -65,6 +77,14 @@
     function basla(i) {
         sv = i; tur = 0; hata = 0;
         $('gTitle').textContent = SEVIYELER[i].ad;
+        if (ipucuKont) ipucuKont.kaldir();
+        ipucuKont = KL.ipucu({ etkinlik: 'oruntu', bolum: i, yer: $('ipucuYer'), basamaklar: [IPUCLARI[i][0], IPUCLARI[i][1], {
+            metin: 'Yanlış bir seçeneği senin için eleyebilirim. Kalan iki seçenekten doğruyu sen bul!', uygulaYazi: 'Bir yanlışı ele', bildiri: '',
+            uygula: () => {
+                const i = soru.secenekler.findIndex((x, j) => !ayni(x, soru.dogru) && !$('opts').children[j].classList.contains('hata'));
+                if (i >= 0) $('opts').children[i].classList.add('hata');
+            }
+        }] });
         goster('oyun');
         yeniTur();
     }
@@ -141,6 +161,7 @@
             setTimeout(() => (tur < TUR ? yeniTur() : bitir()), 900);
         } else {
             hata++;
+            if (ipucuKont) ipucuKont.yanlis();
             KL.ses('yanlis');
             b.classList.add('hata');
         }
@@ -149,7 +170,7 @@
     document.addEventListener('keydown', (e) => { if (!$('oyun').hidden && /^[1-3]$/.test(e.key)) sec(+e.key - 1); });
 
     function bitir() {
-        const y = hata === 0 ? 3 : hata <= 2 ? 2 : 1;
+        const y = Math.min(hata === 0 ? 3 : hata <= 2 ? 2 : 1, ipucuKont ? ipucuKont.yildizSiniri() : 3);
         if (y > (kayit.yildiz[sv] || 0)) { kayit.yildiz[sv] = y; KL.yaz('oruntu', kayit); }
         $('rTitle').textContent = y === 3 ? 'Süpersin!' : 'Aferin!';
         $('rStars').innerHTML = KL.yildizHTML(y);

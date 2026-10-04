@@ -25,6 +25,43 @@
         if (c && !c.disabled) basla(+c.dataset.i);
     });
 
+    // İpucu Asistanı metinleri: [düşündüren soru, somut ipucu]
+    const IPUCLARI = [
+        ['Anahtar kapalıyken (0) lamba yanıyor mu? Anahtarı açınca ne değişiyor?', 'DEĞİL kapısı girişin tersini verir: 0 → 1, 1 → 0. Anahtarı bir kez aç, bir kez kapat; tablo dolar.'],
+        ['İki anahtarın kaç farklı durumu var? 00, 01, …', 'VE kapısı yalnızca iki giriş de 1 iken 1 verir. Dört durumu sırayla dene; her seferinde tek bir anahtarı değiştir.'],
+        ['Lambanın yanması için kaç anahtarın açık olması yeter?', 'VEYA kapısı en az bir giriş 1 ise 1 verir; yalnızca ikisi de 0 iken 0. Dört durumu dene.'],
+        ['İki anahtar da açıkken lamba yanmalı mı? Tablodaki hedef sütununa bak.', 'Girişler farklıyken 1 veren kapı <b>ÖZEL VEYA (XOR)</b>dur. Soru işaretli kapıya tıklayarak XOR\'u seç.'],
+        ['Lamba yalnızca iki anahtar birlikte açıkken sönüyor. Bu hangi kapının tam tersi?', 'Sağdaki DEĞİL sabit. Soldaki kapı <b>VE</b> olursa: VE\'nin tersi, yalnızca ikisi de 1 iken 0 verir.'],
+        ['Cümledeki "ve" ile "ya da" kelimelerini bul. Hangi ikisi önce birleşiyor?', '"Kapı açık VE alarm kurulu" ilk kapıdır (VE). Bunun sonucu "ya da cam kırık" ikinci kapıdır (VEYA).'],
+        ['Üç anahtarın kaç farklı durumu var? 2 × 2 × 2 = ?', '8 durum var. İkilik sayar gibi sırayla dene: 000, 001, 010, 011, 100, 101, 110, 111.'],
+        ['"Yalnızca biri" ile "en az biri" arasındaki fark ne? Hangi durumda ayrılıyorlar?', 'XOR = (A VEYA B) VE DEĞİL(A VE B). Yani en az biri açık olacak, ama ikisi birden açık olmayacak.'],
+        ['En az iki kişi "evet" demeli. Hangi ikililer olabilir?', 'Her ikili için bir VE kapısı (A VE B, A VE C, B VE C); sonuçları VEYA kapılarıyla birleştir.'],
+        ['1 + 1 ikilikte kaçtır? Hangi durumda elde oluşur?', 'Elde = A VE B (ikisi de 1 ise). Toplam = A XOR B (yalnızca biri 1 ise).'],
+        ['Üç biti toplarken toplam ne zaman 1 olur, elde ne zaman çıkar?', 'Önce A ile B\'yi yarım toplayıcıyla topla, sonra çıkan toplamı Eg ile topla. İki eldeden biri 1 ise son elde 1 olur (VEYA).']
+    ];
+    let ipucuKont = null;
+    function ipucuKur() {
+        if (ipucuKont) ipucuKont.kaldir();
+        const t = IPUCLARI[no] || IPUCLARI[0];
+        const cozumMetni = b.tur === 'sec'
+            ? 'Soru işaretli kapılar:<br>' + b.dugumler.filter(d => d.tip === '?').map(d => {
+                const ad = (x) => { const j = b.dugumler.findIndex(e => e.id === x); return j < 0 ? x : `${j + 1}. kapının çıkışı`; };
+                return `• ${d.giris.map(ad).join(' ile ')} → <b>${b.cozum[d.id]}</b>`;
+            }).join('<br>')
+            : 'Bütün durumları tabloya yerleştirebilirim. Sonra her satırda lambanın neden yandığını ya da sönmediğini kendine açıkla.';
+        ipucuKont = KL.ipucu({
+            etkinlik: 'mantik', bolum: no, yer: $('ipucuYer'),
+            basamaklar: [t[0], t[1], {
+                metin: cozumMetni, uygulaYazi: b.tur === 'sec' ? 'Kapıları yerleştir' : 'Tabloyu doldur',
+                bildiri: 'Çözüm yerleştirildi. Tablodaki her satırın neden böyle olduğunu incele.',
+                uygula: () => {
+                    if (b.tur === 'sec') Object.assign(secim, b.cozum);
+                    else for (const k of M.kombinasyonlar(b.girisler.length)) bulunan[anahtar(k)] = M.hesapla(b, k, {}).cikis[0];
+                    ciz();
+                }
+            }]
+        });
+    }
     function basla(i) {
         no = i; b = M.BOLUMLER[i];
         girisler = b.girisler.map(() => false);
@@ -34,6 +71,7 @@
         $('ttBaslik').textContent = b.tur === 'yak' ? 'Keşfettiğin durumlar' : 'Doğruluk tablosu: hedef ve senin devren';
         goster('oyun');
         if (b.tur === 'yak') kesfet();
+        ipucuKur();
         ciz();
     }
 
@@ -161,9 +199,9 @@
         const kombs = M.kombinasyonlar(b.girisler.length).length;
         let enAz;
         if (b.tur === 'sec') enAz = b.dugumler.filter(d => d.tip === '?').reduce((t, d) => t + d.izin.indexOf(b.cozum[d.id]) + 1, 0);
-        const y = b.tur === 'yak'
+        const y = Math.min(ipucuKont ? ipucuKont.yildizSiniri() : 3, b.tur === 'yak'
             ? (tiklama <= kombs ? 3 : tiklama <= kombs * 2 ? 2 : 1)
-            : (tiklama <= enAz + 2 ? 3 : tiklama <= enAz * 2 + 4 ? 2 : 1);
+            : (tiklama <= enAz + 2 ? 3 : tiklama <= enAz * 2 + 4 ? 2 : 1));
         if (y > (kayit[no] || 0)) { kayit[no] = y; KL.yaz('mantik', kayit); }
         const son = no === M.BOLUMLER.length - 1;
         $('durum').className = 'card durum tebrik ok';
@@ -180,7 +218,7 @@
     function girisDegistir(i) {
         if (bitti && b.tur === 'yak') return;
         girisler[i] = !girisler[i];
-        if (b.tur === 'yak') { tiklama++; kesfet(); }
+        if (b.tur === 'yak') { tiklama++; kesfet(); if (ipucuKont && tiklama > M.kombinasyonlar(b.girisler.length).length * 2 && tiklama % 3 === 0) ipucuKont.yanlis(); }
         KL.ses('tik');
         ciz();
     }
@@ -190,6 +228,7 @@
         const i = d.izin.indexOf(secim[id]);
         secim[id] = d.izin[(i + 1) % d.izin.length];
         tiklama++;
+        if (ipucuKont && tiklama > 8 && tiklama % 4 === 0) ipucuKont.yanlis();
         KL.ses('tik');
         ciz();
     }

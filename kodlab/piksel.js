@@ -27,6 +27,25 @@
     let piksel = [];       // boyanan resim
     let w = 8, h = 8, renk = 1, boyuyor = false, tasarim = false, kodGizli = false, bulmacaNo = null;
 
+    let ipucuKont = null, hataliSay = 0;
+    function ipucuKur() {
+        if (ipucuKont) ipucuKont.kaldir();
+        hataliSay = 0;
+        ipucuKont = KL.ipucu({ etkinlik: 'piksel', bolum: bulmacaNo ?? 'ozel', yer: $('ipucuYer'), basamaklar: [
+            'Bir satırdaki sayıları toplarsan kaç çıkar? Bu toplam satırın genişliğine eşit mi?',
+            'Satır kodunu soldan sağa uygula: örneğin <b>2 ⬜ 4 ⬛ 2 ⬜</b> → önce 2 kare beyaz bırak, sonra 4 kare siyah boya, kalan 2 kare beyaz. Her satırın yanında ✓ çıkana kadar devam et.',
+            { metin: 'Yanlış renge boyadığın kareleri kırmızı çerçeveyle işaretleyebilirim. Eksik kareleri ise satır kodlarına bakarak sen bul!', uygulaYazi: 'Yanlış kareleri göster', bildiri: '',
+              uygula: () => {
+                  let yanlis = 0, eksik = 0;
+                  piksel.forEach((s, y) => s.forEach((c, x) => {
+                      if (c === hedef[y][x]) return;
+                      if (c === 0) eksik++;
+                      else { yanlis++; $('board').children[y * (w + 1) + 1 + x].classList.add('wrong'); }
+                  }));
+                  KL.bildir((yanlis ? `${yanlis} kare yanlış boyanmış. ` : 'Yanlış boyanmış kare yok. ') + (eksik ? `${eksik} kare daha boyanmalı.` : ''), 3500);
+              } }
+        ] });
+    }
     const cevir = (satirlar) => satirlar.map(s => [...s].map(c => HARF[c]));
 
     // Satırı "kaç tane, hangi renk" çiftlerine çevir
@@ -82,6 +101,7 @@
         paletCiz(kullanilan.includes(0) ? kullanilan : [0, ...kullanilan]);
         $('gTitle').textContent = baslik || (no !== null && kayit.tamam[no] ? BULMACALAR[no].ad : `Bulmaca ${no + 1}`);
         $('solvePanel').hidden = false; $('designPanel').hidden = true;
+        ipucuKur();
         goster('oyun');
         tahtaCiz();
     }
@@ -158,7 +178,11 @@
         hucreBoya(x, y);
         satirKodCiz(y);
         if (tasarim) istatistik();
-        else kontrol();
+        else {
+            // Hedefte beyaz olan bir kareyi boyamak takılma işareti olabilir
+            if (renk !== 0 && hedef[y][x] !== renk && ipucuKont && ++hataliSay % 4 === 0) ipucuKont.yanlis();
+            kontrol();
+        }
     }
     $('board').addEventListener('pointerdown', (e) => {
         if (!e.target.classList.contains('px')) return;

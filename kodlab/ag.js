@@ -15,7 +15,19 @@
         { id: 'ip', ad: 'IP Adresi Dedektifi', ikon: 'fa-network-wired', renk: '#8b5cf6', sinif: '6. – 12. sınıf', ozet: 'Hangi adres geçerli, hangisi sahte?',
           anlatim: 'IPv4 adresi noktalarla ayrılmış <b>4 sayıdan</b> oluşur. Her sayı 1 bayttır (8 bit), bu yüzden <b>0 ile 255</b> arasında olmalıdır. Örneğin 192.168.1.10 geçerli bir adrestir.' }
     ];
-    let bolum = null, hata = 0;
+    let bolum = null, hata = 0, ipucuKont = null, cozumYardim = () => '';
+    const IPUCLARI = {
+        paket: ['Bir mesajın sırasını ne belirler: paketlerin geliş sırası mı, başlıklarındaki numara mı?', 'Önce <b>#1</b> numaralı paketi bul, sonra #2, #3… Aradığın numara gelen paketlerin hiçbirinde yoksa, o paket yolda kaybolmuştur: "Sıradaki paket gelmedi!" düğmesine bas.'],
+        yonlendir: ['Daha az durak her zaman daha hızlı mıdır? Tellerin üstündeki sayılar neyi gösteriyor?', 'Her olası yolun gecikmelerini <b>topla</b> ve en küçük toplamı seç. Kablo koparsa, bulunduğun yerden yeniden hesapla.'],
+        dns: ['Bir site adını sağdan sola okursan ilk ne görürsün? (.tr, .com, .org)', 'Sıra her zaman aynıdır: önce <b>kök sunucu</b>, sonra uzantının sunucusu (.tr / .com / .org), en son sitenin kendi ad sunucusu.'],
+        ip: ['Noktalarla ayrılmış kaç parça olmalı? Her parça en fazla kaç olabilir?', 'Kontrol listesi: tam <b>4 parça</b> var mı? Hepsi rakamdan mı oluşuyor? Hepsi <b>0 ile 255</b> arasında mı? Üçüne de evet ise geçerlidir.']
+    };
+    function ipucuKur() {
+        if (ipucuKont) ipucuKont.kaldir();
+        const t = IPUCLARI[bolum.id];
+        ipucuKont = KL.ipucu({ etkinlik: 'ag', bolum: bolum.id, yer: $('ipucuYer'), basamaklar: [t[0], t[1], { metin: () => cozumYardim() || 'Şu anki soruya göre çözüm burada görünecek.' }] });
+    }
+    const hataYap = () => { hata++; if (ipucuKont) ipucuKont.yanlis(); };
     function goster(id) { ['liste', 'oyun', 'sonuc'].forEach(s => { $(s).hidden = s !== id; }); window.scrollTo(0, 0); }
     function listeCiz() {
         $('bolumler').innerHTML = BOLUMLER.map(b => `<button class="card bol" data-id="${b.id}"><span class="ik" style="background:${b.renk}"><i class="fas ${b.ikon}"></i></span>
@@ -27,11 +39,13 @@
         bolum = BOLUMLER.find(b => b.id === id); hata = 0;
         $('baslik').textContent = bolum.ad; $('anlatim').innerHTML = bolum.anlatim; $('dots').innerHTML = '';
         goster('oyun');
+        cozumYardim = () => '';
+        ipucuKur();
         ({ paket, yonlendir, dns, ip })[id]();
     }
     const noktalar = (n, i) => { $('dots').innerHTML = Array.from({ length: n }, (_, j) => `<span class="${j < i ? 'ok' : j === i ? 'cur' : ''}"></span>`).join(''); };
     function bitir(y, metin) {
-        y = y ?? (hata === 0 ? 3 : hata <= 2 ? 2 : 1);
+        y = Math.min(y ?? (hata === 0 ? 3 : hata <= 2 ? 2 : 1), ipucuKont ? ipucuKont.yildizSiniri() : 3);
         if (y > (kayit[bolum.id] || 0)) { kayit[bolum.id] = y; KL.yaz('ag', kayit); }
         $('sBaslik').textContent = y === 3 ? 'İnternet ustası!' : 'Bölüm tamam!';
         $('sYildiz').innerHTML = KL.yildizHTML(y);
@@ -49,6 +63,9 @@
             const q = A.paketSorusu(tur > 0);
             let beklenen = 1;
             const n = q.paketler.length;
+            cozumYardim = () => beklenen > n ? 'Bu mesaj tamam!' : q.kayip === beklenen
+                ? `Sıradaki paket <b>#${beklenen}</b>. Gelen paketlere bak: #${beklenen} hiçbirinde yok. Yani kaybolmuş, "Sıradaki paket gelmedi!" düğmesine basmalısın.`
+                : `Sıradaki paket <b>#${beklenen}</b>: başlığında "Sıra: ${beklenen}/${n}" yazan paketi seç. Onun verisi: "${q.paketler[beklenen - 1].veri}".`;
             $('icerik').innerHTML = `<div class="card panel">
                 <p style="font-weight:700;margin-bottom:8px">Alınan mesaj</p><div class="yuvalar" id="yuvalar">${q.paketler.map(p => `<div class="yuva" data-s="${p.sira}">#${p.sira}</div>`).join('')}</div>
                 <p style="font-weight:700;margin-bottom:8px">Gelen paketler <small style="color:var(--muted);font-weight:500">— sıradaki paketi seç</small></p>
@@ -71,7 +88,7 @@
                 const b = e.target.closest('.paket'); if (!b) return;
                 const s = +b.dataset.s;
                 if (s !== beklenen) {
-                    hata++; KL.ses('yanlis');
+                    hataYap(); KL.ses('yanlis');
                     b.classList.remove('hata'); b.offsetWidth; b.classList.add('hata');
                     $('fb').className = 'fb bad'; $('fb').textContent = `Sıradaki paket #${beklenen} olmalı. Paket başlıklarındaki sıra numarasına bak.`;
                     return;
@@ -81,7 +98,7 @@
             };
             $('eksik').onclick = () => {
                 if (q.kayip !== beklenen) {
-                    hata++; KL.ses('yanlis');
+                    hataYap(); KL.ses('yanlis');
                     $('fb').className = 'fb bad'; $('fb').textContent = `#${beklenen} numaralı paket gelen paketlerin arasında var, dikkatli bak!`;
                     return;
                 }
@@ -101,6 +118,12 @@
             noktalar(A.AGLAR.length, agNo);
             const ag = A.AGLAR[agNo];
             let simdi = 'K', yol = ['K'], sure = 0, kopuk = null, ttl = ag.ttl || 12, hareket = false;
+            cozumYardim = () => {
+                if (simdi === 'H') return 'Paket hedefte. "Tekrar dene" ile en hızlı yolu bulmaya çalış.';
+                const e = A.enKisaYol(ag, simdi, kopuk);
+                if (!e.yol) return 'Buradan hedefe yol kalmadı; paketi yeniden gönder.';
+                return `Bulunduğun yerden en hızlı yol: <b>${e.yol.map(d => d === 'K' ? 'Sen' : d === 'H' ? 'Hedef' : d).join(' → ')}</b> (toplam ${e.sure} ms). Gecikmeleri tek tek toplayarak kontrol et.`;
+            };
             $('icerik').innerHTML = `<div class="iki">
                 <div class="card panel"><div class="ag-sec" id="agSec" style="margin-bottom:10px">${A.AGLAR.map((a, i) => `<button class="${i === agNo ? 'sel' : ''} ${yildizlar[i] ? 'bitti' : ''}" data-i="${i}">${i + 1}. ${a.ad}</button>`).join('')}</div>
                     <svg class="ag" id="ag" viewBox="-4 4 108 92" role="img" aria-label="Ağ haritası"></svg></div>
@@ -152,7 +175,7 @@
                     ciz();
                     if (simdi === 'H') return vardi();
                     if (ttl <= 0) {
-                        KL.ses('yanlis'); hata++;
+                        KL.ses('yanlis'); hataYap();
                         $('fb').className = 'fb bad'; $('fb').textContent = 'TTL sıfırlandı: paket çok fazla dolaştığı için bir yönlendirici onu çöpe attı! Bu, sonsuza kadar dolaşan paketleri önler.';
                         $('sonucAlan').innerHTML = '<button class="btn btn-primary" id="yeniden" style="width:100%;margin-top:8px">Paketi yeniden gönder</button>';
                         $('yeniden').onclick = sec;
@@ -167,7 +190,8 @@
                 // En iyi süre: bağlantı koptuysa, kopma noktasına kadar en iyi + oradan kopuk ağdaki en iyi
                 let enIyi = A.enKisaYol(ag).sure;
                 if (kopuk) enIyi = A.enKisaYol(ag, 'K', null, ag.kopma[0]).sure + A.enKisaYol(ag, ag.kopma[0], ag.kopma).sure;
-                const y = sure <= enIyi ? 3 : sure <= enIyi * 1.3 ? 2 : 1;
+                const y = Math.min(sure <= enIyi ? 3 : sure <= enIyi * 1.3 ? 2 : 1, ipucuKont ? ipucuKont.yildizSiniri() : 3);
+                if (y < 3 && ipucuKont) ipucuKont.yanlis();
                 yildizlar[agNo] = Math.max(yildizlar[agNo] || 0, y);
                 KL.yaz('ag.yonlendir', yildizlar);
                 KL.ses(y === 3 ? 'dogru' : 'kazan');
@@ -195,6 +219,11 @@
             noktalar(TUR, tur);
             const q = A.dnsSorusu();
             let adim = 0;
+            cozumYardim = () => {
+                if (adim >= 3) return 'Adres bulundu!';
+                const ad = ['Kök sunucu her sorguya en tepeden başlar', `".${q.alan.split('.').pop()}" uzantısını bu sunucu bilir`, 'Sitenin kendi ad sunucusu IP adresini verir'][adim];
+                return `Şimdi sorman gereken: <b>${q.adimlar[adim].sunucu}</b>. ${ad}.`;
+            };
             const sunucular = KL.karistir([...q.adimlar.map(a => a.sunucu), ...KL.karistir(q.yanlis).slice(0, 3)]);
             $('icerik').innerHTML = `<div class="iki"><div class="card panel">
                 <div class="tarayici"><div class="adres"><i class="fas fa-magnifying-glass"></i> ${q.alan}</div><div class="sayfa" id="sayfa">Bilgisayarın bu sitenin IP adresini bilmiyor. Kime sormalı?</div></div>
@@ -205,7 +234,7 @@
                 const b = e.target.closest('.sunucu'); if (!b || adim >= 3) return;
                 const s = b.dataset.s, beklenen = q.adimlar[adim].sunucu;
                 if (s !== beklenen) {
-                    hata++; KL.ses('yanlis');
+                    hataYap(); KL.ses('yanlis');
                     b.classList.remove('hata'); b.offsetWidth; b.classList.add('hata');
                     $('fb').className = 'fb bad';
                     $('fb').textContent = adim === 0 ? 'Her DNS sorgusu en tepeden, kök sunucudan başlar.' : 'Son cevabı tekrar oku: kimi sorman söylendi?';
@@ -234,13 +263,18 @@
         const yeni = () => {
             noktalar(TUR, tur);
             const q = A.ipSorusu();
+            cozumYardim = () => {
+                const p = q.ip.split('.');
+                const sat = p.map(x => `<code>${x}</code> ${/^\d+$/.test(x) && +x <= 255 ? '✓' : '✗'}`).join(' · ');
+                return `Parça sayısı: <b>${p.length}</b> ${p.length === 4 ? '✓' : '✗'}<br>${sat}<br>${q.gecerli ? 'Hepsi tamam: <b>geçerli</b>.' : 'Bir kural bozuluyor: <b>geçersiz</b>.'}`;
+            };
             $('icerik').innerHTML = `<div class="card panel ip-kart"><p style="color:var(--muted)">Bu IP adresi geçerli mi?</p><div class="ip">${q.ip}</div>
                 <div class="karar" id="karar"><button class="btn" data-k="1"><i class="fas fa-check" style="color:var(--ok)"></i> Geçerli</button><button class="btn" data-k="0"><i class="fas fa-xmark" style="color:var(--bad)"></i> Geçersiz</button></div><p class="fb" id="fb"></p></div>`;
             $('karar').onclick = (e) => {
                 const b = e.target.closest('button'); if (!b || $('karar').dataset.bitti) return;
                 $('karar').dataset.bitti = '1';
                 const dogru = (b.dataset.k === '1') === q.gecerli;
-                if (!dogru) hata++;
+                if (!dogru) hataYap();
                 KL.ses(dogru ? 'dogru' : 'yanlis');
                 $('fb').className = 'fb ' + (dogru ? 'ok' : 'bad');
                 $('fb').textContent = (dogru ? 'Doğru! ' : 'Olmadı. ') + q.neden;
