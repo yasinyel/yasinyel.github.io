@@ -13,6 +13,16 @@
             destek: 'İlk dersleri tekrarlatın; ekran klavyesindeki renkli ipuçlarını açık tutun.',
             zenginlestirme: 'Büyük harf, noktalama ve rakam derslerine geçip hız testinde rekor denemesi yapsınlar.'
         },
+        bulmaca: {
+            hedefler: ['Bir problemi kurallarına göre adım adım, tahmin etmeden çözer.', 'Resimlerin sayılarla, verinin 0 ve 1\'lerle gösterildiğini açıklar.', 'Ağ yapısını ve XOR mantığını oyun içinde fark eder.'],
+            giris: 'Tahtaya 5×5 boş bir kareli tablo ve satır/sütun sayılarını yazın: "Bu sayılar bir resmi saklıyor. Bilgisayar resimleri böyle saklayabilir mi?"',
+            isinma: 'Tahtadaki piksel resmini sınıfça çözün; her adımda "Bu kareyi neden boyadık?" diye sorun.',
+            adimlar: ['Kolay seviyede Piksel Resim ve Işıkları Söndür ile başlayın.', 'Ortaokul ve lise İkili Bulmaca ve Ağı Kur\'a geçsin; her türün yanındaki "Bunun bilişimle ilgisi ne?" kutusunu birlikte okuyun.', 'Sonda bütün sınıf aynı numaralı bulmacayı (ya da günün bulmacasını) çözsün; en az ipucuyla bitirenleri tebrik edin.'],
+            tartisma: ['Tahmin etmek ile mantıkla çıkarım yapmak arasındaki fark nedir?', 'Aynı lambaya iki kez basmak neden hiçbir şey değiştirmez?', 'Bir ağda döngü olsaydı ne olurdu?'],
+            cikis: 'Kendi 5×5 piksel resminizi çizip satır ve sütun sayılarını yazın; arkadaşınız çözsün.',
+            destek: 'Kolay seviyede ipucu düğmesini kullanmalarına izin verin; ilk satırları birlikte çözün.',
+            zenginlestirme: 'Zor seviyede ipucusuz çözüm ve en az basışla Işıkları Söndür denemesi.'
+        },
         tablo: {
             hedefler: ['Hücre, satır, sütun ve aralık kavramlarını kullanır.', 'Hazır fonksiyonlarla (TOPLA, ORTALAMA, EĞER…) hesap yapar.', 'Göreli ve mutlak başvuru arasındaki farkı açıklar ve doldurmayı kullanır.'],
             giris: 'Sınıf kantininin bir haftalık satış listesini gösterin: "Toplamı hesap makinesiyle mi bulursunuz, yoksa bilgisayara mı yaptırırsınız? Bir fiyat değişirse ne olur?"',
