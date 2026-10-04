@@ -29,9 +29,10 @@ test('Rapor kodu gidip geliyor (Türkçe karakterlerle)', () => {
     const kod = K.raporOlustur({ ad: 'Çağrı Işık Öztürk', sinif: '9-Ş', no: '42' }, 'g123');
     const r = K.raporOku('Merhaba öğretmenim, kodum: ' + kod + ' teşekkürler');
     assert.strictEqual(r.ad, 'Çağrı Işık Öztürk'); assert.strictEqual(r.sinif, '9-Ş'); assert.strictEqual(r.gorev, 'g123');
-    assert.strictEqual(r.ilerleme.robot, '32000100000000' + '0'.repeat(36));
-    assert.strictEqual(r.ilerleme['sensin.lise'], '300000000002');
-    assert.strictEqual(r.ilerleme.algoritma, '003000' + '0'.repeat(9));
+    const dolgu = (id, s) => s.padEnd(K.parca(id).seviye, '0');
+    assert.strictEqual(r.ilerleme.robot, dolgu('robot', '320001'));
+    assert.strictEqual(r.ilerleme['sensin.lise'], dolgu('sensin.lise', '300000000002'));
+    assert.strictEqual(r.ilerleme.algoritma, dolgu('algoritma', '003'));
     assert.ok(kod.length < 300, 'kod çok uzun: ' + kod.length);
 });
 test('Bozuk kod reddediliyor', () => {
