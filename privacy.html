@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gizlilik Politikasi — Yasin Yel</title>
+    <title>Gizlilik Politikası — Yasin Yel</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -22,45 +22,71 @@
 <body>
     <div class="legal-content">
         <a href="index.html" class="back-link">&larr; Ana Sayfa</a>
-        <h1>Gizlilik Politikasi</h1>
-        <p class="date">Son guncelleme: 21 Mart 2026</p>
+        <h1>Gizlilik Politikası</h1>
+        <p class="date">Son güncelleme: 8 Ekim 2026</p>
 
-        <h2>1. Toplanan Bilgiler</h2>
-        <p>Ogrenci Takip Sistemi uygulamasi asagidaki bilgileri toplar:</p>
+        <p>Bu metin, Öğrenci Takip Sistemi uygulamasının ("Uygulama") hangi kişisel verileri hangi amaçla işlediğini ve 6698 sayılı Kişisel Verilerin Korunması Kanunu ("KVKK") kapsamındaki haklarınızı açıklar.</p>
+
+        <h2>1. Veri Sorumlusu</h2>
+        <p>Yasin Yel — <a href="mailto:yasinyel32@gmail.com" style="color: var(--accent);">yasinyel32@gmail.com</a></p>
+
+        <h2>2. Toplanan Bilgiler</h2>
         <ul>
-            <li>Hesap bilgileri (e-posta adresi, sifre)</li>
-            <li>Ogrenci bilgileri (ad soyad, sinif, brans, veli iletisim bilgileri)</li>
-            <li>Ders programi ve odeme bilgileri</li>
-            <li>Deneme sinavi sonuclari</li>
+            <li><strong>Öğretmen hesabı:</strong> ad soyad, e-posta adresi ve şifre. Şifreler Firebase Authentication tarafından şifrelenmiş olarak saklanır; tarafımızca görülemez.</li>
+            <li><strong>Veli hesabı:</strong> ad soyad, e-posta adresi, şifre ve hesabın bağlı olduğu öğrenci.</li>
+            <li><strong>Öğretmenin girdiği öğrenci bilgileri:</strong> ad soyad, sınıf, branş, hedef sınav, isteğe bağlı profil fotoğrafı ve veli adı, telefonu, e-posta adresi.</li>
+            <li><strong>Eğitim kayıtları:</strong> ders programı, ders durumları ve ders notları, ödevler (isteğe bağlı fotoğraf ekleriyle), deneme sınavı sonuçları, öğrenciye eklenen dosyalar.</li>
+            <li><strong>Ödeme kayıtları:</strong> öğretmenin girdiği ders ücretleri ve tahsilatlar. Uygulama kart veya banka bilgisi almaz.</li>
+            <li><strong>Abonelik durumu:</strong> aboneliğin aktif olup olmadığı ve bitiş tarihi (Apple ve RevenueCat üzerinden).</li>
         </ul>
 
-        <h2>2. Bilgilerin Kullanimi</h2>
-        <p>Toplanan bilgiler yalnizca uygulamanin islevselligini saglamak icin kullanilir:</p>
+        <h2>3. Bilgilerin Kullanım Amaçları</h2>
         <ul>
-            <li>Ogrenci ve ders yonetimi</li>
-            <li>Odeme takibi</li>
-            <li>Sinav sonucu analizi</li>
-            <li>Yerel bildirim gonderimi</li>
+            <li>Öğrenci, ders, ödev, sınav ve ödeme takibinin yapılması</li>
+            <li>Velinin, bağlı olduğu öğrencinin bilgilerini görebilmesi</li>
+            <li>Hesap yönetimi ve kimlik doğrulama</li>
+            <li>Cihaz üzerinde ders hatırlatma bildirimleri</li>
+            <li>Abonelik durumunun yönetilmesi</li>
         </ul>
+        <p>Veriler reklam, profilleme veya pazarlama amacıyla kullanılmaz.</p>
 
-        <h2>3. Veri Depolama</h2>
-        <p>Verileriniz Firebase (Google Cloud) altyapisinda guvenli bir sekilde saklanir. Veriler sifreli olarak iletilir ve depolanir.</p>
+        <h2>4. Öğrenci (Çocuk) Verileri</h2>
+        <p>Uygulama öğretmenler ve veliler tarafından kullanılmak üzere tasarlanmıştır; çocukların kendisi tarafından kullanılması amaçlanmamıştır. Öğrenci bilgileri öğretmen tarafından girilir. Öğretmen, bu bilgileri velinin bilgisi ve onayı dahilinde girmekten sorumludur. 13 yaşından küçük çocuklardan doğrudan veri toplanmaz.</p>
 
-        <h2>4. Ucuncu Taraf Hizmetleri</h2>
+        <h2>5. Veli Erişimi</h2>
+        <p>Veli, öğretmenin paylaştığı davet koduyla kendi hesabını oluşturur ve yalnızca bağlı olduğu öğrencinin ders, ödev, sınav ve ödeme bilgilerini görür. Öğretmen veli erişimini istediği zaman kaldırabilir.</p>
+
+        <h2>6. Veri Depolama ve Güvenlik</h2>
+        <p>Veriler Google Firebase (Authentication, Firestore, Storage) altyapısında saklanır ve şifreli bağlantı üzerinden iletilir. Firebase sunucuları yurt dışında bulunabilir; Uygulamayı kullanarak verilerinizin bu sunucularda saklanmasına onay vermiş olursunuz.</p>
+
+        <h2>7. Üçüncü Taraf Hizmetler</h2>
         <ul>
-            <li><strong>Firebase Authentication:</strong> Kullanici kimlik dogrulama</li>
-            <li><strong>Firebase Firestore:</strong> Veritabani hizmeti</li>
-            <li><strong>RevenueCat:</strong> Abonelik yonetimi</li>
+            <li><strong>Google Firebase:</strong> kimlik doğrulama, veritabanı ve dosya depolama</li>
+            <li><strong>RevenueCat:</strong> abonelik durumunun doğrulanması</li>
+            <li><strong>Apple App Store:</strong> abonelik ödemelerinin alınması</li>
+            <li><strong>WhatsApp:</strong> Öğretmen isterse Uygulama, WhatsApp'ı hazır bir mesajla açar. Mesaj öğretmenin kendi WhatsApp hesabından, öğretmen tarafından gönderilir; Uygulama WhatsApp'a veri aktarmaz.</li>
         </ul>
+        <p>Kişisel verileriniz satılmaz, kiralanmaz ve yukarıdaki hizmet sağlayıcılar dışında kimseyle paylaşılmaz.</p>
 
-        <h2>5. Veri Paylasimi</h2>
-        <p>Kisisel verileriniz ucuncu taraflarla paylasilmaz, satilmaz veya kiralanmaz. Veriler yalnizca uygulamanin calismasiicin gerekli olan hizmet saglayicilariyla (Firebase, RevenueCat) paylasilir.</p>
+        <h2>8. Bildirimler</h2>
+        <p>Uygulama yalnızca cihaz üzerinde oluşturulan yerel ders hatırlatmaları gönderir. Pazarlama bildirimi gönderilmez.</p>
 
-        <h2>6. Hesap Silme</h2>
-        <p>Hesabinizi uygulama icinden silebilirsiniz. Hesap silindiginde tum verileriniz kalici olarak kaldilir.</p>
+        <h2>9. Saklama Süresi ve Hesap Silme</h2>
+        <p>Veriler hesabınız açık olduğu sürece saklanır. Hesabınızı Uygulama içinden (Ayarlar → Hesabımı Sil) silebilirsiniz:</p>
+        <ul>
+            <li>Öğretmen hesabı silindiğinde öğrenciler, dersler, ödemeler, ödevler, sınav sonuçları, fotoğraflar ve dosyalar dahil tüm veriler kalıcı olarak silinir; bağlı velilerin erişimi sona erer.</li>
+            <li>Veli hesabı silindiğinde veli hesabı silinir; öğrencinin kayıtları öğretmende kalır.</li>
+        </ul>
+        <p>Aktif bir abonelik varsa ücretlendirme Apple üzerinden devam eder; aboneliği iPhone Ayarlar → Apple ID → Abonelikler bölümünden ayrıca iptal etmeniz gerekir.</p>
 
-        <h2>7. Iletisim</h2>
-        <p>Gizlilik politikamiz hakkinda sorulariniz icin: <a href="mailto:yasinyel32@gmail.com" style="color: var(--accent);">yasinyel32@gmail.com</a></p>
+        <h2>10. KVKK Kapsamındaki Haklarınız</h2>
+        <p>KVKK'nın 11. maddesi uyarınca; verilerinizin işlenip işlenmediğini öğrenme, bilgi talep etme, düzeltilmesini veya silinmesini isteme, işlemeye itiraz etme ve zarara uğramanız halinde tazminat talep etme haklarına sahipsiniz. Talepleriniz için <a href="mailto:yasinyel32@gmail.com" style="color: var(--accent);">yasinyel32@gmail.com</a> adresine yazabilirsiniz.</p>
+
+        <h2>11. Değişiklikler</h2>
+        <p>Bu politika güncellenebilir. Önemli değişiklikler Uygulama veya bu sayfa üzerinden duyurulur.</p>
+
+        <h2>12. İletişim</h2>
+        <p>Sorularınız için: <a href="mailto:yasinyel32@gmail.com" style="color: var(--accent);">yasinyel32@gmail.com</a></p>
     </div>
 </body>
 </html>
