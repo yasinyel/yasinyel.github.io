@@ -149,6 +149,7 @@ const APPS = [
 const DAY = [
     { time: '08:15', app: 'ekilit',  text: 'Öğretmen QR kodu okutur, sınıftaki akıllı tahta açılır.' },
     { time: '08:30', app: 'yoklama', text: 'İlk derste yoklama birkaç dokunuşla alınır.' },
+    { time: '09:30', app: 'kodlayalim', text: 'Bilişim dersinde öğrenciler blokla kodlama etkinliklerini çözer.' },
     { time: '10:20', app: 'eagle',   text: 'Laboratuvar dersinde 30 ekran tek panelden izlenir.' },
     { time: '12:40', app: 'store',   text: 'Öğle arasında okul kıyafeti barkodla satılır.' },
     { time: '14:00', app: 'anket',   text: 'Veli toplantısında anket QR ile projeksiyona yansır.' },
