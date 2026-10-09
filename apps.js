@@ -3,6 +3,20 @@
 // image: img/ klasöründeki ekran görüntüsü (yoksa renkli önizleme çizilir)
 const APPS = [
     {
+        id: 'kodlayalim',
+        image: 'img/kodlayalim.png',
+        name: 'Kodlayalım',
+        tagline: 'Anasınıfından liseye kodlama etkinlikleri',
+        platform: 'web',
+        status: 'active',
+        color: '#1d5fd6',
+        icon: 'fa-robot',
+        description: 'Anasınıfından liseye bilişim ve kodlama etkinlikleri. Blokla çizim, kod okuma, algoritma, şifre kırma ve yapay zekâ gibi 27 etkinlik, 557\'den fazla bölüm ve görev. İnternet olmadan da çalışır; öğretmen sınıf açar, ödev verir ve öğrencilerinin ilerlemesini takip eder.',
+        features: ['27 etkinlik', 'İnternetsiz çalışma', 'Öğretmen paneli', 'Sınıf kodu ile giriş', 'İlerleme takibi', 'Türkçe'],
+        tech: ['HTML', 'JavaScript', 'Firebase', 'Vercel'],
+        link: 'https://kodlayalim.com'
+    },
+    {
         id: 'eagle',
         image: 'img/eagle.png',
         name: 'Eagle Eye',
@@ -114,20 +128,6 @@ const APPS = [
         features: ['Kes & birleştir', 'Yaz & çiz', 'Filigran kaldırma', 'Çalışma sayfası', 'Bulut kayıt', 'Mobil uyumlu'],
         tech: ['Next.js', 'React', 'TypeScript', 'Firebase'],
         link: 'https://pdfhazirla.com'
-    },
-    {
-        id: 'kodlayalim',
-        image: 'img/kodlayalim.png',
-        name: 'Kodlayalım',
-        tagline: 'Anasınıfından liseye kodlama etkinlikleri',
-        platform: 'web',
-        status: 'active',
-        color: '#1d5fd6',
-        icon: 'fa-robot',
-        description: 'Anasınıfından liseye bilişim ve kodlama etkinlikleri. Blokla çizim, kod okuma, algoritma, şifre kırma ve yapay zekâ gibi 27 etkinlik, 557\'den fazla bölüm ve görev. İnternet olmadan da çalışır; öğretmen sınıf açar, ödev verir ve öğrencilerinin ilerlemesini takip eder.',
-        features: ['27 etkinlik', 'İnternetsiz çalışma', 'Öğretmen paneli', 'Sınıf kodu ile giriş', 'İlerleme takibi', 'Türkçe'],
-        tech: ['HTML', 'JavaScript', 'Firebase', 'Vercel'],
-        link: 'https://kodlayalim.com'
     },
     {
         id: 'takip',
