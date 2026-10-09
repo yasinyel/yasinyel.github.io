@@ -13,7 +13,7 @@ const APPS = [
         icon: 'fa-robot',
         description: 'Anasınıfından liseye bilişim ve kodlama etkinlikleri. Blokla çizim, kod okuma, algoritma, şifre kırma ve yapay zekâ gibi 27 etkinlik, 557\'den fazla bölüm ve görev. İnternet olmadan da çalışır; öğretmen sınıf açar, ödev verir ve öğrencilerinin ilerlemesini takip eder.',
         features: ['27 etkinlik', 'İnternetsiz çalışma', 'Öğretmen paneli', 'Sınıf kodu ile giriş', 'İlerleme takibi', 'Türkçe'],
-        tech: ['HTML', 'JavaScript', 'Firebase', 'Vercel'],
+        tech: ['HTML', 'JavaScript'],
         link: 'https://kodlayalim.com'
     },
     {
@@ -42,7 +42,7 @@ const APPS = [
         icon: 'fa-lock',
         description: 'Okuldaki akıllı tahtalar varsayılan olarak kilitli durur. Öğretmen tahtadaki QR kodu telefonuyla okutarak tahtayı açar, süre dolunca tahta otomatik yeniden kilitlenir. Yönetici tüm tahtaları tek panelden görür, çevrimiçi durumlarını izler ve uzaktan açıp kilitleyebilir. Tahtalarda C# ile yazılmış bir kiosk programı çalışır.',
         features: ['QR ile açma', 'Otomatik kilit', 'Uzaktan yönetim', 'Çevrimiçi takibi', 'Excel ile öğretmen ekleme', 'Kiosk programı'],
-        tech: ['React', 'Vite', 'Firebase', 'C# Kiosk', 'Vercel'],
+        tech: ['React', 'Vite', 'C# Kiosk'],
         link: 'https://ekilitsistemi.com'
     },
     {
@@ -56,7 +56,7 @@ const APPS = [
         icon: 'fa-door-open',
         description: 'Anasınıfı öğrencilerinin akşam çıkışını düzenler. Veli kapıda QR kodunu okutur, öğrencinin adı sınıfın akıllı tahtasında sesli uyarıyla belirir. Öğretmen çocuğu gönderince kapıdaki ekranda "yolda" olarak görünür. Nöbetçi öğretmen tüm sınıfları anlık izler.',
         features: ['QR veli kartı', 'Sesli çağrı', 'Tahta ekranı', 'Nöbetçi paneli', 'Çıkış geçmişi'],
-        tech: ['React', 'Vite', 'TypeScript', 'Firebase', 'Vercel'],
+        tech: ['React', 'Vite', 'TypeScript'],
         link: 'https://bkqrsis.com'
     },
     {
@@ -70,7 +70,7 @@ const APPS = [
         icon: 'fa-store',
         description: 'Okul kıyafeti satışı için barkodlu kasa, beden bazında stok takibi, öğrenciye bağlı satış geçmişi, iade/değişim, gün sonu kasa kontrolü ve eğitim-öğretim yılı geçişi. Yönetici, kasiyer ve müdür için ayrı yetkiler.',
         features: ['Barkodlu kasa', 'Beden bazlı stok', 'İade & değişim', 'Gün sonu', 'Excel aktarımı', 'Rol yönetimi'],
-        tech: ['React', 'Vite', 'TypeScript', 'Firebase', 'Vercel'],
+        tech: ['React', 'Vite', 'TypeScript'],
         link: 'https://store-sistemi.vercel.app'
     },
     {
@@ -84,7 +84,7 @@ const APPS = [
         icon: 'fa-square-poll-vertical',
         description: 'Okul etkinlikleri, veli ve öğrenci anketleri için QR kodlu anket sistemi. Katılımcılar telefonlarından anonim yanıt verir; projeksiyon ekranında yanıt sayacı canlı güncellenir. Sonuçlar grafiklerle izlenir ve Excel raporu olarak indirilir.',
         features: ['Anket oluşturma', 'QR ile katılım', 'Canlı grafikler', 'Projeksiyon ekranı', 'Excel raporu'],
-        tech: ['Vite', 'JavaScript', 'Firebase', 'Vercel'],
+        tech: ['Vite', 'JavaScript'],
         link: 'https://anket-black.vercel.app'
     },
     {
@@ -98,7 +98,7 @@ const APPS = [
         icon: 'fa-clipboard-check',
         description: 'Öğretmenlerin dijital ortamda hızlı ve kolay yoklama almasını sağlayan web tabanlı sistem. Sınıf yönetimi, yoklama raporları ve devamsızlık takibiyle okul süreçlerini dijitalleştirir.',
         features: ['Hızlı yoklama', 'Sınıf yönetimi', 'Devamsızlık raporu', 'Raporlama', 'Güvenli giriş'],
-        tech: ['Next.js', 'React', 'TypeScript', 'Firebase'],
+        tech: ['Next.js', 'React', 'TypeScript'],
         link: 'https://yoklamasistemi.com'
     },
     {
@@ -112,7 +112,7 @@ const APPS = [
         icon: 'fa-server',
         description: 'Eğitim kurumlarının bilgi işlem altyapısını yönetmek için geliştirilmiş kapsamlı bir web uygulaması. Envanter takibi, arıza yönetimi, stok kontrolü, harcama ve teklif yönetimi, laboratuvar takibi ve personel yönetimi modüllerini içerir.',
         features: ['Envanter', 'Arıza takibi', 'Stok kontrolü', 'Harcama & teklif', 'Laboratuvar', 'Raporlama'],
-        tech: ['Next.js', 'React', 'TypeScript', 'Firebase', 'Vercel'],
+        tech: ['Next.js', 'React', 'TypeScript'],
         link: 'https://ibkit.vercel.app'
     },
     {
@@ -126,7 +126,7 @@ const APPS = [
         icon: 'fa-file-pdf',
         description: 'Öğretmenlerin ders materyali, sınav ve çalışma kâğıtlarını hızlıca hazırlamasını sağlayan ücretsiz PDF editörü. PDF\'lerden bölgeleri kesip birleştirme, üzerine yazma, çizme, vurgulama ve filigran kaldırma; tamamı tarayıcıda çalışır, dosyalar sunucuya gönderilmez.',
         features: ['Kes & birleştir', 'Yaz & çiz', 'Filigran kaldırma', 'Çalışma sayfası', 'Bulut kayıt', 'Mobil uyumlu'],
-        tech: ['Next.js', 'React', 'TypeScript', 'Firebase'],
+        tech: ['Next.js', 'React', 'TypeScript'],
         link: 'https://pdfhazirla.com'
     },
     {
@@ -139,7 +139,7 @@ const APPS = [
         icon: 'fa-graduation-cap',
         description: 'Özel ders öğretmenlerinin öğrenci takibi, ders planlama, ödeme yönetimi ve deneme sınavı takibi yapmasını sağlayan mobil uygulama. Veliler kendi hesaplarıyla çocuklarının derslerini ve ödemelerini izleyebilir.',
         features: ['Öğrenci yönetimi', 'Ders planlama', 'Ödeme takibi', 'Sınav analizi', 'Bildirimler', 'Veli paneli'],
-        tech: ['React Native', 'TypeScript', 'Firebase', 'Xcode', 'RevenueCat'],
+        tech: ['React Native', 'TypeScript', 'Xcode', 'RevenueCat'],
         link: null,
         linkLabel: 'App Store & Google Play — yakında'
     }
