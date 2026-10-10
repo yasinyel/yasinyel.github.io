@@ -4,6 +4,7 @@ import { pcAt, isNatural, bothNames, midiAt, octaveOf } from '../theory.js';
 import { store, streak, practicedThisWeek, onSettings } from '../state.js';
 import { LESSONS } from '../data/lessons.js';
 import { SONGS } from '../data/songs.js';
+import { FAMOUS } from '../data/famous.js';
 import { icon } from '../ui.js';
 
 const SECTIONS = [
@@ -12,7 +13,7 @@ const SECTIONS = [
     { href: '#alistirma', name: 'Nota avı', text: 'Notayı adlandır, perdeyi bul, hepsini bul. Zayıf noktaların ısı haritasında.', meta: '3 oyun · 60 sn sprint' },
     { href: '#pozisyonlar', name: 'Pozisyonlar', text: 'Doğal notalar, majör, minör, pentatonik ve blues; pozisyon pozisyon.', meta: '8 dizi · 12 ton' },
     { href: '#akorlar', name: 'Akorlar', text: 'Açık akorlar, E ve A formu bare, power chord, geçiş antrenmanı.', meta: '32 açık akor · her tonda bare' },
-    { href: '#sarkilar', name: 'Şarkılar', text: 'Tab\'lı melodiler, akorlu şarkılar ve senin eklediklerin.', meta: `${SONGS.length} hazır parça` },
+    { href: '#sarkilar', name: 'Şarkılar', text: 'Tab\'lı melodiler, Metallica\'dan Pink Floyd\'a ünlü şarkı rehberleri ve senin eklediklerin.', meta: `${SONGS.length} parça · ${FAMOUS.length} ünlü şarkı` },
     { href: '#araclar', name: 'Akort ve metronom', text: 'Mikrofonla akort, vurgulu metronom ve hız antrenörü.', meta: 'Mikrofon gerekir' }
 ];
 

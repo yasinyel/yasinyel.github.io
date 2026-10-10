@@ -3,6 +3,22 @@
 // level: 1 başlangıç, 2 orta, 3 ileri
 // strum: sekizlik dilimler, D aşağı, U yukarı, - boş (4/4 için 8, 3/4 için 6 dilim)
 
+// A minör pentatonik 1. kutu, üçerli gruplar halinde yukarı ve aşağı
+const BOX1 = ['6.5', '6.8', '5.5', '5.7', '4.5', '4.7', '3.5', '3.7', '2.5', '2.8', '1.5', '1.8'];
+function threes(notes) {
+    const out = [];
+    for (let i = 0; i + 2 < notes.length; i++) out.push(notes[i], notes[i + 1], notes[i + 2]);
+    return out;
+}
+function ladder() {
+    const up = threes(BOX1), down = threes([...BOX1].reverse());
+    const all = [...up, ...down];                 // 60 nota = 20 vuruş
+    const bars = [];
+    for (let i = 0; i < all.length; i += 12) bars.push(all.slice(i, i + 12));
+    const txt = bars.map((b, i) => b.map((n, j) => (i === 0 && j === 0 ? n + ':1/3' : n)).join(' '));
+    return txt.join(' | ') + ' | 5.5:4';          // son ölçü: kök A
+}
+
 export const SONGS = [
     {
         id: 'neseye-ovgu',
@@ -41,6 +57,7 @@ export const SONGS = [
     },
     {
         id: 'fur-elise',
+        lang: 'de',
         title: 'Für Elise (giriş)',
         artist: 'L. v. Beethoven (1810)',
         source: 'Kamu malı',
@@ -137,7 +154,58 @@ export const SONGS = [
 [Am] 5.0 4.2 3.2 2.1 1.0 2.1 | [E] 6.0 5.2 4.2 3.1 2.0 3.1 | [Am] 5.0 4.2 3.2 2.1 1.0 2.1 | [E] 6.0 5.2 4.2 3.1 2.0 3.1`
     },
     {
+        id: 'dortnala',
+        title: 'Dörtnala Ritim',
+        artist: 'Perde alıştırması',
+        source: 'Alıştırma',
+        kind: 'tab',
+        level: 2,
+        key: 'Em',
+        tempo: 110,
+        time: '4/4',
+        tone: 'drive',
+        focus: 'Gallop ritmi (bir sekizlik + iki on altılık), downpicking',
+        notes: 'Metal ritim gitarının temel kalıbı: "da-ga-dak". Boş E telini avuçla hafifçe sustur (palm mute), her notayı aşağı vuruşla çal. Önce 80 BPM, sonra hız antrenörüyle yukarı.',
+        tab: `
+6.0:0.5 6.0:0.25 6.0 6.0:0.5 6.0:0.25 6.0 6.0:0.5 6.0:0.25 6.0 [G5] 6.3+5.5:0.5 [A5] 6.5+5.7 |
+6.0:0.5 6.0:0.25 6.0 6.0:0.5 6.0:0.25 6.0 6.0:0.5 6.0:0.25 6.0 [B5] 6.7+5.9:1 |
+6.0:0.5 6.0:0.25 6.0 6.0:0.5 6.0:0.25 6.0 6.0:0.5 6.0:0.25 6.0 [G5] 6.3+5.5:0.5 [A5] 6.5+5.7 |
+6.0:0.5 6.0:0.25 6.0 6.0:0.5 6.0:0.25 6.0 [C5] 5.3+4.5:1 [B5] 5.2+4.4:1`
+    },
+    {
+        id: 'inen-bas',
+        title: 'İnen Bas Arpeji',
+        artist: 'Perde alıştırması',
+        source: 'Alıştırma',
+        kind: 'tab',
+        level: 2,
+        key: 'Am',
+        tempo: 84,
+        time: '4/4',
+        focus: 'Am akorunda yarım ses yarım ses inen bas, arpej',
+        notes: 'Rock baladlarının çok sevdiği bir fikir: Am akorunu tutarken bas sesi A, G♯, G, F♯ diye iner. Üst teller aynı kalır, sadece işaret ya da orta parmak 6. telde kayar.',
+        tab: `
+[Am] 5.0:0.5 4.2 3.2 2.1 1.0 2.1 3.2 4.2 | [Am/G#] 6.4 4.2 3.2 2.1 1.0 2.1 3.2 4.2 | [Am/G] 6.3 4.2 3.2 2.1 1.0 2.1 3.2 4.2 |
+[D/F#] 6.2 4.0 3.2 2.3 1.2 2.3 3.2 4.0 | [Fmaj7] 4.3 3.2 2.1 1.0 2.1 3.2 4.3 3.2 | [E] 6.0 5.2 4.2 3.1 2.0 3.1 4.2 5.2 | [Am] 5.0+4.2+3.2+2.1+1.0:4`
+    },
+    {
+        id: 'pentatonik-merdiven',
+        title: 'Pentatonik Merdiven',
+        artist: 'Perde alıştırması',
+        source: 'Alıştırma',
+        kind: 'tab',
+        level: 2,
+        key: 'Am',
+        tempo: 72,
+        time: '4/4',
+        tone: 'drive',
+        focus: 'A minör pentatonik 1. kutu, üçerli gruplar (triole)',
+        notes: 'Solo çalanların klasik ısınması: kutuyu düz çıkmak yerine üçerli gruplarla çık ve in. Her vuruşa üç nota düşer. Pena yönünü düzenli değiştir: aşağı-yukarı-aşağı, yukarı-aşağı-yukarı.',
+        tab: ladder()
+    },
+    {
         id: 'amazing-grace',
+        lang: 'en',
         title: 'Amazing Grace',
         artist: 'John Newton (1779), ezgi "New Britain"',
         source: 'Kamu malı',
@@ -169,6 +237,7 @@ And [Em]grace will [D]lead me [G]home`
     },
     {
         id: 'saints',
+        lang: 'en',
         title: 'When the Saints Go Marching In',
         artist: 'Geleneksel gospel',
         source: 'Geleneksel',
@@ -194,6 +263,7 @@ When the [G]sun re[D]fuse to [G]shine`
     },
     {
         id: 'oh-susanna',
+        lang: 'en',
         title: 'Oh! Susanna',
         artist: 'Stephen Foster (1848)',
         source: 'Kamu malı',
@@ -217,6 +287,7 @@ For I [C]come from Alabama with my [G7]banjo on my [C]knee
     },
     {
         id: 'greensleeves',
+        lang: 'en',
         title: 'Greensleeves',
         artist: 'İngiliz halk şarkısı (16. yy)',
         source: 'Kamu malı',

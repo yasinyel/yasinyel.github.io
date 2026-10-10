@@ -328,6 +328,7 @@ button.chip:hover { border-color: var(--ink); }
     color: var(--muted);
 }
 .tag-tab { color: var(--accent); border-color: color-mix(in srgb, var(--accent-fill) 50%, var(--line)); }
+.tag-ref { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 45%, var(--line)); }
 .tag-ch { color: var(--blue); border-color: color-mix(in srgb, var(--blue) 45%, var(--line)); }
 .meter { display: block; height: 6px; border-radius: 99px; background: var(--line); overflow: hidden; }
 .meter i { display: block; height: 100%; background: var(--accent-fill); border-radius: inherit; }
@@ -699,6 +700,13 @@ button.cp-chord:hover { text-decoration: underline; text-underline-offset: 3px; 
 .cp-section { font: 500 0.72rem var(--mono); text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); margin: 1.2em 0 0.5em; }
 .cp-chorus { padding-left: 14px; border-left: 2px solid var(--line); margin: 0.4em 0; }
 .cp-gap { height: 0.6em; }
+
+.ref-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+.ref-grid .fact p { color: var(--muted); }
+.ticks { margin: 0; padding-left: 1.1em; display: grid; gap: 4px; }
+.paste { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; background: var(--surface); display: grid; gap: 10px; }
+.paste summary { cursor: pointer; font-weight: 600; display: inline-flex; gap: 8px; align-items: center; }
+.paste[open] summary { margin-bottom: 8px; }
 
 /* Editör */
 .editor { display: grid; gap: 18px; }

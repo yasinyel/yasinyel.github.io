@@ -2,18 +2,22 @@
 import { Fretboard } from '../fretboard.js';
 import { playPos, strum, click, Clock, audioTime } from '../audio.js';
 import { parseChord, prettyChord, transposeChord, keyPref, chordLongName } from '../theory.js';
-import { store, save, onSettings, markPracticed, settings, updateSettings } from '../state.js';
+import { store, save, onSettings, markPracticed, settings, updateSettings, setIntent, takeIntent } from '../state.js';
 import { SONGS } from '../data/songs.js';
+import { FAMOUS, songsterrUrl, ugUrl, lessonUrl } from '../data/famous.js';
+import { convertPaste } from '../convert.js';
 import { parseTab, renderTab } from '../tab.js';
 import { parseChordPro, renderChordPro, chordsIn } from '../chordpro.js';
 import { voicingsFor, voicingNotes } from '../chords.js';
 import { chordBox } from '../chordbox.js';
 import { seg, bindSegs, icon, esc, toast, copyText } from '../ui.js';
 
+const titleLang = s => s.lang || (s.kind === 'ref' ? 'en' : 'tr');
 const LEVEL = { 1: 'Başlangıç', 2: 'Orta', 3: 'İleri' };
 const TIMES = ['4/4', '3/4', '2/4', '6/8', '3/8', '12/8'];
 
-const allSongs = () => [...store.songs, ...SONGS];
+const REFS = FAMOUS.map(f => ({ ...f, kind: 'ref', source: 'Ünlü şarkı rehberi' }));
+const allSongs = () => [...store.songs, ...SONGS, ...REFS];
 const findSong = id => allSongs().find(s => s.id === id);
 
 /** "6/8" → ölçü başına dörtlük vuruş ve tık aralığı */
@@ -62,7 +66,7 @@ export default {
         if (param.startsWith('duzenle-')) return editor(root, findSong(param.slice(8)));
         const song = findSong(param);
         if (!song) { root.innerHTML = `<header class="ph"><h1>Şarkı bulunamadı</h1><p class="lede">Bu şarkı silinmiş ya da başka bir tarayıcıda eklenmiş olabilir. <a href="#sarkilar">Şarkılara dön</a></p></header>`; return null; }
-        return song.kind === 'tab' ? tabView(root, song) : chordView(root, song);
+        return song.kind === 'tab' ? tabView(root, song) : song.kind === 'ref' ? refView(root, song) : chordView(root, song);
     }
 };
 
@@ -71,7 +75,7 @@ export default {
 // ===================================================================
 let listFilter = 'all';
 function list(root) {
-    const filters = [['all', 'Tümü'], ['tab', 'Tab ve melodi'], ['chords', 'Akorlu'], ['mine', 'Benim eklediklerim']];
+    const filters = [['all', 'Tümü'], ['ref', 'Ünlü şarkılar'], ['tab', 'Tab ve alıştırma'], ['chords', 'Akorlu'], ['mine', 'Benim eklediklerim']];
     root.innerHTML = `
     <header class="ph ph-row">
         <div>
@@ -91,20 +95,21 @@ function list(root) {
     </section>
     <div class="toolbar">${seg('filter', filters, listFilter)}</div>
     <div class="song-grid" id="songGrid"></div>
-    <p class="hint">Hazır parçalar kamu malı ya da geleneksel eserler ve Perde için yazılmış alıştırmalardır. Senin eklediğin şarkılar yalnızca bu tarayıcıda saklanır.</p>`;
+    <p class="hint">Hazır tab ve akorlu parçalar kamu malı ya da geleneksel eserler ve Perde için yazılmış alıştırmalardır. Ünlü şarkıların söz ve tabları telifli olduğu için rehber kartlarında ton, akorlar, teknikler ve lisanslı tab kaynaklarına bağlantı var. Senin eklediğin şarkılar yalnızca bu tarayıcıda saklanır.</p>`;
 
     const grid = root.querySelector('#songGrid');
     function paint() {
         const items = allSongs().filter(s => listFilter === 'all' || (listFilter === 'mine' ? s.user : s.kind === listFilter));
         grid.innerHTML = items.length ? items.map(s => {
-            const chords = s.kind === 'chords' ? chordsIn(parseChordPro(s.body || '')).slice(0, 6) : [];
+            const chords = s.kind === 'chords' ? chordsIn(parseChordPro(s.body || '')).slice(0, 6) : s.kind === 'ref' ? s.chords.slice(0, 6) : [];
+            const tag = s.kind === 'tab' ? ['tag-tab', s.source === 'Alıştırma' ? 'Alıştırma' : 'Tab'] : s.kind === 'ref' ? ['tag-ref', 'Rehber'] : ['tag-ch', 'Akorlu'];
             return `
-            <a class="song-card" href="#sarki-${esc(s.id)}">
-                <span class="sc-top"><span class="tag ${s.kind === 'tab' ? 'tag-tab' : 'tag-ch'}">${s.kind === 'tab' ? 'Tab' : 'Akorlu'}</span><span class="lvl lvl-${s.level}">${LEVEL[s.level] || ''}</span></span>
-                <strong>${esc(s.title)}</strong>
-                <span class="sc-artist">${esc(s.artist || s.source || '')}</span>
-                ${s.focus ? `<span class="sc-focus">${esc(s.focus)}</span>` : ''}
-                <span class="sc-meta">${chords.length ? chords.map(c => `<b>${esc(prettyChord(c))}</b>`).join('') : ''}<span>${s.tempo || ''} BPM · ${esc(s.time || '4/4')}${s.key ? ' · ' + esc(prettyChord(s.key)) : ''}</span></span>
+            <a class="song-card${s.kind === 'ref' ? ' is-ref' : ''}" href="#sarki-${esc(s.id)}">
+                <span class="sc-top"><span class="tag ${tag[0]}">${tag[1]}</span><span class="lvl lvl-${s.level}">${LEVEL[s.level] || ''}</span></span>
+                <strong lang="${titleLang(s)}">${esc(s.title)}</strong>
+                <span class="sc-artist">${esc(s.artist || s.source || '')}${s.year ? ' · ' + s.year : ''}</span>
+                ${s.focus ? `<span class="sc-focus">${esc(s.focus)}</span>` : s.techniques ? `<span class="sc-focus">${esc(s.techniques.slice(0, 2).join(' · '))}</span>` : ''}
+                <span class="sc-meta">${chords.length ? chords.map(c => `<b>${esc(prettyChord(c))}</b>`).join('') : ''}<span>${s.tempo ? s.tempo + ' BPM · ' : ''}${esc(s.time || '4/4')}${s.key ? ' · ' + esc(prettyChord(s.key)) : ''}</span></span>
             </a>`;
         }).join('') : `<p class="empty">Henüz şarkı eklemedin. <a href="#sarki-yeni">İlk şarkını ekle</a>: akorları köşeli parantezle yazman yeterli.</p>`;
     }
@@ -141,7 +146,7 @@ function songHeader(song) {
     <nav class="crumbs"><a href="#sarkilar">${icon('back')} Şarkılar</a>${song.user ? `<span class="crumb-actions"><a href="#sarki-duzenle-${esc(song.id)}">${icon('edit')} Düzenle</a><button type="button" class="linkbtn" id="shareBtn">${icon('copy')} Paylaş</button></span>` : ''}</nav>
     <header class="ph">
         <p class="kicker">${esc(song.source || '')}${song.level ? ' · ' + LEVEL[song.level] : ''}</p>
-        <h1>${esc(song.title)}</h1>
+        <h1 lang="${titleLang(song)}">${esc(song.title)}</h1>
         <p class="song-artist">${esc(song.artist || '')}</p>
         <p class="pills">
             <span>${song.tempo} BPM</span><span>${esc(song.time || '4/4')}</span>
@@ -447,6 +452,85 @@ function chordView(root, song) {
 }
 
 // ===================================================================
+// Ünlü şarkı rehberi
+// ===================================================================
+function refView(root, song) {
+    let current = song.chords[0];
+    root.innerHTML = `
+    <nav class="crumbs"><a href="#sarkilar">${icon('back')} Şarkılar</a></nav>
+    <header class="ph">
+        <p class="kicker">Ünlü şarkı rehberi · ${LEVEL[song.level]}</p>
+        <h1 lang="${titleLang(song)}">${esc(song.title)}</h1>
+        <p class="song-artist">${esc(song.artist)} · ${song.year}</p>
+        <p class="pills">
+            <span>Ton ${esc(prettyChord(song.key))}</span><span>${esc(song.time)}</span>
+            ${song.capo ? `<span>Capo ${song.capo}. perde</span>` : ''}
+            <span>${esc(song.tuning || 'Standart akort')}</span>
+        </p>
+        <p class="lede-sm">${esc(song.notes)}</p>
+    </header>
+    <section class="stage">
+        <div class="stage-head">
+            <p class="kicker">Şarkıda geçen başlıca akorlar</p>
+            <p class="readout" id="refReadout"></p>
+        </div>
+        <div class="chord-strip" id="refChords">
+            ${song.chords.map(c => {
+                const v = voicingsFor(c)[0];
+                return `<button type="button" class="chord-card chord-card-sm" data-chord="${esc(c)}">${v ? chordBox(v, { root: parseChord(c).root }) : ''}<strong>${esc(prettyChord(c))}</strong></button>`;
+            }).join('')}
+        </div>
+    </section>
+    <div class="ref-grid">
+        <section class="fact">
+            <strong>Gereken teknikler</strong>
+            <ul class="ticks">${song.techniques.map(t => `<li>${esc(t)}</li>`).join('')}</ul>
+        </section>
+        <section class="fact">
+            <strong>Önce bunları çalış</strong>
+            <div class="row-actions">${song.prep.map(([label, href], i) => `<a class="btn" href="${href}" data-prep="${i}">${esc(label)} ${icon('arrow')}</a>`).join('')}</div>
+        </section>
+        <section class="fact">
+            <strong>Tab ve sözler</strong>
+            <p>Bu şarkının tab ve sözleri telifli; lisanslı kaynaklarda bulabilirsin. Songsterr tabları çalarken dinletir, Perde'deki tab çalar gibi.</p>
+            <div class="row-actions">
+                <a class="btn btn-primary" href="${songsterrUrl(song)}" target="_blank" rel="noopener">Songsterr'de aç ${icon('arrow')}</a>
+                <a class="btn" href="${ugUrl(song)}" target="_blank" rel="noopener">Ultimate Guitar</a>
+                <a class="btn btn-quiet" href="${lessonUrl(song)}" target="_blank" rel="noopener">Video dersler</a>
+            </div>
+        </section>
+        <section class="fact">
+            <strong>Kendi çalışma sayfanı yap</strong>
+            <p>Elindeki tabı ya da akorlu sözleri yapıştır; Perde biçimine çevrilsin. Sonra klavyede izleyerek ve yavaşlatarak çalışırsın. Bu sayfa yalnızca senin tarayıcında kalır.</p>
+            <div class="row-actions"><button type="button" class="btn" id="makeOwn">${icon('plus')} Bu şarkı için sayfa oluştur</button></div>
+        </section>
+    </div>`;
+
+    const readout = root.querySelector('#refReadout');
+    function select(c, play) {
+        current = c;
+        const v = voicingsFor(c)[0];
+        root.querySelectorAll('#refChords .chord-card').forEach(b => b.classList.toggle('is-on', b.dataset.chord === c));
+        readout.innerHTML = v ? `<b>${esc(prettyChord(c))}</b> <span>${esc(chordLongName(c))} · ${v.frets.map(f => f < 0 ? '×' : f).join(' ')}</span>` : '';
+        if (play && v) strum(voicingNotes(v), { dur: 2 });
+    }
+    select(current, false);
+    root.querySelector('#refChords').addEventListener('click', e => {
+        const b = e.target.closest('[data-chord]');
+        if (b) select(b.dataset.chord, true);
+    });
+    root.querySelectorAll('[data-prep]').forEach(a => a.addEventListener('click', () => {
+        const intent = song.prep[+a.dataset.prep][2];
+        if (intent) setIntent(intent);
+    }));
+    root.querySelector('#makeOwn').addEventListener('click', () => {
+        setIntent({ prefill: { title: song.title, artist: song.artist, key: song.key, time: song.time, capo: song.capo || 0, level: song.level } });
+        location.hash = '#sarki-yeni';
+    });
+    return null;
+}
+
+// ===================================================================
 // Editör
 // ===================================================================
 const SAMPLE_CHORDS = `{c: 1. kıta}
@@ -461,7 +545,8 @@ const SAMPLE_TAB = `[Am] 5.0:0.5 4.2 3.2 2.1 1.0 2.1 3.2 4.2 | [C] 5.3 4.2 3.0 2
 function editor(root, song) {
     if (song && !song.user) { location.hash = `#sarki-${song.id}`; return null; }
     const isNew = !song;
-    const d = song ? { ...song } : { title: '', artist: '', kind: 'chords', level: 1, key: '', tempo: 90, time: '4/4', capo: 0, strum: 'D-DU-UDU', notes: '', body: SAMPLE_CHORDS, tab: SAMPLE_TAB };
+    const prefill = (takeIntent() || {}).prefill;
+    const d = song ? { ...song } : { title: '', artist: '', kind: 'chords', level: 1, key: '', tempo: 90, time: '4/4', capo: 0, strum: 'D-DU-UDU', notes: '', body: SAMPLE_CHORDS, tab: SAMPLE_TAB, ...(prefill || {}) };
     if (d.body === undefined) d.body = SAMPLE_CHORDS;
     if (d.tab === undefined) d.tab = SAMPLE_TAB;
     let previewTab = null;
@@ -486,6 +571,12 @@ function editor(root, song) {
             <label class="fld fld-chords"><span>Ritim kalıbı</span><input id="fStrum" maxlength="16" value="${esc(d.strum || '')}" placeholder="D-DU-UDU"></label>
             <label class="fld fld-wide"><span>Notlar</span><input id="fNotes" maxlength="2000" value="${esc(d.notes || '')}" placeholder="Çalarken dikkat edilecekler"></label>
         </div>
+        <details class="paste" ${prefill ? 'open' : ''}>
+            <summary>${icon('copy')} Yapıştır ve dönüştür</summary>
+            <p class="hint">İnternetten ya da notlarından bir tab (<code>e|---0---|</code> satırları) veya akorların sözlerin üstünde durduğu bir metin yapıştır. Perde biçimine çevrilip aşağıya yerleşir.</p>
+            <textarea id="pasteText" class="code" rows="7" spellcheck="false" placeholder="e|-------0-------|&#10;B|-----1---1-----|&#10;G|---2-------2---|&#10;…&#10;&#10;ya da&#10;&#10;Am          G&#10;Şarkı sözü burada"></textarea>
+            <div class="row-actions"><button type="button" class="btn btn-primary" id="pasteGo">Dönüştür</button><span class="hint" id="pasteInfo"></span></div>
+        </details>
         <div class="ed-cols">
             <div class="ed-src">
                 <label class="fld"><span id="srcLabel"></span><textarea id="fBody" class="code" rows="14" spellcheck="false"></textarea></label>
@@ -559,6 +650,16 @@ function editor(root, song) {
         if (name === 'level') d.level = +v;
     });
     setKind(d.kind);
+
+    $('#pasteGo').addEventListener('click', () => {
+        const raw = $('#pasteText').value;
+        if (!raw.trim()) { $('#pasteInfo').textContent = 'Önce bir metin yapıştır.'; return; }
+        const r = convertPaste(raw);
+        if (r.kind === 'tab') d.tab = r.text; else d.body = r.text;
+        root.querySelectorAll('[data-seg="kind"] [data-v]').forEach(b => b.setAttribute('aria-checked', String(b.dataset.v === r.kind)));
+        setKind(r.kind);
+        $('#pasteInfo').textContent = `${r.kind === 'tab' ? 'Tab' : 'Akorlu metin'} olarak çevrildi. ${r.info}`;
+    });
 
     $('#songForm').addEventListener('submit', e => {
         e.preventDefault();
