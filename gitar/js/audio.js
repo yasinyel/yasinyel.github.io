@@ -62,6 +62,44 @@ onSettings(patch => {
     if ('volume' in patch) master.gain.setTargetAtTime(settings.volume, ctx.currentTime, 0.02);
 });
 
+// ===== iPhone / iPad: sessiz mod ve ses kilidi =====
+// iOS, sessiz moddayken web sesini kısar. Ses oturumunu "playback" yapınca
+// müzik uygulamaları gibi sessiz modda da çalar (iOS 17+). Eski sürümler için
+// dokunuş anında sessiz bir <audio> çalmak aynı etkiyi verir.
+let unlocked = false;
+function silentWavUrl() {
+    const sr = 8000, n = 800;
+    const buf = new ArrayBuffer(44 + n * 2);
+    const v = new DataView(buf);
+    const w = (o, str) => [...str].forEach((c, i) => v.setUint8(o + i, c.charCodeAt(0)));
+    w(0, 'RIFF'); v.setUint32(4, 36 + n * 2, true); w(8, 'WAVE'); w(12, 'fmt ');
+    v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+    v.setUint32(24, sr, true); v.setUint32(28, sr * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true);
+    w(36, 'data'); v.setUint32(40, n * 2, true);
+    return URL.createObjectURL(new Blob([buf], { type: 'audio/wav' }));
+}
+
+/** Her kullanıcı dokunuşunda çağrılır: bağlamı açar, iOS ses oturumunu ayarlar */
+export function unlockAudio() {
+    try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) { /* desteklenmiyor */ }
+    const c = ensureAudio();
+    if (!c || unlocked) return;
+    unlocked = true;
+    // iOS: dokunuş içinde bir örneklik sessiz ses başlatmak bağlamın kilidini açar
+    const b = c.createBuffer(1, 1, c.sampleRate);
+    const src = c.createBufferSource();
+    src.buffer = b;
+    src.connect(c.destination);
+    src.start(0);
+    if (!navigator.audioSession && /iP(hone|ad|od)|Macintosh/.test(navigator.userAgent) && 'ontouchend' in document) {
+        try {
+            const el = new Audio(silentWavUrl());
+            el.setAttribute('playsinline', '');
+            el.play().catch(() => {});
+        } catch (e) { /* yok say */ }
+    }
+}
+
 /** Ses bağlamını hazırlar; tarayıcılar ancak bir dokunuştan sonra izin verir */
 export function ensureAudio() {
     if (!ctx) {
@@ -75,6 +113,7 @@ export function ensureAudio() {
 }
 export const audioTime = () => (ctx ? ctx.currentTime : 0);
 export const getContext = () => ctx;
+export const audioState = () => (ctx ? ctx.state : (window.AudioContext || window.webkitAudioContext) ? 'kapalı' : 'desteklenmiyor');
 
 // Karplus-Strong: gürültü ile başlayan, her turda biraz yumuşayan bir gecikme hattı
 function pluck(midi) {

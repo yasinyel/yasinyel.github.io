@@ -1,6 +1,6 @@
 // Uygulama kabuğu: sayfa yönlendirme, kanal düğmesi, tema ve ayarlar penceresi
 import { settings, updateSettings, exportData, importData, store, save, onSettings } from './state.js';
-import { ensureAudio, strum } from './audio.js';
+import { unlockAudio, strum, playPos, audioState } from './audio.js';
 import { icon, seg, bindSegs, toast, copyText, $ } from './ui.js';
 
 import home from './pages/home.js';
@@ -60,8 +60,10 @@ function route() {
 }
 window.addEventListener('hashchange', route);
 
-// Tarayıcılar sesi ancak bir dokunuştan sonra açar
-document.addEventListener('pointerdown', () => ensureAudio(), { passive: true });
+// Tarayıcılar sesi ancak bir dokunuştan sonra açar (iOS parmak kalkınca: touchend)
+for (const ev of ['pointerdown', 'touchend', 'click', 'keydown']) {
+    document.addEventListener(ev, unlockAudio, { passive: true, capture: true });
+}
 
 // ===== Kanal (temiz / distorsiyon) =====
 const toneBtn = document.getElementById('toneBtn');
@@ -110,6 +112,8 @@ function renderSettings() {
             <div class="set-row"><span class="set-label">Amfi kanalı</span>${seg('tone', [['clean', 'Temiz'], ['drive', 'Distorsiyon']], settings.tone)}</div>
             <div class="set-row"><label class="set-label" for="volRange">Ses düzeyi</label><input type="range" id="volRange" min="0" max="1" step="0.05" value="${settings.volume}"></div>
         </div>
+        <div class="set-row"><span class="set-label">Ses testi</span><button type="button" class="btn" data-act="soundtest">${icon('sound')} A notasını çal</button></div>
+        <p class="hint" id="soundHint">Ses gelmiyorsa: telefonun ses düzeyini aç, iPhone'da yan tuştaki sessiz modu kapat, Bluetooth kulaklık bağlı mı bak. Sonra sayfayı yenileyip bir notaya dokun.</p>
         <h3 class="sheet-sub">Yedekleme</h3>
         <p class="hint">İlerlemen, rekorların ve eklediğin şarkılar bu tarayıcıda duruyor. Başka bir cihaza taşımak için yedeği kopyala, orada yapıştırıp yükle.</p>
         <textarea id="backupText" class="code" rows="4" spellcheck="false" placeholder="Yedek metnini buraya yapıştır"></textarea>
@@ -140,6 +144,15 @@ body.addEventListener('click', e => {
     if (b.hasAttribute('data-close')) { dlg.close(); return; }
     const ta = $('#backupText', body);
     switch (b.dataset.act) {
+        case 'soundtest':
+            playPos(5, 0, { dur: 1.5 });
+            setTimeout(() => {
+                const st = audioState();
+                $('#soundHint', body).textContent = st === 'running'
+                    ? 'Ses motoru çalışıyor. Hâlâ duymuyorsan sorun cihazın ses ayarında: ses düzeyi, sessiz mod ya da bağlı bir kulaklık.'
+                    : `Ses motoru açılamadı (durum: ${st}). Sayfayı yenileyip tekrar dene; olmazsa başka bir tarayıcıyla aç.`;
+            }, 400);
+            break;
         case 'export':
             ta.value = exportData();
             copyText(ta.value, ta);
