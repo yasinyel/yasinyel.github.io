@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Perde Gitar Atölyesi</title>
+    <meta name="description" content="Elektro gitar klavyesindeki notaları, pozisyonları, bare akorları ve şarkıları dinleyerek, dokunarak öğren. Ücretsiz, kurulum gerektirmez.">
+    <meta name="theme-color" content="#16181c">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/perde.css">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%233a2419'/%3E%3Cpath d='M4 9h24M4 14h24M4 19h24M4 24h24' stroke='%23d9dde3' stroke-width='1.4'/%3E%3Cpath d='M12 6v22M21 6v22' stroke='%23b9bdc4' stroke-width='2'/%3E%3Ccircle cx='16.5' cy='16.5' r='4' fill='%23f0a020'/%3E%3C/svg%3E">
+    <script>
+        try { const t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+    </script>
+</head>
+<body>
+    <a class="skip" href="#main">İçeriğe geç</a>
+
+    <header class="top" id="top">
+        <div class="top-in">
+            <a class="logo" href="#ana" aria-label="Perde ana sayfa">
+                <span class="logo-lamp" aria-hidden="true"></span>Perde
+            </a>
+            <nav class="nav" id="nav" aria-label="Bölümler">
+                <a href="#klavye" data-r="klavye">Klavye</a>
+                <a href="#dersler" data-r="dersler ders">Dersler</a>
+                <a href="#alistirma" data-r="alistirma">Nota avı</a>
+                <a href="#pozisyonlar" data-r="pozisyonlar">Pozisyonlar</a>
+                <a href="#akorlar" data-r="akorlar">Akorlar</a>
+                <a href="#sarkilar" data-r="sarkilar sarki">Şarkılar</a>
+                <a href="#araclar" data-r="araclar">Akort &amp; metronom</a>
+            </nav>
+            <div class="top-act">
+                <button type="button" class="channel" id="toneBtn" aria-pressed="false" title="Amfi kanalı: temiz ya da distorsiyon">
+                    <span class="ch-led" aria-hidden="true"></span><span class="ch-label">Temiz</span>
+                </button>
+                <button type="button" class="iconbtn" id="themeBtn" aria-label="Açık / koyu tema"></button>
+                <button type="button" class="iconbtn" id="setBtn" aria-label="Ayarlar"></button>
+            </div>
+        </div>
+    </header>
+
+    <main id="main" class="page" tabindex="-1"></main>
+
+    <footer class="foot">
+        <div class="foot-in">
+            <p><strong>Perde</strong> · elektro gitar atölyesi. İlerlemen yalnızca bu tarayıcıda saklanır.</p>
+            <p><a href="../">Yasin Yel</a> · <a href="#araclar">Akort</a> · <a href="#" data-open-settings>Ayarlar ve yedekleme</a></p>
+        </div>
+    </footer>
+
+    <dialog class="sheet" id="settings" aria-labelledby="settingsTitle">
+        <div class="sheet-in" id="settingsBody"></div>
+    </dialog>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
