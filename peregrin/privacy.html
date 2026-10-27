@@ -4,25 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Privacy Policy — Peregrin</title>
+    <link rel="icon" href="icon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
     <style>
-        .legal-content { max-width: 800px; margin: 120px auto 60px; padding: 0 2rem; }
+        .legal-content { max-width: 800px; margin: 100px auto 60px; padding: 0 2rem; }
         .legal-content h1 { font-size: 2rem; margin-bottom: 0.5rem; }
         .legal-content .date { color: var(--text-muted); margin-bottom: 2rem; font-size: 0.9rem; }
         .legal-content h2 { font-size: 1.3rem; margin: 2rem 0 0.8rem; color: var(--accent-light); }
         .legal-content p, .legal-content li { color: var(--text-secondary); margin-bottom: 0.8rem; line-height: 1.8; }
         .legal-content ul { padding-left: 1.5rem; }
-        .legal-content hr { border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 3rem 0; }
-        .lang { display: inline-flex; gap: 1rem; margin-bottom: 2rem; font-size: 0.9rem; }
-        .lang a, .legal-content a { color: var(--accent); }
+        .legal-content a { color: var(--accent); }
+        .app-head { display: flex; align-items: center; gap: 14px; margin-bottom: 1.5rem; }
+        .app-head img { width: 56px; height: 56px; border-radius: 14px; }
+        .app-head span { font-weight: 700; font-size: 1.1rem; }
+        .tf-nav { display: flex; gap: 1.2rem; flex-wrap: wrap; margin-bottom: 2rem; font-size: 0.9rem; }
+        .faq-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.2rem 1.5rem; margin-bottom: 0.8rem; }
+        .faq-item h3 { font-size: 1rem; color: var(--accent-light); margin-bottom: 0.5rem; }
+        .faq-item p { margin-bottom: 0; }
+        .lang { font-size: 0.85rem; color: var(--text-muted); margin: 2.5rem 0 0.5rem; letter-spacing: 0.08em; text-transform: uppercase; }
+        hr { border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 3rem 0; }
     </style>
 </head>
 <body>
-<div class="legal-content">
-    <div class="lang"><a href="#en">English</a><a href="#tr">Türkçe</a></div>
+    <div class="legal-content">
+        <div class="tf-nav"><a href="../index.html">&larr; Home</a><a href="index.html">Peregrin</a><a href="support.html">Support</a><a href="privacy.html">Privacy</a></div>
+        <div class="app-head"><img src="icon.png" alt="Peregrin icon"><span>Peregrin: Walk &amp; Ride the World</span></div>
+
+    <p class="date"><a href="#en">English</a> · <a href="#tr">Türkçe</a></p>
 
     <section id="en">
         <h1>Peregrin — Privacy Policy</h1>
@@ -130,6 +141,7 @@
         <h2>9. İletişim</h2>
         <p>Gizlilikle ilgili sorular: <a href="mailto:yasinyel32@gmail.com">yasinyel32@gmail.com</a></p>
     </section>
-</div>
+
+    </div>
 </body>
 </html>
