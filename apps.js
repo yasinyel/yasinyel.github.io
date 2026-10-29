@@ -134,14 +134,14 @@ const APPS = [
         name: 'Öğrenci Takip Sistemi',
         tagline: 'Özel ders öğretmenleri için mobil uygulama',
         platform: 'mobile',
-        status: 'soon',
+        status: 'active',
         color: '#d98a0b',
         icon: 'fa-graduation-cap',
         description: 'Özel ders öğretmenlerinin öğrenci takibi, ders planlama, ödeme yönetimi ve deneme sınavı takibi yapmasını sağlayan mobil uygulama. Veliler kendi hesaplarıyla çocuklarının derslerini ve ödemelerini izleyebilir.',
         features: ['Öğrenci yönetimi', 'Ders planlama', 'Ödeme takibi', 'Sınav analizi', 'Bildirimler', 'Veli paneli'],
         tech: ['React Native', 'TypeScript', 'Xcode', 'RevenueCat'],
-        link: null,
-        linkLabel: 'App Store & Google Play — yakında'
+        link: 'ogrenci-takip/',
+        linkLabel: 'App Store\'da · Google Play yakında'
     }
 ];
 

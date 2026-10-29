@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Öğrenci Takip Sistemi — Yasin Yel</title>
+    <meta name="description" content="Özel ders öğretmenleri için ders, ödeme, ödev ve deneme takibi. Veliler davet koduyla bağlanır. iPhone ve Android.">
+    <link rel="icon" href="ikon.png">
+    <link rel="apple-touch-icon" href="ikon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../site.css">
+    <script>
+        try { const t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+    </script>
+    <style>
+        .app-badge { display: flex; align-items: center; gap: 14px; margin-bottom: 26px; }
+        .app-badge img { width: 64px; height: 64px; border-radius: 16px; box-shadow: var(--shadow); }
+        .app-badge .eyebrow { margin-bottom: 0; }
+        .store-btn { min-width: 210px; justify-content: flex-start; }
+        .store-btn i { font-size: 1.5rem; }
+        .store-btn span { display: flex; flex-direction: column; line-height: 1.15; text-align: left; }
+        .store-btn small { font-size: 0.72rem; font-weight: 500; opacity: 0.8; }
+        .store-btn b { font-size: 1.05rem; }
+        .store-btn.is-soon { pointer-events: none; color: var(--muted); }
+        .hero-note { margin-top: 18px; font-size: 0.88rem; color: var(--muted); }
+
+        .phone {
+            position: relative; width: min(300px, 100%); margin-inline: auto;
+            aspect-ratio: 1080 / 2234; border-radius: 44px; padding: 10px;
+            background: #0b0f19; box-shadow: var(--shadow-lg); border: 1px solid var(--line);
+            transform: rotate(2deg);
+        }
+        .phone img { width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 34px; padding-top: 34px; background: #f3f5f9; }
+        .phone::before { content: ""; position: absolute; top: 20px; left: 50%; width: 76px; height: 22px; margin-left: -38px; border-radius: 12px; background: #0b0f19; z-index: 1; }
+
+        .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+        .feature-grid .tl-card { height: 100%; }
+        .feature-grid .tl-card span:last-child { font-size: 0.92rem; }
+
+        .steps { display: grid; gap: 14px; counter-reset: step; }
+        .step { display: flex; gap: 16px; align-items: flex-start; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; }
+        .step::before {
+            counter-increment: step; content: counter(step);
+            flex: none; width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center;
+            font-family: var(--display); font-weight: 800; background: var(--accent); color: var(--accent-ink);
+        }
+        .step strong { font-family: var(--display); font-size: 1.05rem; display: block; margin-bottom: 2px; }
+        .step p { color: var(--muted); font-size: 0.93rem; }
+        .veli-shot .phone { transform: rotate(-2deg); width: min(270px, 100%); }
+
+        .cta-box { text-align: center; background: var(--surface); border: 1px solid var(--line); border-radius: 28px; padding: clamp(36px, 6vw, 64px) 24px; box-shadow: var(--shadow); }
+        .cta-box img { width: 72px; height: 72px; border-radius: 18px; margin: 0 auto 18px; }
+        .cta-box h2 { margin: 0 auto 12px; }
+        .cta-box p { color: var(--muted); max-width: 52ch; margin: 0 auto; }
+        .cta-box .hero-cta { justify-content: center; }
+
+        @media (max-width: 1000px) { .feature-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 820px) {
+            .hero-visual { order: 0; margin-top: 8px; }
+            .phone { width: min(250px, 80%); }
+        }
+        @media (max-width: 560px) {
+            .feature-grid { grid-template-columns: 1fr; }
+            .store-btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <div class="wrap topbar-inner">
+            <a href="../" class="brand">Yasin&nbsp;Yel<span class="brand-dot"></span></a>
+            <nav class="nav" id="nav">
+                <a href="#ozellikler">Özellikler</a>
+                <a href="#veliler">Veliler için</a>
+                <a href="#indir">İndir</a>
+                <a href="../#uygulamalar">Diğer uygulamalar</a>
+            </nav>
+            <div class="topbar-actions">
+                <button class="icon-btn" id="themeBtn" aria-label="Temayı değiştir"><i class="fas fa-circle-half-stroke"></i></button>
+                <button class="icon-btn menu-btn" id="menuBtn" aria-label="Menü"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <main id="top">
+        <section class="hero wrap">
+            <div class="hero-text">
+                <div class="app-badge">
+                    <img src="ikon.png" alt="Öğrenci Takip Sistemi simgesi">
+                    <p class="eyebrow"><span class="pulse"></span> <span id="statusText">App Store'da yayında · Android yakında</span></p>
+                </div>
+                <h1>Özel derslerin <em>tamamı</em> tek uygulamada.</h1>
+                <p class="lead">Öğrenci Takip Sistemi; özel ders veren öğretmenlerin ders programını, ödemelerini, ödevleri ve deneme sonuçlarını tek yerden yönetmesini sağlar. Veliler de kendi hesaplarıyla çocuklarının gelişimini takip eder.</p>
+                <div class="hero-cta" id="indir">
+                    <a class="btn btn-primary btn-lg store-btn" id="iosBtn" href="https://apps.apple.com/tr/app/id6760719492">
+                        <i class="fab fa-apple"></i><span><small>İndir</small><b>App Store</b></span>
+                    </a>
+                    <a class="btn btn-ghost btn-lg store-btn" id="androidBtn" href="https://play.google.com/store/apps/details?id=com.yasinyel.ozelders">
+                        <i class="fab fa-google-play"></i><span><small id="androidSmall">İndir</small><b>Google Play</b></span>
+                    </a>
+                </div>
+                <p class="hero-note">Öğretmenler için 7 gün ücretsiz deneme · Veliler için ücretsiz</p>
+            </div>
+            <div class="hero-visual">
+                <div class="phone"><img src="ekran-ana.jpg" alt="Uygulamanın ana ekranı: bugünün dersleri, öğrenci sayısı, tahsilat ve bekleyen ödeme"></div>
+                <span class="float-chip chip-b"><i class="fas fa-bell"></i> Veli talebi: dersi ertele</span>
+                <span class="float-chip chip-a"><i class="fas fa-circle"></i> Ödeme alındı · ₺1.200</span>
+            </div>
+        </section>
+
+        <section class="wrap">
+            <dl class="stats">
+                <div><dt>7 gün</dt><dd>Ücretsiz deneme, kart gerekmez</dd></div>
+                <div><dt>2</dt><dd>Platform: iPhone ve Android</dd></div>
+                <div><dt>₺0</dt><dd>Veliler için ücret yok</dd></div>
+                <div><dt>Anlık</dt><dd>Ders, ödev ve ödeme bildirimleri</dd></div>
+            </dl>
+        </section>
+
+        <section class="section" id="ozellikler">
+            <div class="wrap">
+                <header class="section-head">
+                    <p class="kicker">01 — Özellikler</p>
+                    <h2>Defter, takvim ve ödeme listesi artık tek ekranda.</h2>
+                </header>
+                <div class="feature-grid">
+                    <div class="tl-card" style="--c:#6d5ae6">
+                        <span class="tl-icon"><i class="fas fa-user-graduate"></i></span>
+                        <strong>Öğrenci yönetimi</strong>
+                        <span>Sınıf, branş, hedef sınav ve veli bilgileri; her öğrencinin ders geçmişi, ödevleri ve dosyaları bir arada.</span>
+                    </div>
+                    <div class="tl-card" style="--c:#2563eb">
+                        <span class="tl-icon"><i class="fas fa-calendar-days"></i></span>
+                        <strong>Ders planlama</strong>
+                        <span>Tek seferlik ya da haftalık tekrarlayan dersler, iptal, erteleme ve telafi. Dersler istenirse telefon takvimine eklenir.</span>
+                    </div>
+                    <div class="tl-card" style="--c:#16a36a">
+                        <span class="tl-icon"><i class="fas fa-wallet"></i></span>
+                        <strong>Ödeme ve borç takibi</strong>
+                        <span>Ders başı, aylık ya da paket ücret; yapılan derslere göre otomatik borç, PDF ekstre ve gelir raporu.</span>
+                    </div>
+                    <div class="tl-card" style="--c:#d98a0b">
+                        <span class="tl-icon"><i class="fas fa-chart-line"></i></span>
+                        <strong>Ödev ve deneme sonuçları</strong>
+                        <span>Ödevleri fotoğrafıyla verin, deneme netlerini girin; gelişim grafikleri kendiliğinden oluşur.</span>
+                    </div>
+                    <div class="tl-card" style="--c:#c2367a">
+                        <span class="tl-icon"><i class="fas fa-people-roof"></i></span>
+                        <strong>Veli uygulaması</strong>
+                        <span>Veli davet koduyla kendi hesabını açar; programı, ödevleri, netleri ve ödemeleri görür, ders erteleme isteyebilir.</span>
+                    </div>
+                    <div class="tl-card" style="--c:#0e8fa3">
+                        <span class="tl-icon"><i class="fas fa-bell"></i></span>
+                        <strong>Bildirimler</strong>
+                        <span>Ders hatırlatmaları ile veli talebi, yeni ödev, deneme sonucu ve ödeme bildirimleri anında telefona gelir.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section section-alt" id="veliler">
+            <div class="wrap featured">
+                <div>
+                    <p class="kicker">02 — Veliler için</p>
+                    <h2>Öğretmeninizden davet kodu mu aldınız?</h2>
+                    <p class="lead" style="margin:16px 0 26px">Üç adımda çocuğunuzun derslerini, ödevlerini ve deneme sonuçlarını takip etmeye başlayın. Veliler için uygulama ücretsizdir.</p>
+                    <div class="steps">
+                        <div class="step"><div><strong>Uygulamayı indirin</strong><p>iPhone'da App Store'dan, Android'de Google Play'den "Öğrenci Takip Sistemi"ni indirin.</p></div></div>
+                        <div class="step"><div><strong>"Davet koduyla kaydolun"a dokunun</strong><p>Giriş ekranının altındaki "Veli misiniz?" bölümünde.</p></div></div>
+                        <div class="step"><div><strong>Kodu girin, hesabınızı açın</strong><p>Öğretmeninizin gönderdiği kodu yazın; adınızı, e-postanızı ve şifrenizi belirleyin.</p></div></div>
+                    </div>
+                </div>
+                <div class="veli-shot">
+                    <div class="phone"><img src="ekran-takvim.jpg" alt="Uygulamanın haftalık takvim ekranı"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="wrap">
+                <div class="cta-box">
+                    <img src="ikon.png" alt="">
+                    <h2>Hemen başlayın</h2>
+                    <p>Öğretmenler 7 gün boyunca tüm özellikleri ücretsiz dener; sonrasında aylık ya da yıllık abonelikle devam eder.</p>
+                    <div class="hero-cta">
+                        <a class="btn btn-primary btn-lg store-btn" href="https://apps.apple.com/tr/app/id6760719492"><i class="fab fa-apple"></i><span><small>İndir</small><b>App Store</b></span></a>
+                        <a class="btn btn-ghost btn-lg store-btn" id="androidBtn2" href="https://play.google.com/store/apps/details?id=com.yasinyel.ozelders"><i class="fab fa-google-play"></i><span><small id="androidSmall2">İndir</small><b>Google Play</b></span></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="wrap footer-inner">
+            <p>© 2026 Yasin Yel · Öğrenci Takip Sistemi</p>
+            <nav>
+                <a href="../privacy.html">Gizlilik</a>
+                <a href="../terms.html">Kullanım Koşulları</a>
+                <a href="../hesap-silme.html">Hesap silme</a>
+                <a href="mailto:yasinyel32@gmail.com">İletişim</a>
+            </nav>
+        </div>
+    </footer>
+
+    <script>
+        // Google Play'de herkese açılınca true yapılacak (kapalı testte mağaza sayfası yalnızca test kullanıcılarına açık)
+        var ANDROID_PUBLIC = false;
+
+        if (!ANDROID_PUBLIC) {
+            ['androidBtn', 'androidBtn2'].forEach(function (id) { document.getElementById(id).classList.add('is-soon'); });
+            ['androidSmall', 'androidSmall2'].forEach(function (id) { document.getElementById(id).textContent = 'Çok yakında'; });
+        } else {
+            document.getElementById('statusText').textContent = 'App Store ve Google Play\'de yayında';
+        }
+
+        // Davet bağlantısıyla (?indir) gelen telefonu doğrudan mağazaya gönder
+        var ua = navigator.userAgent || '';
+        var isIOS = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        var isAndroid = /Android/.test(ua);
+        if (/[?&]indir\b/.test(location.search)) {
+            if (isIOS) location.replace(document.getElementById('iosBtn').href);
+            else if (isAndroid && ANDROID_PUBLIC) location.replace(document.getElementById('androidBtn').href);
+        }
+
+        // Tema ve mobil menü (ana sayfadaki gibi)
+        var root = document.documentElement;
+        document.getElementById('themeBtn').addEventListener('click', function () {
+            var dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+            root.dataset.theme = dark ? 'light' : 'dark';
+            try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
+        });
+        var nav = document.getElementById('nav');
+        document.getElementById('menuBtn').addEventListener('click', function () { nav.classList.toggle('open'); });
+        nav.addEventListener('click', function (e) { if (e.target.tagName === 'A') nav.classList.remove('open'); });
+    </script>
+</body>
+</html>
