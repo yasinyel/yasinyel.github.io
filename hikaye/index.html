@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Yasin Yel — Uygulamalarım</title>
+    <meta name="description" content="Yasin Yel'in geliştirdiği uygulamalar, her biri tek ekranda.">
+    <meta property="og:title" content="Yasin Yel — Uygulamalarım">
+    <meta property="og:description" content="Okul sistemlerinden App Store uygulamalarına, geliştirdiğim her şey tek tek.">
+    <meta property="og:image" content="https://yasinyel.com/assets/profile.jpg">
+    <meta name="theme-color" content="#0c111b">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100%; }
+        body {
+            background: #05070c;
+            color: #fff;
+            font-family: 'Inter', system-ui, sans-serif;
+            display: grid; place-items: center;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            user-select: none; -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        a { color: inherit; text-decoration: none; }
+        [hidden] { display: none !important; }
+        button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+
+        /* 9:16 stage: full screen on phones, a centered "phone" on desktop */
+        .stage {
+            position: relative;
+            height: 100dvh; width: min(100vw, calc(100dvh * 9 / 16));
+            overflow: hidden;
+            container-type: inline-size;
+            background: #0c111b;
+            touch-action: pan-y;
+        }
+        @media (min-width: 700px) {
+            .stage { height: min(100dvh - 40px, 900px); width: calc(min(100dvh - 40px, 900px) * 9 / 16); border-radius: 22px; box-shadow: 0 30px 80px rgba(0,0,0,0.6); }
+        }
+
+        /* Progress bars + header */
+        .top { position: absolute; z-index: 20; left: 0; right: 0; top: 0; padding: calc(env(safe-area-inset-top) + 3cqw) 3.5cqw 0; pointer-events: none; }
+        .bars { display: flex; gap: 1cqw; }
+        .bar { flex: 1; height: max(2px, 0.7cqw); border-radius: 99px; background: rgba(255,255,255,0.3); overflow: hidden; }
+        .bar i { display: block; height: 100%; width: 0; background: #fff; }
+        .head { display: flex; align-items: center; gap: 2.4cqw; margin-top: 3cqw; }
+        .head img { width: 8.5cqw; height: 8.5cqw; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.85); }
+        .head b { font-size: 3.6cqw; font-weight: 600; }
+        .head span { font-size: 3.2cqw; opacity: 0.7; }
+        .head .tools { margin-left: auto; display: flex; gap: 1.5cqw; pointer-events: auto; }
+        .head .tools button, .head .tools a { width: 9cqw; height: 9cqw; border-radius: 50%; display: grid; place-items: center; font-size: 3.8cqw; background: rgba(0,0,0,0.25); }
+
+        /* Slides */
+        .slide {
+            position: absolute; inset: 0;
+            display: flex; flex-direction: column;
+            padding: calc(env(safe-area-inset-top) + 19cqw) 7cqw calc(env(safe-area-inset-bottom) + 8cqw);
+            background:
+                radial-gradient(120% 70% at 80% 0%, color-mix(in srgb, var(--c) 85%, #fff 15%) 0%, transparent 60%),
+                linear-gradient(180deg, var(--c) 0%, color-mix(in srgb, var(--c) 45%, #000) 100%);
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.35s ease, visibility 0.35s;
+        }
+        .slide.on { opacity: 1; visibility: visible; }
+        .slide::after { content: ''; position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,0.12) 1px, transparent 1px); background-size: 3.4cqw 3.4cqw; mask-image: linear-gradient(to bottom, #000, transparent 55%); pointer-events: none; }
+        .slide > * { position: relative; z-index: 1; }
+
+        .media { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; gap: 4cqw; margin-bottom: 6cqw; }
+        .phone { height: 100%; max-height: 118cqw; border-radius: 6cqw; overflow: hidden; border: 1.1cqw solid #0b0d12; box-shadow: 0 4cqw 10cqw rgba(0,0,0,0.45); background: #000; }
+        .phone img { height: 100%; width: auto; display: block; }   /* frame takes the screenshot's own proportions */
+        .video .phone { aspect-ratio: 9 / 16; }                         /* promo videos are 1080×1920 */
+        .phone video { width: 100%; height: 100%; object-fit: contain; display: block; }
+        .phones .phone:nth-child(1) { transform: rotate(-4deg) translateY(3cqw); }
+        .phones .phone:nth-child(2) { transform: rotate(4deg) translateY(-3cqw); }
+        .phones .phone { max-height: 100cqw; }
+        .video .phone { max-height: 128cqw; }
+        .browser { width: 100%; border-radius: 3cqw; overflow: hidden; background: #0f1320; box-shadow: 0 4cqw 12cqw rgba(0,0,0,0.45); transform: rotate(-2deg); }
+        .browser .dots { display: flex; gap: 1.2cqw; padding: 2cqw 2.6cqw; background: rgba(15,19,32,0.95); }
+        .browser .dots i { width: 1.8cqw; height: 1.8cqw; border-radius: 50%; background: rgba(255,255,255,0.35); }
+        .browser img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; }
+        .tile { width: 42cqw; height: 42cqw; border-radius: 10cqw; display: grid; place-items: center; font-size: 18cqw; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); box-shadow: 0 4cqw 12cqw rgba(0,0,0,0.35); }
+        .tile img { width: 100%; height: 100%; border-radius: inherit; object-fit: cover; }
+
+        .meta { display: flex; align-items: center; gap: 2cqw; flex-wrap: wrap; margin-bottom: 3cqw; }
+        .pill { display: inline-flex; align-items: center; gap: 1.4cqw; font-size: 3.2cqw; font-weight: 600; padding: 1.2cqw 3cqw; border-radius: 99px; background: rgba(255,255,255,0.16); border: 1px solid rgba(255,255,255,0.22); }
+        .pill.live i { width: 1.6cqw; height: 1.6cqw; border-radius: 50%; background: #4ade80; box-shadow: 0 0 0 0.8cqw rgba(74,222,128,0.25); }
+        .pill.soon { background: rgba(251,191,36,0.2); border-color: rgba(251,191,36,0.45); color: #fde68a; }
+        .name { display: flex; align-items: center; gap: 3cqw; }
+        .name img { width: 12cqw; height: 12cqw; border-radius: 3cqw; box-shadow: 0 1.5cqw 4cqw rgba(0,0,0,0.3); }
+        h1, h2 { font-family: 'Bricolage Grotesque', 'Inter', sans-serif; font-weight: 800; letter-spacing: -0.02em; line-height: 1.02; }
+        h2 { font-size: 9.5cqw; }
+        .tagline { font-size: 4.3cqw; line-height: 1.35; opacity: 0.88; margin-top: 2.2cqw; }
+        .chips { display: flex; flex-wrap: wrap; gap: 1.6cqw; margin-top: 4cqw; }
+        .chips span { font-size: 3.2cqw; padding: 1.2cqw 2.8cqw; border-radius: 99px; background: rgba(0,0,0,0.22); }
+        .cta { margin-top: 5cqw; display: flex; }
+        .cta a, .cta span { display: inline-flex; align-items: center; gap: 2cqw; font-size: 3.9cqw; font-weight: 600; padding: 3.2cqw 5.5cqw; border-radius: 99px; background: #fff; color: #0c111b; box-shadow: 0 2cqw 6cqw rgba(0,0,0,0.25); }
+        .cta span { background: rgba(255,255,255,0.15); color: #fff; box-shadow: none; }
+        .site { position: absolute; z-index: 2; left: 0; right: 0; bottom: calc(env(safe-area-inset-bottom) + 3cqw); text-align: center; font-size: 3.2cqw; font-weight: 600; letter-spacing: 0.04em; opacity: 0.6; display: none; }
+
+        /* Intro & outro */
+        .intro, .outro { justify-content: center; align-items: center; text-align: center; }
+        .intro .avatar { width: 46cqw; height: 46cqw; border-radius: 50%; object-fit: cover; border: 1.4cqw solid rgba(255,255,255,0.9); box-shadow: 0 4cqw 14cqw rgba(0,0,0,0.45); margin-bottom: 7cqw; }
+        .intro h1 { font-size: 13cqw; }
+        .intro .role { font-size: 4.4cqw; opacity: 0.85; margin: 3cqw 0 6cqw; line-height: 1.4; }
+        .intro .lead { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 6.4cqw; line-height: 1.2; max-width: 80cqw; }
+        .intro .lead em { font-style: normal; color: #93c5fd; }
+        .hint { margin-top: 9cqw; font-size: 3.4cqw; opacity: 0.7; display: inline-flex; gap: 2cqw; align-items: center; animation: nudge 1.6s ease-in-out infinite; }
+        @keyframes nudge { 50% { transform: translateX(1.5cqw); } }
+        .outro h2 { font-size: 11cqw; margin-bottom: 4cqw; }
+        .outro p { font-size: 4.4cqw; opacity: 0.85; line-height: 1.45; max-width: 78cqw; }
+        .outro .cta { justify-content: center; }
+        .socials { display: flex; gap: 3cqw; margin-top: 7cqw; justify-content: center; }
+        .socials a { width: 12cqw; height: 12cqw; border-radius: 50%; display: grid; place-items: center; font-size: 5cqw; background: rgba(255,255,255,0.14); }
+
+        /* Export mode (Instagram images): no progress bars or controls */
+        .export .bars, .export .tools, .export .hint, .export #counter { display: none; }
+        .export .site { display: block; }
+        .export .slide { transition: none; }
+        .export .stage { width: 100vw; height: 100vh; border-radius: 0; box-shadow: none; }
+    </style>
+</head>
+<body>
+    <main class="stage" id="stage" aria-roledescription="hikaye">
+        <div class="top">
+            <div class="bars" id="bars"></div>
+            <div class="head">
+                <img src="../assets/profile.jpg" alt="">
+                <div><b>Yasin Yel</b> <span id="counter"></span></div>
+                <div class="tools">
+                    <button id="soundBtn" aria-label="Sesi aç" hidden><i class="fas fa-volume-xmark"></i></button>
+                    <a href="../" aria-label="Siteyi aç"><i class="fas fa-xmark"></i></a>
+                </div>
+            </div>
+        </div>
+        <div id="slides"></div>
+    </main>
+
+    <script src="../apps.js"></script>
+    <script>
+        const params = new URLSearchParams(location.search);
+        const EXPORT = params.has('export');
+        if (EXPORT) document.body.classList.add('export');
+
+        const PLATFORM = { web: ['fa-globe', 'Web'], desktop: ['fa-desktop', 'Masaüstü'], mobile: ['fa-mobile-screen', 'Mobil'] };
+        const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        const rel = p => /^https?:/.test(p) ? p : '../' + p;   // apps.js paths are relative to the site root
+        const live = APPS.filter(a => a.status === 'active').length;
+        const IMAGE_MS = 6000, VIDEO_MAX_MS = 20000;
+
+        function media(app) {
+            if (app.video && !EXPORT) {
+                return `<div class="media video"><div class="phone"><video src="${rel(app.video)}" muted playsinline preload="auto"></video></div></div>`;
+            }
+            if (app.phones) {
+                return `<div class="media phones">${app.phones.map(p => `<div class="phone"><img src="${rel(p)}" alt=""></div>`).join('')}</div>`;
+            }
+            if (app.image) {
+                return `<div class="media"><div class="browser"><div class="dots"><i></i><i></i><i></i></div><img src="${rel(app.image)}" alt=""></div></div>`;
+            }
+            return `<div class="media"><div class="tile">${app.appIcon ? `<img src="${rel(app.appIcon)}" alt="">` : `<i class="fas ${app.icon}"></i>`}</div></div>`;
+        }
+
+        function appSlide(app) {
+            const [picon, plabel] = PLATFORM[app.platform];
+            const status = app.status === 'active'
+                ? `<span class="pill live"><i></i>${app.platform === 'mobile' ? "App Store'da" : 'Aktif'}</span>`
+                : '<span class="pill soon">Yakında</span>';
+            // In exported images a button can't be tapped, so show the address instead
+            const address = app.link && (/^https?:/.test(app.link) ? app.link : 'https://yasinyel.com/' + app.link)
+                .replace(/^https?:\/\//, '').replace(/\/$/, '');
+            const cta = app.link
+                ? EXPORT
+                    ? `<a><i class="fas fa-link"></i> ${esc(address)}</a>`
+                    : `<a href="${rel(app.link)}" target="_blank" rel="noopener">${esc(app.linkText || 'Uygulamayı aç')} <i class="fas fa-arrow-up-right-from-square"></i></a>`
+                : `<span><i class="fas ${picon}"></i> ${esc(app.linkLabel || '')}</span>`;
+            return `
+                <section class="slide" style="--c:${app.color}" data-video="${app.video && !EXPORT ? 1 : ''}">
+                    ${media(app)}
+                    <div class="meta"><span class="pill"><i class="fas ${picon}"></i> ${plabel}</span>${status}</div>
+                    <div class="name">${app.appIcon ? `<img src="${rel(app.appIcon)}" alt="">` : ''}<h2>${esc(app.name)}</h2></div>
+                    <p class="tagline">${esc(app.tagline)}</p>
+                    ${app.features.length ? `<div class="chips">${app.features.slice(0, 3).map(f => `<span>${esc(f)}</span>`).join('')}</div>` : ''}
+                    <div class="cta">${cta}</div>
+                    <div class="site">yasinyel.com</div>
+                </section>`;
+        }
+
+        const intro = `
+            <section class="slide intro" style="--c:#1d4ed8">
+                <img class="avatar" src="../assets/profile.jpg" alt="Yasin Yel">
+                <h1>Yasin Yel</h1>
+                <p class="role">Bilişim Teknolojileri Öğretmeni<br>Yazılım Geliştirici</p>
+                <p class="lead">Okul sistemlerinden App Store'a, <em>${live} uygulama</em> yayında.</p>
+                <p class="hint">Dokunarak ilerle <i class="fas fa-arrow-right"></i></p>
+                <div class="site">yasinyel.com</div>
+            </section>`;
+        const outro = `
+            <section class="slide outro" style="--c:#0f172a">
+                <h2>Hepsi tek yerde</h2>
+                <p>Her uygulamanın ayrıntıları, ekran görüntüleri ve videoları sitemde.</p>
+                <div class="cta"><a href="../">yasinyel.com <i class="fas fa-arrow-right"></i></a></div>
+                <div class="socials">
+                    <a href="https://instagram.com/_yasinyel" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://linkedin.com/in/yasinyel" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://github.com/yasinyel" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="mailto:yasinyel32@gmail.com" aria-label="E-posta"><i class="fas fa-envelope"></i></a>
+                </div>
+                <div class="site">yasinyel.com</div>
+            </section>`;
+
+        document.getElementById('slides').innerHTML = intro + APPS.map(appSlide).join('') + outro;
+        const slides = [...document.querySelectorAll('.slide')];
+        const bars = document.getElementById('bars');
+        bars.innerHTML = slides.map(() => '<div class="bar"><i></i></div>').join('');
+        const fills = [...bars.querySelectorAll('i')];
+        const counter = document.getElementById('counter');
+        const soundBtn = document.getElementById('soundBtn');
+
+        let index = 0, elapsed = 0, last = 0, paused = false, muted = true;
+
+        const videoOf = i => slides[i].querySelector('video');
+
+        function show(i) {
+            index = Math.max(0, Math.min(slides.length - 1, i));
+            slides.forEach((s, n) => s.classList.toggle('on', n === index));
+            fills.forEach((f, n) => f.style.width = n < index ? '100%' : '0%');
+            counter.textContent = `· ${index + 1}/${slides.length}`;
+            slides.forEach((s, n) => { const v = s.querySelector('video'); if (v && n !== index) { v.pause(); v.currentTime = 0; } });
+            const v = videoOf(index);
+            soundBtn.hidden = !v;
+            if (v) { v.muted = muted; v.currentTime = 0; v.play().catch(() => {}); }
+            elapsed = 0;
+        }
+
+        function tick(now) {
+            const dt = last ? now - last : 0;
+            last = now;
+            if (!paused) {
+                const v = videoOf(index);
+                let progress;
+                if (v) {
+                    const total = Math.min((v.duration || 20) * 1000, VIDEO_MAX_MS);
+                    progress = (v.currentTime * 1000) / total;
+                    if (v.ended) progress = 1;
+                } else {
+                    elapsed += dt;
+                    progress = elapsed / IMAGE_MS;
+                }
+                fills[index].style.width = Math.min(progress, 1) * 100 + '%';
+                if (progress >= 1) {
+                    if (index < slides.length - 1) show(index + 1);
+                    else paused = true;   // stay on the last screen
+                }
+            }
+            requestAnimationFrame(tick);
+        }
+
+        function setPaused(p) {
+            paused = p;
+            const v = videoOf(index);
+            if (v) p ? v.pause() : v.play().catch(() => {});
+        }
+
+        if (EXPORT) {
+            show(Number(params.get('export')) || 0);
+        } else {
+            show(0);
+            requestAnimationFrame(tick);
+
+            // Tap right = next, tap left = back, hold = pause, swipe = next/back
+            const stage = document.getElementById('stage');
+            let downX = 0, downY = 0, downAt = 0, holdTimer = null, held = false;
+            stage.addEventListener('pointerdown', e => {
+                if (e.target.closest('a, button')) return;
+                downX = e.clientX; downY = e.clientY; downAt = Date.now(); held = false;
+                holdTimer = setTimeout(() => { held = true; setPaused(true); }, 220);
+            });
+            stage.addEventListener('pointerup', e => {
+                if (e.target.closest('a, button')) return;
+                clearTimeout(holdTimer);
+                const dx = e.clientX - downX, dy = e.clientY - downY;
+                if (held) { setPaused(false); return; }
+                if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) { show(index + (dx < 0 ? 1 : -1)); paused = false; return; }
+                const rect = stage.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                show(index + (x < rect.width / 3 ? -1 : 1));
+                paused = false;
+            });
+            stage.addEventListener('pointercancel', () => { clearTimeout(holdTimer); if (held) setPaused(false); });
+            document.addEventListener('keydown', e => {
+                if (e.key === 'ArrowRight' || e.key === ' ') { show(index + 1); paused = false; }
+                if (e.key === 'ArrowLeft') { show(index - 1); paused = false; }
+            });
+            document.addEventListener('visibilitychange', () => setPaused(document.hidden));
+
+            soundBtn.addEventListener('click', () => {
+                muted = !muted;
+                const v = videoOf(index);
+                if (v) v.muted = muted;
+                soundBtn.innerHTML = `<i class="fas ${muted ? 'fa-volume-xmark' : 'fa-volume-high'}"></i>`;
+                soundBtn.setAttribute('aria-label', muted ? 'Sesi aç' : 'Sesi kapat');
+            });
+        }
+    </script>
+</body>
+</html>
