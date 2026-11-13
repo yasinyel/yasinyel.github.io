@@ -51,19 +51,6 @@ grid.innerHTML = APPS.map(app => `
 const liveCount = document.getElementById('liveCount');
 if (liveCount) liveCount.textContent = APPS.filter(a => a.status === 'active').length;
 
-// ===== PROMO VIDEO TABS =====
-const promoVideo = document.getElementById('promoVideo');
-const videoTabs = document.getElementById('videoTabs');
-if (promoVideo && videoTabs) {
-    videoTabs.addEventListener('click', e => {
-        const btn = e.target.closest('.filter');
-        if (!btn || btn.classList.contains('is-active')) return;
-        videoTabs.querySelectorAll('.filter').forEach(b => b.classList.toggle('is-active', b === btn));
-        promoVideo.src = btn.dataset.src;
-        promoVideo.play().catch(() => {});
-    });
-}
-
 // ===== FILTERS =====
 document.getElementById('filters').addEventListener('click', e => {
     const btn = e.target.closest('.filter');
