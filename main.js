@@ -19,7 +19,7 @@ function preview(app) {
         <div class="preview" style="--c:${app.color}">
             <div class="preview-bar"><i></i><i></i><i></i></div>
             <div class="preview-body">
-                <div class="preview-icon"><i class="fas ${app.icon}"></i></div>
+                <div class="preview-icon${app.appIcon ? ' has-img' : ''}">${app.appIcon ? `<img src="${app.appIcon}" alt="">` : `<i class="fas ${app.icon}"></i>`}</div>
                 <div class="preview-lines"><b></b><b></b><b></b></div>
             </div>
         </div>`;
@@ -47,6 +47,23 @@ grid.innerHTML = APPS.map(app => `
         </div>
     </button>`).join('');
 
+// Hero chip: number of live apps, kept in sync with the list
+const liveCount = document.getElementById('liveCount');
+if (liveCount) liveCount.textContent = APPS.filter(a => a.status === 'active').length;
+
+// ===== PROMO VIDEO TABS =====
+const promoVideo = document.getElementById('promoVideo');
+const videoTabs = document.getElementById('videoTabs');
+if (promoVideo && videoTabs) {
+    videoTabs.addEventListener('click', e => {
+        const btn = e.target.closest('.filter');
+        if (!btn || btn.classList.contains('is-active')) return;
+        videoTabs.querySelectorAll('.filter').forEach(b => b.classList.toggle('is-active', b === btn));
+        promoVideo.src = btn.dataset.src;
+        promoVideo.play().catch(() => {});
+    });
+}
+
 // ===== FILTERS =====
 document.getElementById('filters').addEventListener('click', e => {
     const btn = e.target.closest('.filter');
@@ -66,7 +83,7 @@ function openApp(id) {
     const app = byId[id];
     if (!app) return;
     const action = app.link
-        ? `<a class="btn btn-primary" href="${app.link}" target="_blank" rel="noopener">Uygulamayı aç <i class="fas fa-arrow-up-right-from-square"></i></a>`
+        ? `<a class="btn btn-primary" href="${app.link}" target="_blank" rel="noopener">${esc(app.linkText || 'Uygulamayı aç')} <i class="fas fa-arrow-up-right-from-square"></i></a>`
         : `<span class="btn btn-ghost btn-static"><i class="fas ${PLATFORM_ICON[app.platform]}"></i> ${esc(app.linkLabel || '')}</span>`;
     dialogBody.innerHTML = `
         ${preview(app)}
@@ -78,10 +95,10 @@ function openApp(id) {
             <h3>${esc(app.name)}</h3>
             <p class="dialog-tagline">${esc(app.tagline)}</p>
             <p>${esc(app.description)}</p>
-            <h4>Özellikler</h4>
-            <ul class="feature-list">${app.features.map(f => `<li><i class="fas fa-check"></i>${esc(f)}</li>`).join('')}</ul>
-            <h4>Teknolojiler</h4>
-            <div class="tech-row">${app.tech.map(t => `<span>${esc(t)}</span>`).join('')}</div>
+            ${app.features.length ? `<h4>Özellikler</h4>
+            <ul class="feature-list">${app.features.map(f => `<li><i class="fas fa-check"></i>${esc(f)}</li>`).join('')}</ul>` : ''}
+            ${app.tech.length ? `<h4>Teknolojiler</h4>
+            <div class="tech-row">${app.tech.map(t => `<span>${esc(t)}</span>`).join('')}</div>` : ''}
             <div class="dialog-actions">${action}</div>
         </div>`;
     dialog.showModal();

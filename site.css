@@ -229,6 +229,10 @@ h2 { font-size: clamp(1.8rem, 3.6vw, 2.8rem); font-weight: 700; max-width: 22ch;
 .featured-shot:hover { transform: translateY(-4px) rotate(-0.4deg); }
 .featured-shot img { width: 100%; height: 100%; object-fit: cover; }
 .featured-btn { margin-top: 28px; }
+.featured-video:hover { transform: none; }
+.featured-video video { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; }
+.video-tabs { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+.video-tabs > span { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); }
 
 .tech-row { display: flex; flex-wrap: wrap; gap: 8px; }
 .tech-row span {
@@ -306,6 +310,9 @@ h2 { font-size: clamp(1.8rem, 3.6vw, 2.8rem); font-weight: 700; max-width: 22ch;
     display: grid; place-items: center; font-size: 1.4rem;
     box-shadow: 0 8px 20px rgba(0,0,0,0.2);
 }
+/* Real app icon (mobile apps) */
+.preview-icon.has-img { width: 64px; height: 64px; border-radius: 16px; overflow: hidden; background: transparent; }
+.preview-icon.has-img img { width: 100%; height: 100%; object-fit: cover; }
 /* Screenshot variant: framed screenshot rising from a coloured backdrop */
 .preview-shot { aspect-ratio: 16 / 10; padding: 22px 22px 0; }
 .shot-frame {

@@ -50,7 +50,7 @@
                 <div class="photo-frame">
                     <img src="assets/profile.jpg" alt="Yasin Yel">
                 </div>
-                <div class="float-chip chip-a"><i class="fas fa-circle"></i> 9 sistem şu an aktif</div>
+                <div class="float-chip chip-a"><i class="fas fa-circle"></i> <span id="liveCount">12</span> uygulama yayında</div>
                 <div class="float-chip chip-b"><i class="fas fa-code"></i> Web · Mobil · Masaüstü</div>
             </div>
         </section>
@@ -96,9 +96,19 @@
                     <div class="tech-row"><span>HTML</span><span>JavaScript</span></div>
                     <a href="https://kodlayalim.com" target="_blank" rel="noopener" class="btn btn-primary featured-btn">kodlayalim.com'u aç <i class="fas fa-arrow-up-right-from-square"></i></a>
                 </div>
-                <a href="https://kodlayalim.com" target="_blank" rel="noopener" class="featured-shot">
-                    <img src="img/kodlayalim.png" alt="kodlayalim.com ana sayfası" loading="lazy">
-                </a>
+                <div class="featured-media">
+                    <div class="featured-shot featured-video">
+                        <video id="promoVideo" controls preload="none" playsinline poster="img/kodlayalim.png" src="https://kodlayalim.com/video/kodlayalim-ogretmen.mp4" aria-label="Kodlayalım tanıtım videosu"></video>
+                    </div>
+                    <div class="video-tabs">
+                        <span>Tanıtım videoları</span>
+                        <div class="filters" id="videoTabs">
+                            <button class="filter is-active" data-src="https://kodlayalim.com/video/kodlayalim-ogretmen.mp4">Öğretmen</button>
+                            <button class="filter" data-src="https://kodlayalim.com/video/kodlayalim-veli.mp4">Veli</button>
+                            <button class="filter" data-src="https://kodlayalim.com/video/kodlayalim-ogrenci.mp4">Öğrenci</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
