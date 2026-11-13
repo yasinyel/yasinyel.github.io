@@ -6,6 +6,12 @@ const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;'
 
 // Card preview: the app's screenshot in a browser-like frame, or a stylised "window" in its colour
 function preview(app) {
+    if (app.phones) {
+        return `
+        <div class="preview preview-phones" style="--c:${app.color}">
+            ${app.phones.map(src => `<img src="${src}" alt="${esc(app.name)} ekran görüntüsü" loading="lazy">`).join('')}
+        </div>`;
+    }
     if (app.image) {
         return `
         <div class="preview preview-shot" style="--c:${app.color}">

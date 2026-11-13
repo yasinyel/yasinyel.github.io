@@ -308,6 +308,19 @@ h2 { font-size: clamp(1.8rem, 3.6vw, 2.8rem); font-weight: 700; max-width: 22ch;
 /* Real app icon (mobile apps) */
 .preview-icon.has-img { width: 64px; height: 64px; border-radius: 16px; overflow: hidden; background: transparent; }
 .preview-icon.has-img img { width: 100%; height: 100%; object-fit: cover; }
+/* Phone variant: two portrait screenshots rising from a coloured backdrop */
+.preview-phones { aspect-ratio: 16 / 10; display: flex; justify-content: center; align-items: flex-start; gap: 14px; padding: 22px 22px 0; }
+.preview-phones img {
+    position: relative; z-index: 1;
+    width: 34%; aspect-ratio: 460 / 997; object-fit: cover; object-position: top;
+    border-radius: 16px; border: 3px solid #0b0d12;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s;
+}
+.preview-phones img + img { margin-top: 18px; }
+.app-card:hover .preview-phones img { transform: translateY(-6px); }
+.app-dialog .preview-phones { aspect-ratio: 16 / 9; }
+.app-dialog .preview-phones img { width: 28%; }
 /* Screenshot variant: framed screenshot rising from a coloured backdrop */
 .preview-shot { aspect-ratio: 16 / 10; padding: 22px 22px 0; }
 .shot-frame {

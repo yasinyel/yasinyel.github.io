@@ -1,6 +1,7 @@
 // Yeni uygulama eklemek için bu listeye bir nesne eklemek yeterli.
 // platform: 'web' | 'desktop' | 'mobile'   status: 'active' | 'soon'
 // image: img/ klasöründeki ekran görüntüsü (yoksa renkli önizleme çizilir)
+// phones: mobil uygulamalar için iki dikey telefon ekran görüntüsü
 const APPS = [
     {
         id: 'kodlayalim',
@@ -138,6 +139,7 @@ const APPS = [
         color: '#1e3a9e',
         icon: 'fa-graduation-cap',
         appIcon: 'ogrenci-takip/ikon.png',
+        phones: ['ogrenci-takip/ekran-ana.jpg', 'ogrenci-takip/ekran-takvim.jpg'],
         description: 'Özel ders öğretmenlerinin öğrenci takibi, ders planlama, ödeme yönetimi ve deneme sınavı takibi yapmasını sağlayan mobil uygulama. Veliler kendi hesaplarıyla çocuklarının derslerini ve ödemelerini izleyebilir. App Store\'da yayında, Google Play yakında.',
         features: ['Öğrenci yönetimi', 'Ders planlama', 'Ödeme takibi', 'Sınav analizi', 'Bildirimler', 'Veli paneli'],
         tech: ['React Native', 'TypeScript', 'Xcode', 'RevenueCat'],
@@ -154,6 +156,7 @@ const APPS = [
         color: '#0f2147',
         icon: 'fa-route',
         appIcon: 'peregrin/icon.png',
+        phones: ['peregrin/kart-1.jpg', 'peregrin/kart-2.jpg'],
         video: 'peregrin/tanitim.mp4',
         description: 'Günlük yürüyüş, koşu ve bisiklet sürüşlerini dünyanın büyük rotalarında bir yolculuğa dönüştürür. Her durakta bir hikâye, sesli anlatım, kısa bir yarışma ve bir hatıra bekler. İlk Maraton ücretsiz; ardından Likya Yolu, Meşale Yolu, Boston Maratonu, İpek Yolu, Camino de Santiago, Kumano Kodo ve Spartathlon. Hesap yok, reklam yok. App Store\'da yayında, Google Play yakında.',
         features: ['8 tarihi rota', 'Sesli anlatım', 'Durak hikâyeleri', 'Rozet ve madalyalar', '8 dil', 'Hesap ve reklam yok'],
@@ -170,6 +173,7 @@ const APPS = [
         color: '#e8590c',
         icon: 'fa-bell',
         appIcon: 'teneffus/ikon.png',
+        phones: ['teneffus/kart-1.jpg', 'teneffus/kart-2.jpg'],
         description: 'Ders programını bir kez girdiğinde hangi sınıfa, hangi dersliğe ve kaçta gideceğini telefonunun kilidini açmadan gösterir. Kilit ekranı ve Dynamic Island sayacı her zilde kendiliğinden bir sonraki derse geçer. Türk okullarının zil düzenleri hazır gelir. App Store\'da yayında.',
         features: ['Kilit ekranı sayacı', 'Dynamic Island', 'Widget\'lar', 'Öğretmen modu', 'Türk okulu zil düzenleri', 'QR ile paylaşım'],
         tech: [],
