@@ -165,6 +165,9 @@
         const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
         const rel = p => /^https?:/.test(p) ? p : '../' + p;   // apps.js paths are relative to the site root
         const live = APPS.filter(a => a.status === 'active').length;
+        // Story order: mobile apps first, then the rest in the site's order
+        const STORY_APPS = [...APPS.filter(a => a.platform === 'mobile'), ...APPS.filter(a => a.platform !== 'mobile')];
+        window.STORY_APPS = STORY_APPS;
         const IMAGE_MS = 6000, VIDEO_MAX_MS = 20000;
 
         function media(app) {
@@ -236,7 +239,7 @@
                 <div class="site">yasinyel.com</div>
             </section>`;
 
-        document.getElementById('slides').innerHTML = intro + APPS.map(appSlide).join('') + outro;
+        document.getElementById('slides').innerHTML = intro + STORY_APPS.map(appSlide).join('') + outro;
         const slides = [...document.querySelectorAll('.slide')];
         const bars = document.getElementById('bars');
         bars.innerHTML = slides.map(() => '<div class="bar"><i></i></div>').join('');
@@ -308,7 +311,7 @@
             const seconds = i => {
                 if (i === 0) return 3.5;                     // intro
                 if (i === slides.length - 1) return 4;       // outro
-                const app = APPS[i - 1];
+                const app = STORY_APPS[i - 1];
                 return app.poster ? 4.5 : app.video ? 6 : 3.5;
             };
             const durations = slides.map((_, i) => seconds(i));
