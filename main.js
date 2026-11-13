@@ -80,7 +80,7 @@ function openApp(id) {
         : `<span class="btn btn-ghost btn-static"><i class="fas ${PLATFORM_ICON[app.platform]}"></i> ${esc(app.linkLabel || '')}</span>`;
     dialogBody.innerHTML = `
         ${app.video
-            ? `<div class="dialog-video"><video src="${app.video}" controls preload="metadata" playsinline aria-label="${esc(app.name)} tanıtım videosu"></video></div>`
+            ? `<div class="dialog-video"><video src="${app.video}" controls preload="metadata" playsinline aria-label="${esc(app.name)} tanıtım videosu"></video><button class="video-cover" type="button"><i class="fas fa-play"></i> Tanıtım videosunu izle</button></div>`
             : preview(app)}
         <div class="dialog-content">
             <div class="app-card-meta">
@@ -96,6 +96,13 @@ function openApp(id) {
             <div class="tech-row">${app.tech.map(t => `<span>${esc(t)}</span>`).join('')}</div>` : ''}
             <div class="dialog-actions">${action}</div>
         </div>`;
+    // "Tanıtım videosunu izle" label: starts the video and hides itself once playing
+    const video = dialogBody.querySelector('.dialog-video video');
+    const cover = dialogBody.querySelector('.video-cover');
+    if (video && cover) {
+        cover.addEventListener('click', () => video.play().catch(() => {}));
+        video.addEventListener('play', () => cover.hidden = true);
+    }
     dialog.showModal();
 }
 
