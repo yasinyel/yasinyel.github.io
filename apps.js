@@ -174,6 +174,7 @@ const APPS = [
         icon: 'fa-bell',
         appIcon: 'teneffus/ikon.png',
         phones: ['teneffus/kart-1.jpg', 'teneffus/kart-2.jpg'],
+        video: 'teneffus/tanitim.mp4',
         description: 'Ders programını bir kez girdiğinde hangi sınıfa, hangi dersliğe ve kaçta gideceğini telefonunun kilidini açmadan gösterir. Kilit ekranı ve Dynamic Island sayacı her zilde kendiliğinden bir sonraki derse geçer. Türk okullarının zil düzenleri hazır gelir. App Store\'da yayında.',
         features: ['Kilit ekranı sayacı', 'Dynamic Island', 'Widget\'lar', 'Öğretmen modu', 'Türk okulu zil düzenleri', 'QR ile paylaşım'],
         tech: [],
