@@ -43,7 +43,7 @@ grid.innerHTML = APPS.map(app => `
             </div>
             <h3>${esc(app.name)}</h3>
             <p>${esc(app.tagline)}</p>
-            <span class="more">Ayrıntılar <i class="fas fa-arrow-right"></i></span>
+            <span class="more">${app.video ? '<i class="fas fa-play"></i> Videoyu izle' : 'Ayrıntılar <i class="fas fa-arrow-right"></i>'}</span>
         </div>
     </button>`).join('');
 
@@ -73,7 +73,9 @@ function openApp(id) {
         ? `<a class="btn btn-primary" href="${app.link}" target="_blank" rel="noopener">${esc(app.linkText || 'Uygulamayı aç')} <i class="fas fa-arrow-up-right-from-square"></i></a>`
         : `<span class="btn btn-ghost btn-static"><i class="fas ${PLATFORM_ICON[app.platform]}"></i> ${esc(app.linkLabel || '')}</span>`;
     dialogBody.innerHTML = `
-        ${preview(app)}
+        ${app.video
+            ? `<div class="dialog-video"><video src="${app.video}" controls preload="metadata" playsinline aria-label="${esc(app.name)} tanıtım videosu"></video></div>`
+            : preview(app)}
         <div class="dialog-content">
             <div class="app-card-meta">
                 <span class="platform"><i class="fas ${PLATFORM_ICON[app.platform]}"></i> ${PLATFORM_LABEL[app.platform]}</span>
@@ -97,6 +99,8 @@ grid.addEventListener('click', e => {
 });
 document.getElementById('dialogClose').addEventListener('click', () => dialog.close());
 dialog.addEventListener('click', e => { if (e.target === dialog) dialog.close(); });
+// Stop any playing video when the dialog closes
+dialog.addEventListener('close', () => dialogBody.querySelectorAll('video').forEach(v => v.pause()));
 
 // ===== TIMELINE =====
 document.getElementById('timeline').innerHTML = DAY.map(step => {

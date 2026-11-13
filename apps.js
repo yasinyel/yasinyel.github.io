@@ -154,6 +154,7 @@ const APPS = [
         color: '#0f2147',
         icon: 'fa-route',
         appIcon: 'peregrin/icon.png',
+        video: 'peregrin/tanitim.mp4',
         description: 'Günlük yürüyüş, koşu ve bisiklet sürüşlerini dünyanın büyük rotalarında bir yolculuğa dönüştürür. Her durakta bir hikâye, sesli anlatım, kısa bir yarışma ve bir hatıra bekler. İlk Maraton ücretsiz; ardından Likya Yolu, Meşale Yolu, Boston Maratonu, İpek Yolu, Camino de Santiago, Kumano Kodo ve Spartathlon. Hesap yok, reklam yok. App Store\'da yayında, Google Play yakında.',
         features: ['8 tarihi rota', 'Sesli anlatım', 'Durak hikâyeleri', 'Rozet ve madalyalar', '8 dil', 'Hesap ve reklam yok'],
         tech: [],
