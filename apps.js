@@ -2,9 +2,12 @@
 // platform: 'web' | 'desktop' | 'mobile'   status: 'active' | 'soon'
 // image: img/ klasöründeki ekran görüntüsü (yoksa renkli önizleme çizilir)
 // phones: mobil uygulamalar için iki dikey telefon ekran görüntüsü
+// category: 'Eğitim' | 'Okul yönetimi' | 'Spor' | 'Oyun'
+// poster: tam ekran hikaye afişi (hikaye sayfasında tek başına gösterilir)
 const APPS = [
     {
         id: 'kodlayalim',
+        category: 'Eğitim',
         image: 'img/kodlayalim.png',
         name: 'Kodlayalım',
         tagline: 'Anasınıfından liseye kodlama etkinlikleri',
@@ -19,6 +22,7 @@ const APPS = [
     },
     {
         id: 'eagle',
+        category: 'Okul yönetimi',
         image: 'img/eagle.png',
         name: 'Eagle Eye',
         tagline: 'Laboratuvar bilgisayarlarını tek merkezden yönetin',
@@ -34,6 +38,7 @@ const APPS = [
     },
     {
         id: 'ekilit',
+        category: 'Okul yönetimi',
         image: 'img/ekilit.jpg',
         name: 'E-Kilit Sistemi',
         tagline: 'Akıllı tahtaları QR kodla açın',
@@ -48,6 +53,7 @@ const APPS = [
     },
     {
         id: 'cikis',
+        category: 'Okul yönetimi',
         image: 'img/cikis.jpg',
         name: 'Çıkış Sistemi',
         tagline: 'QR kodlu veli çağrı sistemi — BK QR SİS',
@@ -62,6 +68,7 @@ const APPS = [
     },
     {
         id: 'store',
+        category: 'Okul yönetimi',
         image: 'img/store.jpg',
         name: 'Store Sistemi',
         tagline: 'Okul kıyafeti satış ve stok takibi',
@@ -76,6 +83,7 @@ const APPS = [
     },
     {
         id: 'anket',
+        category: 'Okul yönetimi',
         image: 'img/anket.jpg',
         name: 'Anket Sistemi',
         tagline: 'QR kodlu okul anketleri, canlı sonuçlar',
@@ -90,6 +98,7 @@ const APPS = [
     },
     {
         id: 'yoklama',
+        category: 'Okul yönetimi',
         image: 'img/yoklama.jpg',
         name: 'Öğrenci Yoklama Sistemi',
         tagline: 'Okullar için dijital yoklama',
@@ -104,6 +113,7 @@ const APPS = [
     },
     {
         id: 'ibkit',
+        category: 'Okul yönetimi',
         image: 'img/ibkit.jpg',
         name: 'IBKIT',
         tagline: 'Okulun bilgi işlem yönetim sistemi',
@@ -118,6 +128,7 @@ const APPS = [
     },
     {
         id: 'pdf',
+        category: 'Eğitim',
         image: 'img/pdfhazirla.png',
         name: 'PDF Hazırla',
         tagline: 'PDF\'leri saniyeler içinde birleştir, düzenle',
@@ -132,6 +143,7 @@ const APPS = [
     },
     {
         id: 'takip',
+        category: 'Eğitim',
         name: 'Öğrenci Takip Sistemi',
         tagline: 'Özel ders öğretmenleri için mobil uygulama',
         platform: 'mobile',
@@ -149,6 +161,7 @@ const APPS = [
     },
     {
         id: 'peregrin',
+        category: 'Spor',
         name: 'Peregrin',
         tagline: 'Yürüyüşlerini dünyanın büyük rotalarına dönüştür',
         platform: 'mobile',
@@ -166,6 +179,7 @@ const APPS = [
     },
     {
         id: 'teneffus',
+        category: 'Eğitim',
         name: 'Teneffüs',
         tagline: 'Ders programı ve zil sayacı',
         platform: 'mobile',
@@ -183,13 +197,16 @@ const APPS = [
     },
     {
         id: 'crown',
+        category: 'Oyun',
         name: 'Crown of Ravens',
-        tagline: 'Mobil oyun — yakında',
+        tagline: 'Mobil fantastik RPG — yakında',
         platform: 'mobile',
         status: 'soon',
-        color: '#2d1b3d',
+        color: '#3b2a17',
         icon: 'fa-crown',
-        description: 'Üzerinde çalıştığım mobil oyun. Yakında App Store ve Google Play\'de.',
+        phones: ['crown/afis.jpg'],
+        poster: 'crown/afis.jpg',
+        description: 'Bütün krallık onu unuttu. Sen hariç. Üzerinde çalıştığım mobil fantastik RPG oyunu. Çok yakında App Store ve Google Play\'de.',
         features: [],
         tech: [],
         link: null,

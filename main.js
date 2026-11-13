@@ -44,7 +44,7 @@ grid.innerHTML = APPS.map(app => `
         ${preview(app)}
         <div class="app-card-body">
             <div class="app-card-meta">
-                <span class="platform"><i class="fas ${PLATFORM_ICON[app.platform]}"></i> ${PLATFORM_LABEL[app.platform]}</span>
+                <span class="platform"><i class="fas ${PLATFORM_ICON[app.platform]}"></i> ${PLATFORM_LABEL[app.platform]}${app.category ? " · " + esc(app.category) : ""}</span>
                 ${statusPill(app)}
             </div>
             <h3>${esc(app.name)}</h3>
@@ -84,7 +84,7 @@ function openApp(id) {
             : preview(app)}
         <div class="dialog-content">
             <div class="app-card-meta">
-                <span class="platform"><i class="fas ${PLATFORM_ICON[app.platform]}"></i> ${PLATFORM_LABEL[app.platform]}</span>
+                <span class="platform"><i class="fas ${PLATFORM_ICON[app.platform]}"></i> ${PLATFORM_LABEL[app.platform]}${app.category ? " · " + esc(app.category) : ""}</span>
                 ${statusPill(app)}
             </div>
             <h3>${esc(app.name)}</h3>

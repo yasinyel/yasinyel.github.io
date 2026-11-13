@@ -79,7 +79,7 @@
         .phones .phone:nth-child(2) { transform: rotate(4deg) translateY(-3cqw); }
         .phones .phone { max-height: 100cqw; }
         .video .phone { max-height: 128cqw; }
-        .browser { width: 100%; border-radius: 3cqw; overflow: hidden; background: #0f1320; box-shadow: 0 4cqw 12cqw rgba(0,0,0,0.45); transform: rotate(-2deg); }
+        .browser { width: min(100%, var(--fit, 100%)); border-radius: 3cqw; overflow: hidden; background: #0f1320; box-shadow: 0 4cqw 12cqw rgba(0,0,0,0.45); transform: rotate(-2deg); }
         .browser .dots { display: flex; gap: 1.2cqw; padding: 2cqw 2.6cqw; background: rgba(15,19,32,0.95); }
         .browser .dots i { width: 1.8cqw; height: 1.8cqw; border-radius: 50%; background: rgba(255,255,255,0.35); }
         .browser img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; }
@@ -117,11 +117,23 @@
         .socials { display: flex; gap: 3cqw; margin-top: 7cqw; justify-content: center; }
         .socials a { width: 12cqw; height: 12cqw; border-radius: 50%; display: grid; place-items: center; font-size: 5cqw; background: rgba(255,255,255,0.14); }
 
-        /* Export mode (Instagram images): no progress bars or controls */
-        .export .bars, .export .tools, .export .hint, .export #counter { display: none; }
-        .export .site { display: block; }
-        .export .slide { transition: none; }
+        /* Full-screen poster slide (e.g. a game's story poster) */
+        .poster-slide { padding: 0; }
+        .poster-slide::after { display: none; }
+        .poster-slide .poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+        /* Export modes (Instagram images and video): Instagram draws its own progress bar and name,
+           so ours is hidden, and content stays clear of Instagram's top bar and bottom reply box */
+        .export .top, .export .hint { display: none; }
+        .export .slide { transition: none; padding-top: 25cqw; padding-bottom: 32cqw; }
+        .export .poster-slide { padding: 0; }
         .export .stage { width: 100vw; height: 100vh; border-radius: 0; box-shadow: none; }
+        .export .site {
+            display: block; left: 50%; right: auto; bottom: 20cqw; transform: translateX(-50%);
+            font-size: 4cqw; letter-spacing: 0.02em; opacity: 1;
+            padding: 1.8cqw 4.5cqw; border-radius: 99px; background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.25);
+        }
+        .export .poster-slide .site { bottom: auto; top: 22cqw; background: rgba(0,0,0,0.45); }
     </style>
 </head>
 <body>
@@ -143,17 +155,20 @@
     <script src="../apps.js"></script>
     <script>
         const params = new URLSearchParams(location.search);
-        const EXPORT = params.has('export');
+        const STILL = params.has('export');    // ?export=N  → one still image per slide
+        const RENDER = params.has('render');   // ?render    → frame-by-frame video rendering via renderAt(t)
+        const EXPORT = STILL || RENDER;
         if (EXPORT) document.body.classList.add('export');
 
         const PLATFORM = { web: ['fa-globe', 'Web'], desktop: ['fa-desktop', 'Masaüstü'], mobile: ['fa-mobile-screen', 'Mobil'] };
+        const CATEGORY_ICON = { 'Eğitim': 'fa-graduation-cap', 'Okul yönetimi': 'fa-school', 'Spor': 'fa-person-running', 'Oyun': 'fa-gamepad' };
         const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
         const rel = p => /^https?:/.test(p) ? p : '../' + p;   // apps.js paths are relative to the site root
         const live = APPS.filter(a => a.status === 'active').length;
         const IMAGE_MS = 6000, VIDEO_MAX_MS = 20000;
 
         function media(app) {
-            if (app.video && !EXPORT) {
+            if (app.video && !STILL) {
                 return `<div class="media video"><div class="phone"><video src="${rel(app.video)}" muted playsinline preload="auto"></video></div></div>`;
             }
             if (app.phones) {
@@ -166,7 +181,15 @@
         }
 
         function appSlide(app) {
+            if (app.poster) {
+                return `
+                <section class="slide poster-slide" style="--c:${app.color}">
+                    <img class="poster" src="${rel(app.poster)}" alt="${esc(app.name)}">
+                    <div class="site">yasinyel.com</div>
+                </section>`;
+            }
             const [picon, plabel] = PLATFORM[app.platform];
+            const category = app.category ? `<span class="pill"><i class="fas ${CATEGORY_ICON[app.category] || 'fa-tag'}"></i> ${esc(app.category)}</span>` : '';
             const status = app.status === 'active'
                 ? `<span class="pill live"><i></i>${app.platform === 'mobile' ? "App Store'da" : 'Aktif'}</span>`
                 : '<span class="pill soon">Yakında</span>';
@@ -179,9 +202,9 @@
                     : `<a href="${rel(app.link)}" target="_blank" rel="noopener">${esc(app.linkText || 'Uygulamayı aç')} <i class="fas fa-arrow-up-right-from-square"></i></a>`
                 : `<span><i class="fas ${picon}"></i> ${esc(app.linkLabel || '')}</span>`;
             return `
-                <section class="slide" style="--c:${app.color}" data-video="${app.video && !EXPORT ? 1 : ''}">
+                <section class="slide" style="--c:${app.color}">
                     ${media(app)}
-                    <div class="meta"><span class="pill"><i class="fas ${picon}"></i> ${plabel}</span>${status}</div>
+                    <div class="meta">${category}<span class="pill"><i class="fas ${picon}"></i> ${plabel}</span>${status}</div>
                     <div class="name">${app.appIcon ? `<img src="${rel(app.appIcon)}" alt="">` : ''}<h2>${esc(app.name)}</h2></div>
                     <p class="tagline">${esc(app.tagline)}</p>
                     ${app.features.length ? `<div class="chips">${app.features.slice(0, 3).map(f => `<span>${esc(f)}</span>`).join('')}</div>` : ''}
@@ -195,7 +218,7 @@
                 <img class="avatar" src="../assets/profile.jpg" alt="Yasin Yel">
                 <h1>Yasin Yel</h1>
                 <p class="role">Bilişim Teknolojileri Öğretmeni<br>Yazılım Geliştirici</p>
-                <p class="lead">Okul sistemlerinden App Store'a, <em>${live} uygulama</em> yayında.</p>
+                <p class="lead">Eğitimden spora, okul sistemlerinden oyunlara: <em>${live} uygulama</em> yayında.</p>
                 <p class="hint">Dokunarak ilerle <i class="fas fa-arrow-right"></i></p>
                 <div class="site">yasinyel.com</div>
             </section>`;
@@ -220,6 +243,17 @@
         const fills = [...bars.querySelectorAll('i')];
         const counter = document.getElementById('counter');
         const soundBtn = document.getElementById('soundBtn');
+
+        // Keep landscape screenshots inside their area on short screens (and in the Instagram-safe export layout)
+        function fitBrowsers() {
+            document.querySelectorAll('.media .browser').forEach(b => {
+                const room = b.parentElement.clientHeight - b.querySelector('.dots').offsetHeight;
+                b.style.setProperty('--fit', Math.max(room, 0) * 1.6 * 0.95 + 'px');
+            });
+        }
+        fitBrowsers();
+        window.addEventListener('resize', fitBrowsers);
+        window.addEventListener('load', fitBrowsers);
 
         let index = 0, elapsed = 0, last = 0, paused = false, muted = true;
 
@@ -266,7 +300,69 @@
             if (v) p ? v.pause() : v.play().catch(() => {});
         }
 
-        if (EXPORT) {
+        if (RENDER) {
+            // ===== VIDEO RENDERING =====
+            // The renderer calls renderAt(t) for every frame and screenshots the page.
+            // Slide lengths keep the whole video under 60 s, so Instagram takes it as a single story.
+            const FADE = 0.4;
+            const seconds = i => {
+                if (i === 0) return 3.5;                     // intro
+                if (i === slides.length - 1) return 4;       // outro
+                const app = APPS[i - 1];
+                return app.poster ? 4.5 : app.video ? 6 : 3.5;
+            };
+            const durations = slides.map((_, i) => seconds(i));
+            const starts = durations.map((_, i) => durations.slice(0, i).reduce((a, b) => a + b, 0));
+            window.TOTAL_SECONDS = starts[starts.length - 1] + durations[durations.length - 1];
+
+            const clamp01 = x => Math.min(Math.max(x, 0), 1);
+            const ease = x => 1 - Math.pow(1 - clamp01(x), 3);
+            const ENTER = '.meta, .name, .tagline, .chips, .cta, .avatar, h1, .role, .lead, .outro h2, .outro p, .socials';
+
+            const seek = (v, t) => new Promise(resolve => {
+                if (Math.abs(v.currentTime - t) < 0.0005) return resolve();
+                const done = () => { clearTimeout(timer); resolve(); };
+                const timer = setTimeout(done, 3000);
+                v.addEventListener('seeked', done, { once: true });
+                v.currentTime = t;
+            });
+
+            function paint(i, local, opacity) {
+                const s = slides[i];
+                s.style.opacity = opacity;
+                s.style.visibility = opacity > 0 ? 'visible' : 'hidden';
+                if (opacity <= 0) return null;
+                // slow zoom on the visual, staggered rise-in for the text
+                const visual = s.querySelector('.media, .poster');
+                if (visual) visual.style.transform = `scale(${1 + 0.035 * Math.max(local, 0) / durations[i]})`;
+                s.querySelectorAll(ENTER).forEach((el, k) => {
+                    const p = ease((local - k * 0.07) / 0.45);
+                    el.style.opacity = p;
+                    el.style.transform = `translateY(${(1 - p) * 4}cqw)`;
+                });
+                const v = s.querySelector('video');
+                return v ? seek(v, Math.min(Math.max(local, 0), (v.duration || 60) - 0.05)) : null;
+            }
+
+            window.renderAt = async t => {
+                let i = 0;
+                while (i + 1 < slides.length && starts[i + 1] <= t) i++;
+                const local = t - starts[i];
+                const fade = i + 1 < slides.length ? (local - (durations[i] - FADE)) / FADE : 0;
+                slides.forEach((s, n) => { if (n !== i && n !== i + 1) { s.style.opacity = 0; s.style.visibility = 'hidden'; } });
+                const jobs = [paint(i, local, 1)];
+                if (i + 1 < slides.length) jobs.push(paint(i + 1, local - durations[i], clamp01(fade)));
+                await Promise.all(jobs);
+                await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+            };
+
+            const videos = [...document.querySelectorAll('video')];
+            window.READY = Promise.all([
+                document.fonts.ready,
+                ...[...document.images].map(img => img.complete ? null : new Promise(r => { img.onload = img.onerror = r; })),
+                ...videos.map(v => v.readyState >= 2 ? null : new Promise(r => v.addEventListener('loadeddata', r, { once: true }))),
+            ]);
+        } else if (STILL) {
             show(Number(params.get('export')) || 0);
         } else {
             show(0);
