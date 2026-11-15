@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ortak bütçeye katıl — Kozu</title>
+    <link rel="icon" href="ikon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .legal-content { max-width: 800px; margin: 100px auto 60px; padding: 0 2rem; }
+        .legal-content h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+        .legal-content .date { color: var(--text-muted); margin-bottom: 2rem; font-size: 0.9rem; }
+        .legal-content h2 { font-size: 1.3rem; margin: 2rem 0 0.8rem; color: var(--accent-light); }
+        .legal-content p, .legal-content li { color: var(--text-secondary); margin-bottom: 0.8rem; line-height: 1.8; }
+        .legal-content ul { padding-left: 1.5rem; }
+        .legal-content a { color: var(--accent); }
+        .app-head { display: flex; align-items: center; gap: 14px; margin-bottom: 1.5rem; }
+        .app-head img { width: 56px; height: 56px; border-radius: 14px; }
+        .app-head span { font-weight: 700; font-size: 1.1rem; }
+        .tf-nav { display: flex; gap: 1.2rem; flex-wrap: wrap; margin-bottom: 2rem; font-size: 0.9rem; }
+        .faq-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.2rem 1.5rem; margin-bottom: 0.8rem; }
+        .faq-item h3 { font-size: 1rem; color: var(--accent-light); margin-bottom: 0.5rem; }
+        .faq-item p { margin-bottom: 0; }
+    </style>
+</head>
+<body>
+    <div class="legal-content">
+        <div class="app-head"><img src="ikon.png" alt="Kozu"><span>Kozu</span></div>
+        <h1 id="baslik">Ortak bütçeye davet edildin</h1>
+        <p id="aciklama">Bu bağlantı Kozu uygulamasında açılır. Uygulama yüklüyse aşağıdaki düğmeye dokun.</p>
+        <p><a id="ac" href="#" style="display:inline-block;padding:0.9rem 1.6rem;border-radius:999px;background:var(--accent);color:#fff;font-weight:700;text-decoration:none;">Kozu'da aç</a></p>
+        <h2 id="olmadi">Açılmadıysa</h2>
+        <p id="adimlar">Kozu'yu aç, Ayarlar &gt; Ortak bütçe &gt; Davet bağlantım var'a dokun ve sana gönderilen bağlantının tamamını yapıştır. Kozu'yu ilk kez açıyorsan aynı düğme karşılama ekranında da var.</p>
+        <p id="gizli" class="date">Davetin anahtarı bu sayfaya ya da herhangi bir sunucuya gönderilmez; yalnızca senin telefonunda kalır.</p>
+    </div>
+    <script>
+        // Kimlik ve anahtar adresin "#" işaretinden sonraki kısmındadır; tarayıcı bu kısmı sunucuya göndermez.
+        var parca = window.location.hash.replace(/^#/, "");
+        var hedef = "kozu://join?" + parca;
+        var dugme = document.getElementById("ac");
+        if (/(^|&)b=[0-9a-f]{32}(&|$)/.test(parca) && /(^|&)k=[A-Za-z0-9_-]{43}(&|$)/.test(parca)) {
+            dugme.href = hedef;
+        } else {
+            dugme.style.display = "none";
+        }
+        if (!/^tr/i.test(navigator.language || "")) {
+            document.documentElement.lang = "en";
+            document.title = "Join a shared budget — Kozu";
+            document.getElementById("baslik").textContent = "You've been invited to a shared budget";
+            document.getElementById("aciklama").textContent = "This link opens in the Kozu app. If the app is installed, tap the button below.";
+            dugme.textContent = "Open in Kozu";
+            document.getElementById("olmadi").textContent = "If it didn't open";
+            document.getElementById("adimlar").textContent = "Open Kozu, go to Settings > Shared budget > I have an invite link, and paste the whole link you were sent. If this is your first time opening Kozu, the same button is on the welcome screen.";
+            document.getElementById("gizli").textContent = "The invite's key is never sent to this page or to any server; it stays on your phone.";
+        }
+    </script>
+</body>
+</html>
