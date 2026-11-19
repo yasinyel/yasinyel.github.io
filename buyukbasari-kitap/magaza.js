@@ -48,8 +48,8 @@
     ogrIndirim = B.yuvarla(ogrIndirim);
     const tutarlar = Object.values(grup).sort((x, y) => y - x);
     // Kardeş indirimi: en yüksek tutarlı öğrenci hariç diğer kardeşlere uygulanır
-    const indirim = tutarlar.length >= 2 && a.kardesIndirim > 0
-      ? B.yuvarla(tutarlar.slice(1).reduce((t, x) => t + x, 0) * a.kardesIndirim / 100)
+    const indirim = tutarlar.length >= 2 && a.kardesEtkin > 0
+      ? B.yuvarla(tutarlar.slice(1).reduce((t, x) => t + x, 0) * a.kardesEtkin / 100)
       : 0;
     const toplam = B.yuvarla(ara - ogrIndirim - indirim);
     return { kalemler, ara, ogrIndirim, indirim, toplam, ogrSayisi: tutarlar.length, ayar: a };
@@ -110,7 +110,7 @@
 
   function girisSayfa() {
     const a = B.ayar();
-    const vadesiz = Math.max(1, ...a.taksitler.filter(n => !B.VADE_FARKI[n]));
+    const enCokTaksit = Math.max(1, ...a.taksitler);
     const tcMi = S.girisTip === 'tc';
     let form;
     if (!a.satisAcik) {
@@ -176,9 +176,9 @@
       </section>
 
       <section class="avantajlar">
-        <div class="avantaj"><i class="fa-solid fa-credit-card"></i><div><b>${vadesiz > 1 ? `${vadesiz} taksit vade farksız` : 'Taksit seçenekleri'}</b><span>Tüm banka kartlarına taksit</span></div></div>
+        <div class="avantaj"><i class="fa-solid fa-credit-card"></i><div><b>${enCokTaksit > 1 ? `${enCokTaksit} taksite kadar` : 'Kartla ödeme'}</b><span>Peşin fiyatına taksit seçenekleri</span></div></div>
         <div class="avantaj"><i class="fa-solid fa-school"></i><div><b>Okulda teslim</b><span>Kitaplar öğrencinin sınıfına dağıtılır</span></div></div>
-        <div class="avantaj"><i class="fa-solid fa-children"></i><div><b>Kardeşler tek ödemede</b><span>${a.kardesIndirim > 0 ? `Kardeşe %${a.kardesIndirim} indirim` : 'Tüm çocuklarınız tek sepette'}</span></div></div>
+        <div class="avantaj"><i class="fa-solid fa-children"></i><div><b>Kardeşler tek ödemede</b><span>${a.kardesEtkin > 0 ? `Kardeşe %${a.kardesEtkin} indirim` : 'Tüm çocuklarınız tek sepette'}</span></div></div>
         <div class="avantaj"><i class="fa-solid fa-file-invoice"></i><div><b>e-Arşiv fatura</b><span>Faturanız e-postanıza gelir</span></div></div>
       </section>
 
@@ -285,8 +285,8 @@
       : `<div class="bos-sepet"><i class="fa-solid fa-basket-shopping"></i>Sepetiniz boş</div>`;
 
     let ipucu = '';
-    if (asama === 'setler' && h.ogrSayisi === 1 && ogrenciler().length > 1 && h.ayar.kardesIndirim > 0) {
-      ipucu = `<div class="bilgi-not vurgu" style="margin:10px 0 0"><i class="fa-solid fa-children"></i><div>Kardeşinin kitaplarını da eklerseniz <b>%${h.ayar.kardesIndirim} kardeş indirimi</b> uygulanır.</div></div>`;
+    if (asama === 'setler' && h.ogrSayisi === 1 && ogrenciler().length > 1 && h.ayar.kardesEtkin > 0) {
+      ipucu = `<div class="bilgi-not vurgu" style="margin:10px 0 0"><i class="fa-solid fa-children"></i><div>Kardeşinin kitaplarını da eklerseniz <b>%${h.ayar.kardesEtkin} kardeş indirimi</b> uygulanır.</div></div>`;
     }
 
     const th = B.taksitHesapla(h.toplam, S.taksit);
@@ -301,7 +301,7 @@
       ${govde}
       <div class="satir"><span>Ara toplam</span><b>${tl(h.ara)}</b></div>
       ${h.ogrIndirim ? `<div class="satir indirim"><span>Öğrenciye özel indirim</span><b>−${tl(h.ogrIndirim)}</b></div>` : ''}
-      ${h.indirim ? `<div class="satir indirim"><span>Kardeş indirimi (%${h.ayar.kardesIndirim})</span><b>−${tl(h.indirim)}</b></div>` : ''}
+      ${h.indirim ? `<div class="satir indirim"><span>Kardeş indirimi (%${h.ayar.kardesEtkin})</span><b>−${tl(h.indirim)}</b></div>` : ''}
       ${asama !== 'setler' ? `<div class="satir"><span>Okulda teslim</span><b>Ücretsiz</b></div>` : ''}
       ${odemeAsamasi && th.oran ? `<div class="satir"><span>Vade farkı (${S.taksit} taksit)</span><b>${tl(th.vadeli - h.toplam)}</b></div>` : ''}
       <div class="satir toplam"><span>Ödenecek tutar</span><b>${tl(odenecek)}</b></div>
@@ -502,7 +502,7 @@
     return secenekler.map(n => {
       const t = B.taksitHesapla(toplam, n);
       const ad = n === 1 ? 'Tek çekim' : `${n} taksit`;
-      const alt = n > 1 && t.oran ? `<span>%${(t.oran * 100).toLocaleString('tr-TR')} vade farkı</span>` : n > 1 ? '<span>Vade farkını okul karşılar</span>' : '<span>Peşin ödeme</span>';
+      const alt = n > 1 ? '<span>Peşin fiyatına</span>' : '<span>Peşin ödeme</span>';
       return `<label class="taksit-satir">
         <input type="radio" name="taksit" value="${n}" ${S.taksit === n ? 'checked' : ''}>
         <span class="t-ad"><b>${ad}${n > 1 && !t.oran ? '<span class="rozet rozet-yesil">Vade farksız</span>' : ''}</b>${alt}</span>

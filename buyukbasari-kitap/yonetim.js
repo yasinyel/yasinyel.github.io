@@ -77,7 +77,7 @@
           <div class="alan"><label for="k-ad">Kullanıcı adı</label><input id="k-ad" value="muhasebe" autocomplete="username"></div>
           <div class="alan"><label for="k-sifre">Şifre</label><input id="k-sifre" type="password" value="demo1234" autocomplete="current-password"></div>
           <button class="btn btn-birincil btn-tam btn-buyuk" style="margin-top:20px">Giriş yap <i class="fa-solid fa-arrow-right"></i></button>
-          <p class="not"><i class="fa-solid fa-flask"></i> Demo bilgileri otomatik dolduruldu. Gerçek sürümde SMS ile iki adımlı doğrulama kullanılır.</p>
+          <p class="not"><i class="fa-solid fa-flask"></i> <b>Demo:</b> kullanıcı adı ve şifre hazır, “Giriş yap”a basmanız yeterli.<br>Gerçek sistemde her personelin kendi kullanıcısı olur, girişte SMS kodu istenir.</p>
         </form>
       </div>`;
   }
@@ -610,8 +610,12 @@
             <label class="anahtar"><input type="checkbox" id="ayar-satis" ${a.satisAcik ? 'checked' : ''}><span></span></label>
           </div>
           <div class="ayar-satir">
-            <div><b>Kardeş indirimi (%)</b><span>İkinci ve sonraki kardeşlerin setlerine uygulanır</span></div>
-            <input type="number" id="ayar-kardes" min="0" max="50" step="1" value="${a.kardesIndirim}">
+            <div><b>Kardeş indirimi</b><span>İsteğe bağlı. Açılırsa ikinci ve sonraki kardeşlerin kitaplarına uygulanır.</span></div>
+            <label class="anahtar"><input type="checkbox" id="ayar-kardes-acik" ${a.kardesIndirimAcik ? 'checked' : ''}><span></span></label>
+          </div>
+          <div class="ayar-satir" ${a.kardesIndirimAcik ? '' : 'style="opacity:.5"'}>
+            <div><b>Kardeş indirimi oranı (%)</b><span>Oranı okul belirler</span></div>
+            <input type="number" id="ayar-kardes" min="1" max="50" step="1" value="${a.kardesIndirim}" ${a.kardesIndirimAcik ? '' : 'disabled'}>
           </div>
           <div class="ayar-satir">
             <div><b>Teslim</b><span>Kitaplar okulda, öğrencinin sınıfına teslim edilir</span></div>
@@ -621,11 +625,10 @@
 
         <section class="kart">
           <h2>Taksit seçenekleri</h2>
-          <p class="aciklama">Vade farkı oranları demo amaçlıdır; gerçek oranlar POS anlaşmasına göre belirlenir.</p>
+          <p class="aciklama">Bankanın sunduğu taksitlerden hangilerinin velilere gösterileceğini seçin. Taksitler peşin fiyatına gösterilir.</p>
           ${taksitSecenek.map(n => {
-            const oran = B.VADE_FARKI[n];
             return `<div class="ayar-satir">
-              <div><b>${n} taksit</b><span>${oran ? `Veliye %${(oran * 100).toLocaleString('tr-TR')} vade farkı yansıtılır` : 'Vade farksız: komisyonu okul üstlenir'}</span></div>
+              <div><b>${n} taksit</b><span>Peşin fiyatına</span></div>
               <label class="anahtar"><input type="checkbox" class="ayar-taksit" value="${n}" ${a.taksitler.includes(n) ? 'checked' : ''}><span></span></label>
             </div>`;
           }).join('')}
@@ -1105,7 +1108,12 @@
       B.bildir(`${esc(B.setById(t.dataset.id).ad)} (${B.setById(t.dataset.id).sinif}. sınıf) → ${tl(v)} · veli mağazasında anında geçerli. Verilmiş siparişler etkilenmez.`);
     }
     else if (t.id === 'ayar-satis') { B.ayarGuncelle({ satisAcik: t.checked }); B.bildir(t.checked ? 'Satış açıldı.' : 'Satış kapatıldı — veliler bilgilendirme mesajı görecek.'); }
-    else if (t.id === 'ayar-kardes') { B.ayarGuncelle({ kardesIndirim: Math.max(0, Math.min(50, Number(t.value) || 0)) }); B.bildir('Kardeş indirimi güncellendi.'); }
+    else if (t.id === 'ayar-kardes-acik') {
+      B.ayarGuncelle({ kardesIndirimAcik: t.checked });
+      B.bildir(t.checked ? `Kardeş indirimi açıldı (%${B.ayar().kardesIndirim}).` : 'Kardeş indirimi kapatıldı.');
+      ayarlar();
+    }
+    else if (t.id === 'ayar-kardes') { B.ayarGuncelle({ kardesIndirim: Math.max(1, Math.min(50, Number(t.value) || 1)) }); B.bildir(`Kardeş indirimi oranı %${B.ayar().kardesIndirim} olarak güncellendi.`); }
     else if (t.classList.contains('ayar-taksit')) {
       const secili = [...document.querySelectorAll('.ayar-taksit:checked')].map(x => Number(x.value));
       B.ayarGuncelle({ taksitler: secili });

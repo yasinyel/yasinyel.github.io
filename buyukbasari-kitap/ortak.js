@@ -195,7 +195,8 @@
 
   /* ---------- Ödeme sabitleri ---------- */
 
-  const VADE_FARKI = { 1: 0, 2: 0, 3: 0, 6: 0.069, 9: 0.119 };
+  // Taksitler bankanın sunduğu şekilde peşin fiyatına (vade farksız) gösterilir
+  const VADE_FARKI = {};
   const KART_PROGRAMLARI = ['Bonus', 'World', 'Maximum', 'Axess', 'CardFinans', 'Paraf', 'Bankkart'];
 
   function kartProgrami(bin) {
@@ -221,7 +222,8 @@
 
   /* ---------- Hazır (tohum) siparişler ---------- */
 
-  const AYAR_VARSAYILAN = { satisAcik: true, kardesIndirim: 5, taksitler: [2, 3, 6] };
+  // Kardeş indirimi isteğe bağlıdır: okul açarsa, belirlediği oranla uygulanır
+  const AYAR_VARSAYILAN = { satisAcik: true, kardesIndirimAcik: false, kardesIndirim: 5, taksitler: [2, 3, 6] };
 
   const TOHUM = (function () {
     const oran = s => (s <= 6 ? 0.74 : s === 7 ? 0.64 : s === 8 ? 0.79 : s <= 10 ? 0.52 : 0.72);
@@ -294,7 +296,11 @@
 
   /* ---------- Sorgular ---------- */
 
-  const ayar = () => Object.assign({}, AYAR_VARSAYILAN, D.ayar);
+  function ayar() {
+    const a = Object.assign({}, AYAR_VARSAYILAN, D.ayar);
+    a.kardesEtkin = a.kardesIndirimAcik ? a.kardesIndirim : 0;
+    return a;
+  }
   const fiyat = setId => (D.fiyat[setId] != null ? D.fiyat[setId] : SET_MAP[setId].fiyat);
 
   function siparisler() {
