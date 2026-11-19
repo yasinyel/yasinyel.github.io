@@ -713,3 +713,37 @@ table.tablo { width: 100%; border-collapse: collapse; font-size: 13.5px; }
   th.imza, td.imza { display: table-cell !important; width: 120px; }
 }
 th.imza, td.imza { display: none; }
+
+/* ---------- Giriş yöntemi ve sabit teslim kartı ---------- */
+.secim-grup.tam { display: flex; width: 100%; }
+.secim-grup.tam button { flex: 1; padding: 9px 8px; }
+.secim-kart.sabit { border-color: var(--marka-orta); background: var(--marka-acik); cursor: default; }
+
+/* ---------- Excel ile tanımlama ---------- */
+.akis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 16px; counter-reset: akis; }
+.akis > div { background: var(--yuzey); border: 1px solid var(--cizgi); border-radius: 12px; padding: 12px 14px; display: grid; grid-template-columns: 30px 1fr; column-gap: 10px; align-items: center; }
+.akis span { grid-row: span 2; width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; background: var(--vurgu); color: #1d1206; font-weight: 800; font-size: 14px; }
+.akis b { font-size: 14px; }
+.akis small { color: var(--soluk); font-size: 12.5px; }
+.veri-kart { display: flex; flex-direction: column; }
+.veri-bas { display: flex; gap: 14px; align-items: center; margin-bottom: 10px; }
+.veri-bas h2 { font-size: 17px; margin-bottom: 4px; }
+.veri-ikon { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: var(--vurgu-acik); color: var(--vurgu-koyu); font-size: 19px; flex: none; }
+.sutun-cipleri { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+.cip-sutun { display: inline-block; font-size: 12px; font-weight: 700; padding: 4px 9px; border-radius: 7px; background: var(--marka-acik); color: var(--marka); border: 1px solid var(--marka-orta); }
+.cip-sutun.istege { background: var(--yuzey-2); color: var(--soluk); border-style: dashed; font-weight: 600; }
+.veri-btnler { display: flex; gap: 10px; flex-wrap: wrap; margin-top: auto; }
+.veri-btnler label.btn { cursor: pointer; }
+.onizleme { border: 2px solid var(--vurgu); margin-bottom: 16px; }
+.onizleme h2 i { color: var(--vurgu-koyu); }
+.onizleme .veri-btnler { margin-top: 16px; }
+.onizleme-hata { border-color: var(--kirmizi); }
+.onizleme-hata h2 i { color: var(--kirmizi); }
+.paket-hata { background: var(--kirmizi-acik); border-color: #efc4bf; color: var(--kirmizi); }
+.paket-hata b { color: var(--kirmizi); }
+.paket-tamam { background: var(--yesil-acik); border-color: #bfe3cc; color: var(--yesil); font-weight: 700; gap: 6px; }
+.mesaj-liste { margin-top: 12px; border-radius: 10px; padding: 10px 14px; font-size: 13.5px; display: grid; gap: 4px; }
+.hata-liste { background: var(--kirmizi-acik); color: #8c2219; }
+.uyari-liste { background: var(--vurgu-acik); color: #7a4210; }
+@media (max-width: 1080px) { .akis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .akis { grid-template-columns: minmax(0, 1fr); } }

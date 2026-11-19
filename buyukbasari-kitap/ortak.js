@@ -20,9 +20,17 @@
     siparisOnEki: 'BB26-'
   };
 
+  // Excel ile içe aktarılan veriler. Yüklenmemişse örnek veriler kullanılır.
+  const VERI_ANAHTAR = 'bbk-kitap-veri-v1';
+  const ICE = (function () {
+    try { return JSON.parse(localStorage.getItem(VERI_ANAHTAR)) || {}; } catch (e) { return {}; }
+  })();
+  const iceOgrenci = Array.isArray(ICE.ogrenciler) && ICE.ogrenciler.length > 0;
+  const iceKitap = Array.isArray(ICE.setler) && ICE.setler.length > 0;
+
   // Okulun kademeleri: Ortaokul (5–8) ve Anadolu Lisesi (9–12)
-  const SINIFLAR = [5, 6, 7, 8, 9, 10, 11, 12];
-  const kademe = sinif => (sinif <= 8 ? 'Ortaokul' : 'Anadolu Lisesi');
+  const ORNEK_SINIFLAR = [5, 6, 7, 8, 9, 10, 11, 12];
+  const kademe = sinif => (sinif <= 4 ? 'İlkokul' : sinif <= 8 ? 'Ortaokul' : 'Anadolu Lisesi');
 
   /* ---------- Yardımcılar ---------- */
 
@@ -81,7 +89,7 @@
     const ekle = (sinif, kod, ad, kisa, tur, fiyat, icerik, renk, ikon) =>
       S.push({ id: `s${sinif}-${kod}`, sinif, kod, ad, kisa, tur, fiyat, icerik, renk, ikon });
 
-    for (const s of SINIFLAR) {
+    for (const s of ORNEK_SINIFLAR) {
       if (s <= 8) {
         if (s < 8) {
           ekle(s, 'ana', `${s}. Sınıf Ana Yayın Seti`, 'Ana Yayın', 'sinif', 3650, [
@@ -130,7 +138,17 @@
     return S;
   }
 
-  const SETLER = setlerOlustur();
+  // Excel'den gelen kitap adına göre kapak rengi ve simgesi
+  function setGorunum(ad) {
+    const a = String(ad).toLocaleLowerCase('tr-TR');
+    if (/ingilizce|english|almanca|yabancı/.test(a)) return ['kirmizi', 'fa-language'];
+    if (/deneme|sınav|prova/.test(a)) return ['turuncu', 'fa-clipboard-check'];
+    if (/okuma|hikâye|hikaye|roman/.test(a)) return ['yesil', 'fa-book-open'];
+    if (/lgs|yks|tyt|ayt|hazırlık/.test(a)) return ['mor', 'fa-graduation-cap'];
+    return ['mavi', 'fa-book'];
+  }
+
+  const SETLER = iceKitap ? ICE.setler : setlerOlustur();
   const SET_MAP = Object.fromEntries(SETLER.map(s => [s.id, s]));
   const sinifSetleri = sinif => SETLER.filter(s => s.sinif === sinif);
 
@@ -144,17 +162,17 @@
 
   // Sunumda kullanılacak öğrenciler (bunlar için hazır sipariş üretilmez)
   const DEMO_OGRENCILER = [
-    { no: '2471', ad: 'Elif Yılmaz', sinif: 7, sube: 'A', veli: 'Ayşe Yılmaz', tel: '05324164567', demo: true },
-    { no: '2472', ad: 'Can Yılmaz', sinif: 5, sube: 'B', veli: 'Ayşe Yılmaz', tel: '05324164567', demo: true },
-    { no: '3105', ad: 'Mert Demir', sinif: 12, sube: 'A', veli: 'Murat Demir', tel: '05051234589', demo: true },
-    { no: '1820', ad: 'Zeynep Kaya', sinif: 9, sube: 'A', veli: 'Esra Kaya', tel: '05437770312', demo: true }
+    { no: '2471', ad: 'Elif Yılmaz', sinif: 7, sube: 'A', veli: 'Ayşe Yılmaz', veliTc: '11111111110', tel: '05324164567', indirim: 0, demo: true },
+    { no: '2472', ad: 'Can Yılmaz', sinif: 5, sube: 'B', veli: 'Ayşe Yılmaz', veliTc: '11111111110', tel: '05324164567', indirim: 0, demo: true },
+    { no: '3105', ad: 'Mert Demir', sinif: 12, sube: 'A', veli: 'Murat Demir', veliTc: '22222222220', tel: '05051234589', indirim: 20, demo: true },
+    { no: '1820', ad: 'Zeynep Kaya', sinif: 9, sube: 'A', veli: 'Esra Kaya', veliTc: '33333333330', tel: '05437770312', indirim: 0, demo: true }
   ];
 
   const r = prng(20262027);
   const sec = a => a[Math.floor(r() * a.length)];
-  const OGRENCILER = [];
+  const URETILEN = [];
   let sira = 4001;
-  for (const s of SINIFLAR) {
+  for (const s of ORNEK_SINIFLAR) {
     for (const sube of ['A', 'B']) {
       const n = 16 + Math.floor(r() * 5);
       for (let i = 0; i < n; i++) {
@@ -162,15 +180,18 @@
         const ad = `${sec(r() < 0.5 ? KIZ : ERKEK)} ${soyad}`;
         const veli = `${sec(r() < 0.7 ? ANNE : BABA)} ${soyad}`;
         const tel = '05' + (30 + Math.floor(r() * 25)) + String(Math.floor(r() * 1e7)).padStart(7, '0');
-        OGRENCILER.push({ no: String(sira++), ad, sinif: s, sube, veli, tel });
+        URETILEN.push({ no: String(sira++), ad, sinif: s, sube, veli, veliTc: '', tel, indirim: 0 });
       }
     }
   }
-  DEMO_OGRENCILER.forEach(o => OGRENCILER.push(o));
+  DEMO_OGRENCILER.forEach(o => URETILEN.push(o));
+  const OGRENCILER = iceOgrenci ? ICE.ogrenciler : URETILEN;
   const OGR_MAP = Object.fromEntries(OGRENCILER.map(o => [o.no, o]));
 
-  const SUBELER = [];
-  for (const s of SINIFLAR) for (const sube of ['A', 'B']) SUBELER.push({ sinif: s, sube, ad: `${s}-${sube}` });
+  const SINIFLAR = [...new Set(OGRENCILER.map(o => o.sinif).concat(SETLER.map(s => s.sinif)))].sort((a, b) => a - b);
+  const SUBELER = [...new Set(OGRENCILER.map(o => `${o.sinif}-${o.sube}`))]
+    .map(ad => { const [g, sb] = ad.split('-'); return { sinif: Number(g), sube: sb, ad }; })
+    .sort((a, b) => a.sinif - b.sinif || a.sube.localeCompare(b.sube, 'tr'));
 
   /* ---------- Ödeme sabitleri ---------- */
 
@@ -200,13 +221,14 @@
 
   /* ---------- Hazır (tohum) siparişler ---------- */
 
-  const AYAR_VARSAYILAN = { satisAcik: true, kardesIndirim: 5, kargo: 149.9, taksitler: [2, 3, 6] };
+  const AYAR_VARSAYILAN = { satisAcik: true, kardesIndirim: 5, taksitler: [2, 3, 6] };
 
   const TOHUM = (function () {
     const oran = s => (s <= 6 ? 0.74 : s === 7 ? 0.64 : s === 8 ? 0.79 : s <= 10 ? 0.52 : 0.72);
     const simdi = new Date();
     const bugun = new Date(simdi); bugun.setHours(0, 0, 0, 0);
     const liste = [];
+    if (iceOgrenci) return liste; // Okulun kendi listesi yüklendiyse örnek sipariş üretilmez
     for (const o of OGRENCILER) {
       if (o.demo) continue;
       if (r() > oran(o.sinif)) continue;
@@ -216,10 +238,10 @@
       const gun = r() < 0.38 ? 12 + Math.floor(r() * 6) : Math.floor(r() * 12);
       let t = new Date(bugun.getTime() - gun * 864e5 + (8 + r() * 15) * 36e5);
       if (t > simdi) t = new Date(simdi.getTime() - (5 + r() * 120) * 6e4);
-      const teslimat = r() < 0.88 ? 'okul' : 'kargo';
+      const teslimat = 'okul';
       const kalemler = setler.map(s => ({ ogrenciNo: o.no, setId: s.id, fiyat: s.fiyat }));
       const ara = kalemler.reduce((a, k) => a + k.fiyat, 0);
-      const kargo = teslimat === 'kargo' ? AYAR_VARSAYILAN.kargo : 0;
+      const kargo = 0;
       const tr = r();
       const taksit = tr < 0.45 ? 1 : tr < 0.55 ? 2 : tr < 0.85 ? 3 : 6;
       const th = taksitHesapla(ara + kargo, taksit);
@@ -263,6 +285,7 @@
 
   const dinleyiciler = [];
   window.addEventListener('storage', e => {
+    if (e.key === VERI_ANAHTAR) { location.reload(); return; }
     if (e.key !== ANAHTAR) return;
     const onceki = D.siparisler.length;
     D = Object.assign(bos(), oku());
@@ -299,6 +322,25 @@
     return OGRENCILER.filter(o => o.tel === tel).sort((a, b) => b.sinif - a.sinif);
   }
 
+  // Telefonu 05XXXXXXXXX biçimine getirir (Excel'de baştaki 0 düşmüş olabilir)
+  function telNormal(t) {
+    let d = String(t == null ? '' : t).replace(/\D/g, '');
+    if (d.length === 12 && d.startsWith('90')) d = '0' + d.slice(2);
+    if (d.length === 10 && d[0] === '5') d = '0' + d;
+    return d;
+  }
+
+  // Veli girişi: T.C. kimlik no + kayıtlı cep telefonu, ya da öğrenci no + kayıtlı cep telefonu
+  function girisTc(tc, tel) {
+    const t = telNormal(tel);
+    const k = String(tc || '').replace(/\D/g, '');
+    return OGRENCILER.find(o => o.veliTc && o.veliTc === k && o.tel === t) || null;
+  }
+  function girisNo(no, tel) {
+    const o = OGR_MAP[String(no || '').trim()];
+    return o && o.tel === telNormal(tel) ? o : null;
+  }
+
   /* ---------- Yazma işlemleri ---------- */
 
   function siparisEkle(veri) {
@@ -312,7 +354,25 @@
   function durumGuncelle(no, durum) { D.durum[no] = durum; yaz(); }
   function fiyatGuncelle(setId, deger) { D.fiyat[setId] = yuvarla(Number(deger) || 0); yaz(); }
   function ayarGuncelle(degisiklik) { D.ayar = Object.assign({}, D.ayar, degisiklik); yaz(); }
-  function sifirla() { D = bos(); yaz(); try { sessionStorage.clear(); } catch (e) { /* yok say */ } }
+  function sifirla() {
+    D = bos(); yaz();
+    try { localStorage.removeItem(VERI_ANAHTAR); sessionStorage.clear(); } catch (e) { /* yok say */ }
+  }
+
+  // Excel içe aktarımı: listeyi kaydeder, eski demo siparişlerini temizler
+  function veriKaydet(degisiklik) {
+    const yeni = Object.assign({}, ICE, degisiklik);
+    if (degisiklik.ogrenciler) yeni.ogrenciTarih = new Date().toISOString();
+    if (degisiklik.setler) yeni.kitapTarih = new Date().toISOString();
+    try { localStorage.setItem(VERI_ANAHTAR, JSON.stringify(yeni)); } catch (e) { return false; }
+    D = bos(); yaz();
+    return true;
+  }
+  function veriSifirla() {
+    try { localStorage.removeItem(VERI_ANAHTAR); } catch (e) { /* yok say */ }
+    D = bos(); yaz();
+  }
+  const iceAktarim = { ogrenci: iceOgrenci ? ICE.ogrenciTarih : null, kitap: iceKitap ? ICE.kitapTarih : null };
 
   /* ---------- Arayüz yardımcıları ---------- */
 
@@ -346,7 +406,8 @@
     OKUL, SINIFLAR, kademe, SETLER, OGRENCILER, SUBELER, DURUMLAR, VADE_FARKI, KART_PROGRAMLARI, RENKLER,
     setById: id => SET_MAP[id],
     ogrenciByNo: no => OGR_MAP[String(no).trim()] || null,
-    sinifSetleri, veliOgrencileri, siparisler, siparis, aktifSiparisler, alinanlar,
+    sinifSetleri, veliOgrencileri, telNormal, girisTc, girisNo, setGorunum,
+    veriKaydet, veriSifirla, iceAktarim, siparisler, siparis, aktifSiparisler, alinanlar,
     ayar, fiyat, kartProgrami, taksitHesapla,
     siparisEkle, durumGuncelle, fiyatGuncelle, ayarGuncelle, sifirla,
     degisince: f => dinleyiciler.push(f),

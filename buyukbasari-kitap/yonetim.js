@@ -13,16 +13,17 @@
 
   const SAYFALAR = [
     ['genel', 'Genel Bakış', 'fa-chart-pie'],
+    ['veri', 'Excel ile Tanımlama', 'fa-file-excel'],
     ['siparisler', 'Siparişler', 'fa-receipt'],
     ['dagitim', 'Dağıtım Listeleri', 'fa-clipboard-list'],
     ['ogrenciler', 'Öğrenciler', 'fa-user-graduate'],
-    ['setler', 'Setler ve Fiyatlar', 'fa-book'],
+    ['setler', 'Kitaplar ve Fiyatlar', 'fa-book'],
     ['ayarlar', 'Ayarlar', 'fa-gear']
   ];
 
   // Sayfalar arası korunan arayüz durumu
   const U = {
-    sipAra: '', sipSinif: '', sipDurum: '', sipTeslimat: '', sipLimit: 50,
+    sipAra: '', sipSinif: '', sipDurum: '', sipLimit: 50,
     dagSube: '7-A',
     ogrAra: '', ogrSinif: '', ogrDurum: '', secili: new Set(),
     setSinif: ''
@@ -116,7 +117,7 @@
     const [sayfa, param] = rota();
     if (!$('.panel')) iskelet();
     navGuncelle(sayfa);
-    ({ genel, siparisler, dagitim, ogrenciler, setler, ayarlar })[sayfa](param);
+    ({ genel, veri, siparisler, dagitim, ogrenciler, setler, ayarlar })[sayfa](param);
   }
 
   const icerik = () => $('#icerik');
@@ -249,11 +250,10 @@
         <div class="ara"><i class="fa-solid fa-magnifying-glass"></i><input class="girdi" id="sip-ara" placeholder="Sipariş no, öğrenci veya veli ara…" value="${esc(U.sipAra)}"></div>
         <select id="sip-sinif" aria-label="Sınıf"><option value="">Tüm sınıflar</option>${sinifSecenekleri(U.sipSinif)}</select>
         <select id="sip-durum" aria-label="Durum"><option value="">Tüm durumlar</option>${Object.entries(B.DURUMLAR).map(([k, d]) => `<option value="${k}" ${U.sipDurum === k ? 'selected' : ''}>${d.ad}</option>`).join('')}</select>
-        <select id="sip-teslimat" aria-label="Teslimat"><option value="">Tüm teslimatlar</option><option value="okul" ${U.sipTeslimat === 'okul' ? 'selected' : ''}>Okulda teslim</option><option value="kargo" ${U.sipTeslimat === 'kargo' ? 'selected' : ''}>Kargo</option></select>
       </div>
       <div class="tablo-kap">
         <table class="tablo">
-          <thead><tr><th>Sipariş</th><th>Tarih</th><th>Öğrenci</th><th>Veli</th><th class="sag">Tutar</th><th>Ödeme</th><th>Teslimat</th><th>Durum</th></tr></thead>
+          <thead><tr><th>Sipariş</th><th>Tarih</th><th>Öğrenci</th><th>Veli</th><th class="sag">Tutar</th><th>Ödeme</th><th>Durum</th></tr></thead>
           <tbody id="sip-govde"></tbody>
         </table>
       </div>
@@ -266,7 +266,6 @@
     const q = U.sipAra.trim().toLocaleLowerCase('tr-TR');
     return B.siparisler().filter(s => {
       if (U.sipDurum && s.durum !== U.sipDurum) return false;
-      if (U.sipTeslimat && s.teslimat !== U.sipTeslimat) return false;
       const ogrs = s.ogrenciler.map(B.ogrenciByNo);
       if (U.sipSinif && !ogrs.some(o => String(o.sinif) === U.sipSinif)) return false;
       if (q) {
@@ -290,10 +289,9 @@
         <td>${esc(s.veli)}</td>
         <td class="sag mono">${tl(s.toplam)}</td>
         <td class="ikincil">${taksitAd(s.taksit)}</td>
-        <td class="ikincil">${s.teslimat === 'okul' ? 'Okulda' : 'Kargo'}</td>
         <td>${durumHTML(s.durum)}</td>
       </tr>`;
-    }).join('') || `<tr><td colspan="8" style="text-align:center;padding:30px;color:var(--soluk)">Bu filtrelere uyan sipariş yok.</td></tr>`;
+    }).join('') || `<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--soluk)">Bu filtrelere uyan sipariş yok.</td></tr>`;
     $('#sip-alt').innerHTML = `<span>${Math.min(U.sipLimit, liste.length)} / ${liste.length} gösteriliyor · satıra tıklayarak detayı açın</span>
       ${liste.length > U.sipLimit ? '<button class="btn btn-ikincil btn-kucuk" data-act="daha">Daha fazla göster</button>' : ''}`;
   }
@@ -317,12 +315,11 @@
             <button class="kapat-btn" data-act="cekmece-kapat" aria-label="Kapat"><i class="fa-solid fa-xmark"></i></button>
           </header>
           <div class="cek-govde">
-            <div class="cek-bolum"><h4>Durum ve teslimat</h4>
+            <div class="cek-bolum"><h4>Durum ve teslim</h4>
               <div class="bilgi-izgara">
                 <span>Sipariş durumu</span>
                 <span><select id="durum-sec" data-no="${s.no}" aria-label="Sipariş durumu">${Object.entries(B.DURUMLAR).map(([k, d]) => `<option value="${k}" ${k === s.durum ? 'selected' : ''}>${d.ad}</option>`).join('')}</select></span>
-                <span>Teslimat</span><b>${s.teslimat === 'okul' ? 'Okulda sınıfına teslim' : 'Adrese kargo'}</b>
-                ${s.adres ? `<span>Adres</span><b style="font-weight:500">${esc(s.adres)}</b>` : ''}
+                <span>Teslim</span><b>Okulda · ${s.ogrenciler.map(no => { const o = B.ogrenciByNo(no); return `${o.sinif}-${esc(o.sube)}`; }).join(', ')} sınıfı</b>
               </div>
             </div>
             <div class="cek-bolum"><h4>Veli</h4>
@@ -339,8 +336,8 @@
                 return `<div class="ozet-grup"><div class="ozet-ogr">${esc(o.ad)} · ${o.sinif}-${o.sube} · No ${o.no}</div>
                   ${gruplar[no].map(k => `<div class="ozet-kalem"><span>${esc(B.setById(k.setId).ad)}</span><b>${tl(k.fiyat)}</b></div>`).join('')}</div>`;
               }).join('')}
+              ${s.ogrIndirim ? `<div class="satir indirim"><span>Öğrenciye özel indirim</span><b>−${tl(s.ogrIndirim)}</b></div>` : ''}
               ${s.indirim ? `<div class="satir indirim"><span>Kardeş indirimi</span><b>−${tl(s.indirim)}</b></div>` : ''}
-              ${s.kargo ? `<div class="satir"><span>Kargo</span><b>${tl(s.kargo)}</b></div>` : ''}
               <div class="satir toplam"><span>Toplam</span><b>${tl(s.toplam)}</b></div>
             </div>
             <div class="cek-bolum"><h4>Ödeme</h4>
@@ -381,10 +378,9 @@
       h.setler[k.setId] = s;
       if (!h.siparisler.includes(s)) h.siparisler.push(s);
     }));
-    const okuldaTeslim = o => harita[o.no] && harita[o.no].siparisler.some(s => s.teslimat === 'okul');
     const paket = setler.map(st => ({
       st,
-      adet: ogrs.filter(o => harita[o.no] && harita[o.no].setler[st.id] && harita[o.no].setler[st.id].teslimat === 'okul').length
+      adet: ogrs.filter(o => harita[o.no] && harita[o.no].setler[st.id]).length
     }));
     const verenSay = ogrs.filter(o => harita[o.no]).length;
     const teslimSay = ogrs.filter(o => harita[o.no] && harita[o.no].siparisler.every(s => s.durum === 'teslim')).length;
@@ -413,7 +409,7 @@
       </div>
 
       <section class="kart baski-gizle" style="margin-bottom:16px">
-        <h2>Hazırlanacak paketler <small>${U.dagSube} · yalnızca okulda teslim</small></h2>
+        <h2>Hazırlanacak paketler <small>${U.dagSube} şubesi</small></h2>
         <div class="paket-ozet" style="margin-top:10px">${paket.map(p => `<span class="paket"><b>${p.adet}</b> ${esc(p.st.ad)}</span>`).join('')}</div>
       </section>
 
@@ -427,13 +423,12 @@
           <tbody>${ogrs.map((o, i) => {
             const h = harita[o.no];
             const teslim = h && h.siparisler.every(s => s.durum === 'teslim');
-            const kargo = h && !okuldaTeslim(o);
             return `<tr>
               <td class="ikincil">${i + 1}</td>
               <td><b>${esc(o.ad)}</b> <span class="ikincil">No ${o.no}</span></td>
               ${setler.map(st => `<td class="orta">${h && h.setler[st.id] ? '<span class="var" aria-label="var">✓</span>' : '<span class="yok" aria-label="yok">—</span>'}</td>`).join('')}
-              <td>${h ? (kargo ? '<span class="ikincil"><i class="fa-solid fa-truck-fast"></i> Kargo</span>' : durumHTML(h.siparisler[0].durum)) : '<span class="ikincil">Sipariş yok</span>'}</td>
-              <td class="orta baski-gizle">${h && !kargo ? `<input type="checkbox" class="teslim-cb" data-nolar="${h.siparisler.map(s => s.no).join(',')}" ${teslim ? 'checked' : ''} aria-label="${esc(o.ad)} teslim edildi">` : ''}</td>
+              <td>${h ? durumHTML(h.siparisler[0].durum) : '<span class="ikincil">Sipariş yok</span>'}</td>
+              <td class="orta baski-gizle">${h ? `<input type="checkbox" class="teslim-cb" data-nolar="${h.siparisler.map(s => s.no).join(',')}" ${teslim ? 'checked' : ''} aria-label="${esc(o.ad)} teslim edildi">` : ''}</td>
               <td class="imza"></td>
             </tr>`;
           }).join('')}</tbody>
@@ -448,7 +443,7 @@
     icerik().innerHTML = `
       <header class="sayfa-bas">
         <div><h1>Öğrenciler ve Hatırlatma</h1><p>${B.sayi(B.OGRENCILER.length)} öğrenci · ${B.SUBELER.length} şube</p></div>
-        <div class="araclar"><button class="btn btn-ikincil" data-act="sablon"><i class="fa-solid fa-download"></i> Örnek Excel şablonu</button></div>
+        <div class="araclar"><a class="btn btn-ikincil" href="#veri"><i class="fa-solid fa-file-excel"></i> Excel ile güncelle</a></div>
       </header>
 
       <div class="uyari-kart">
@@ -457,12 +452,11 @@
         <button class="btn btn-vurgu" data-act="sms-vermeyen"><i class="fa-solid fa-paper-plane"></i> Hepsine hatırlatma gönder</button>
       </div>
 
-      <label class="yukleme-alani" style="margin-bottom:16px">
-        <input type="file" id="ogr-dosya" accept=".xlsx,.xls,.csv" hidden>
-        <i class="fa-solid fa-file-arrow-up"></i>
-        <b>Öğrenci listesini güncelle</b>
-        <span>Okul yönetim yazılımından (e-Okul vb.) alınan Excel dosyasını seçin: öğrenci no, ad soyad, sınıf, şube, veli adı, veli telefonu</span>
-      </label>
+      <a class="yukleme-alani" href="#veri" style="margin-bottom:16px;text-decoration:none">
+        <i class="fa-solid fa-file-excel"></i>
+        <b>Öğrenci ve veli listesini Excel ile güncelle</b>
+        <span>Yeni kayıt, sınıf değişikliği ya da telefon güncellemesi tek dosyayla yapılır.</span>
+      </a>
 
       <div class="filtreler">
         <div class="ara"><i class="fa-solid fa-magnifying-glass"></i><input class="girdi" id="ogr-ara" placeholder="Öğrenci, numara veya veli ara…" value="${esc(U.ogrAra)}"></div>
@@ -567,9 +561,9 @@
 
     icerik().innerHTML = `
       <header class="sayfa-bas">
-        <div><h1>Setler ve Fiyatlar</h1><p>${B.SETLER.length} set · fiyat değişikliği veli mağazasına anında yansır</p></div>
+        <div><h1>Kitaplar ve Fiyatlar</h1><p>${B.SETLER.length} set · fiyat değişikliği veli mağazasına anında yansır</p></div>
         <div class="araclar">
-          <button class="btn btn-ikincil" data-act="yeni-set"><i class="fa-solid fa-plus"></i> Yeni set</button>
+          <a class="btn btn-ikincil" href="#veri"><i class="fa-solid fa-file-excel"></i> Kitap listesini Excel ile güncelle</a>
           <button class="btn btn-birincil" data-act="csv-yayinevi"><i class="fa-solid fa-truck-ramp-box"></i> Yayınevi sipariş listesi</button>
         </div>
       </header>
@@ -620,8 +614,8 @@
             <input type="number" id="ayar-kardes" min="0" max="50" step="1" value="${a.kardesIndirim}">
           </div>
           <div class="ayar-satir">
-            <div><b>Kargo ücreti (₺)</b><span>Okulda teslim her zaman ücretsiz</span></div>
-            <input type="number" id="ayar-kargo" min="0" step="0.1" value="${a.kargo}">
+            <div><b>Teslim</b><span>Kitaplar okulda, öğrencinin sınıfına teslim edilir</span></div>
+            <span class="rozet rozet-yesil"><i class="fa-solid fa-school"></i> Okulda</span>
           </div>
         </section>
 
@@ -654,6 +648,307 @@
           <div class="entegrasyon"><i class="fa-solid fa-chalkboard-user"></i><div><b>Sınıf öğretmeni</b><span>Yalnızca kendi şubesinin dağıtım listesi</span></div><span class="rozet">Sınırlı</span></div>
         </section>
       </div>`;
+  }
+
+  /* ---------- Excel ile toplu tanımlama ---------- */
+
+  const DUZEY_ADLARI = ['duzey', 'sinif', 'sinifduzey', 'sinifduzeyi', 'seviye'];
+  const SUTUNLAR = {
+    ogrenci: [
+      ['no', 'Öğrenci No', ['ogrencino', 'ogrencinumarasi', 'okulno', 'no', 'numara']],
+      ['ad', 'Öğrenci Ad Soyad', ['ogrenciadsoyad', 'ogrenciadisoyadi', 'ogrenciadi', 'adsoyad', 'ogrenci']],
+      ['sinif', 'Düzey', DUZEY_ADLARI],
+      ['sube', 'Şube', ['sube', 'subesi']],
+      ['veli', 'Veli Ad Soyad', ['veliadsoyad', 'veliadisoyadi', 'veliadi', 'veli']],
+      ['veliTc', 'Veli T.C. Kimlik No', ['velitckimlikno', 'velitc', 'velitckn', 'tckimlikno', 'tckn', 'tc']],
+      ['tel', 'Veli Cep Telefonu', ['veliceptelefonu', 'velicep', 'velitelefonu', 'velitelefon', 'ceptelefonu', 'telefon', 'gsm']],
+      ['indirim', 'İndirim (%)', ['indirim', 'indirimorani', 'kitapindirimi', 'burs', 'bursorani']]
+    ],
+    kitap: [
+      ['sinif', 'Düzey', DUZEY_ADLARI],
+      ['paket', 'Paket Adı', ['paketadi', 'paket', 'setadi', 'set']],
+      ['kitap', 'Kitap Adı', ['kitapadi', 'kitap', 'urunadi', 'urun']],
+      ['yayinevi', 'Yayınevi', ['yayinevi', 'yayin']],
+      ['fiyat', 'Fiyat (TL)', ['fiyattl', 'fiyat', 'satisfiyati', 'tutar', 'ucret']],
+      ['tur', 'Tür', ['tur', 'turu', 'zorunluluk']]
+    ]
+  };
+  const ISTEGE_BAGLI = { ogrenci: ['veliTc', 'indirim', 'sube'], kitap: ['paket', 'yayinevi', 'tur'] };
+  let onizleme = null;
+
+  const normal = v => String(v == null ? '' : v).toLocaleLowerCase('tr-TR')
+    .replace(/[çğıöşü]/g, c => ({ ç: 'c', ğ: 'g', ı: 'i', ö: 'o', ş: 's', ü: 'u' }[c]))
+    .replace(/[^a-z0-9]/g, '');
+  const tcMaske = tc => (tc ? `${tc.slice(0, 3)}*****${tc.slice(-3)}` : '—');
+
+  function sayiOku(v) {
+    if (typeof v === 'number') return v;
+    let t = String(v || '').replace(/[^\d.,-]/g, '');
+    if (!t) return NaN;
+    if (t.includes(',')) t = t.replace(/\./g, '').replace(',', '.');
+    else if (/^\d{1,3}(\.\d{3})+$/.test(t)) t = t.replace(/\./g, '');
+    return Number(t);
+  }
+
+  function baslikBul(aoa, tanim) {
+    for (let i = 0; i < Math.min(aoa.length, 6); i++) {
+      const n = (aoa[i] || []).map(normal);
+      const esle = {};
+      tanim.forEach(([alan, , adlar]) => {
+        const j = n.findIndex(h => adlar.includes(h));
+        if (j >= 0) esle[alan] = j;
+      });
+      if (Object.keys(esle).length >= 3) return { esle, bas: i };
+    }
+    return { esle: {}, bas: -1 };
+  }
+
+  function eksikSutunlar(esle, tur, zorunlu) {
+    const adlar = Object.fromEntries(SUTUNLAR[tur].map(([k, ad]) => [k, ad]));
+    return zorunlu.filter(k => esle[k] == null).map(k => adlar[k] || k);
+  }
+
+  function ogrenciCozumle(aoa) {
+    const { esle, bas } = baslikBul(aoa, SUTUNLAR.ogrenci);
+    const eksik = eksikSutunlar(esle, 'ogrenci', ['no', 'ad', 'sinif', 'veli', 'tel']);
+    if (bas < 0 || eksik.length) return { hataGenel: `Gerekli sütunlar bulunamadı: ${eksik.join(', ') || 'başlık satırı'}. Lütfen şablondaki sütun adlarını kullanın.` };
+    const kayitlar = []; const hatalar = []; const uyarilar = [];
+    const gorulen = new Set();
+    let tcsiz = 0;
+    for (let i = bas + 1; i < aoa.length; i++) {
+      const r = aoa[i] || [];
+      if (r.every(c => String(c).trim() === '')) continue;
+      const al = k => (esle[k] == null ? '' : String(r[esle[k]] == null ? '' : r[esle[k]]).trim());
+      const no = al('no').replace(/\.0+$/, '');
+      const ad = al('ad');
+      const sinif = parseInt(al('sinif'), 10);
+      const sube = (al('sube') || 'A').toLocaleUpperCase('tr-TR');
+      const veli = al('veli');
+      const tel = B.telNormal(al('tel'));
+      const tc = al('veliTc').replace(/\D/g, '');
+      const ind = al('indirim') === '' ? 0 : sayiOku(al('indirim'));
+      const sorun = [];
+      if (!no) sorun.push('öğrenci no boş');
+      else if (gorulen.has(no)) sorun.push(`öğrenci no ${no} tekrar ediyor`);
+      if (!ad) sorun.push('öğrenci adı boş');
+      if (!(sinif >= 1 && sinif <= 12)) sorun.push('düzey 1–12 arası bir sayı olmalı');
+      if (!veli) sorun.push('veli adı boş');
+      if (!/^05\d{9}$/.test(tel)) sorun.push('veli telefonu geçersiz');
+      if (tc && tc.length !== 11) sorun.push('T.C. kimlik no 11 haneli olmalı');
+      if (!(ind >= 0 && ind <= 100)) sorun.push('indirim 0–100 arası olmalı');
+      if (sorun.length) { hatalar.push({ satir: i + 1, mesaj: sorun.join(', ') }); continue; }
+      if (!tc) tcsiz++;
+      gorulen.add(no);
+      kayitlar.push({ no, ad, sinif, sube, veli, veliTc: tc, tel, indirim: Math.round(ind) });
+    }
+    if (tcsiz) uyarilar.push(`${tcsiz} öğrencinin velisi için T.C. kimlik no girilmemiş. Bu veliler “öğrenci no + telefon” ile giriş yapabilir.`);
+    const indirimli = kayitlar.filter(k => k.indirim > 0).length;
+    if (indirimli) uyarilar.push(`${indirimli} öğrenciye özel indirim tanımlı; tutarlarına otomatik uygulanacak.`);
+    return { tur: 'ogrenci', kayitlar, hatalar, uyarilar };
+  }
+
+  function kitapCozumle(aoa) {
+    const { esle, bas } = baslikBul(aoa, SUTUNLAR.kitap);
+    const eksik = eksikSutunlar(esle, 'kitap', ['sinif', 'kitap', 'fiyat']);
+    if (bas < 0 || eksik.length) return { hataGenel: `Gerekli sütunlar bulunamadı: ${eksik.join(', ') || 'başlık satırı'}. Lütfen şablondaki sütun adlarını kullanın.` };
+    const gruplar = new Map(); const hatalar = []; const uyarilar = [];
+    let satirSay = 0;
+    for (let i = bas + 1; i < aoa.length; i++) {
+      const r = aoa[i] || [];
+      if (r.every(c => String(c).trim() === '')) continue;
+      const al = k => (esle[k] == null ? '' : String(r[esle[k]] == null ? '' : r[esle[k]]).trim());
+      const sinif = parseInt(al('sinif'), 10);
+      const kitap = al('kitap');
+      const paket = al('paket');
+      const fiyat = esle.fiyat != null && typeof r[esle.fiyat] === 'number' ? r[esle.fiyat] : sayiOku(al('fiyat'));
+      const sorun = [];
+      if (!(sinif >= 1 && sinif <= 12)) sorun.push('düzey 1–12 arası bir sayı olmalı');
+      if (!kitap) sorun.push('kitap adı boş');
+      if (!(fiyat >= 0)) sorun.push('fiyat geçersiz');
+      if (sorun.length) { hatalar.push({ satir: i + 1, mesaj: sorun.join(', ') }); continue; }
+      satirSay++;
+      const anahtar = `${sinif}|${normal(paket || kitap)}`;
+      if (!gruplar.has(anahtar)) gruplar.set(anahtar, { sinif, ad: paket || kitap, kitaplar: [], fiyat: 0, ek: false });
+      const g = gruplar.get(anahtar);
+      const yayinevi = al('yayinevi');
+      g.kitaplar.push(yayinevi ? `${kitap} (${yayinevi})` : kitap);
+      g.fiyat += fiyat;
+      if (/iste|secme|opsiyon|^ek$/.test(normal(al('tur')))) g.ek = true;
+    }
+    const sayac = {};
+    const kayitlar = [...gruplar.values()].sort((a, b) => a.sinif - b.sinif).map(g => {
+      sayac[g.sinif] = (sayac[g.sinif] || 0) + 1;
+      const [renk, ikon] = B.setGorunum(g.ad);
+      const kisa = g.ad.replace(/^\d+\.?\s*sınıf\s*/i, '').replace(/\s*(seti|paketi|set|paket)\s*$/i, '').split(/\s+/).slice(0, 2).join(' ') || g.ad;
+      return {
+        id: `x${g.sinif}-${sayac[g.sinif]}`, sinif: g.sinif, kod: String(sayac[g.sinif]),
+        ad: g.ad, kisa, tur: g.ek ? 'ek' : 'sinif', fiyat: Math.round(g.fiyat * 100) / 100,
+        icerik: g.kitaplar, renk, ikon
+      };
+    });
+    const ogrDuzey = new Set(B.OGRENCILER.map(o => o.sinif));
+    const listesiz = [...ogrDuzey].filter(d => !kayitlar.some(k => k.sinif === d)).sort((a, b) => a - b);
+    if (listesiz.length) uyarilar.push(`${listesiz.map(d => d + '.').join(', ')} sınıf düzeyleri için kitap yok; bu velilere “liste henüz tanımlanmadı” mesajı gösterilir.`);
+    return { tur: 'kitap', kayitlar, hatalar, uyarilar, satirSay };
+  }
+
+  function dosyaOku(dosya, tur) {
+    if (!window.XLSX) { B.bildir('Excel okuyucu yüklenemedi; internet bağlantısını kontrol edin.', 'hata'); return; }
+    const csv = /\.csv$/i.test(dosya.name);
+    (csv ? dosya.text() : dosya.arrayBuffer()).then(icerikV => {
+      const wb = csv ? XLSX.read(icerikV, { type: 'string' }) : XLSX.read(icerikV, { type: 'array' });
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const aoa = XLSX.utils.sheet_to_json(ws, { header: 1, raw: true, defval: '' });
+      onizleme = Object.assign({ dosyaAdi: dosya.name, tur }, tur === 'ogrenci' ? ogrenciCozumle(aoa) : kitapCozumle(aoa));
+      onizlemeCiz();
+      const el = $('#onizleme');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }).catch(() => { onizleme = { dosyaAdi: dosya.name, tur, hataGenel: 'Dosya okunamadı. Excel (.xlsx) ya da CSV dosyası seçtiğinizden emin olun.' }; onizlemeCiz(); });
+  }
+
+  function onizlemeCiz() {
+    const el = $('#onizleme');
+    if (el) el.innerHTML = onizlemeHTML();
+  }
+
+  function onizlemeHTML() {
+    if (!onizleme) return '';
+    const o = onizleme;
+    if (o.hataGenel) {
+      return `<section class="kart onizleme onizleme-hata">
+        <h2><i class="fa-solid fa-triangle-exclamation"></i> “${esc(o.dosyaAdi)}” okunamadı</h2>
+        <p class="aciklama">${esc(o.hataGenel)}</p>
+        <div class="veri-btnler"><button class="btn btn-ikincil" data-act="onizleme-kapat">Kapat</button></div>
+      </section>`;
+    }
+    const k = o.kayitlar;
+    const sayilar = o.tur === 'ogrenci'
+      ? [[k.length, 'öğrenci'], [new Set(k.map(x => `${x.sinif}-${x.sube}`)).size, 'şube'], [new Set(k.map(x => x.tel)).size, 'veli'], [new Set(k.map(x => x.sinif)).size, 'düzey']]
+      : [[o.satirSay, 'kitap'], [k.length, 'paket'], [new Set(k.map(x => x.sinif)).size, 'düzey']];
+    const tablo = o.tur === 'ogrenci'
+      ? `<thead><tr><th>Satır</th><th>No</th><th>Öğrenci</th><th>Şube</th><th>Veli</th><th>T.C.</th><th>Telefon</th><th class="sag">İndirim</th></tr></thead>
+         <tbody>${k.slice(0, 8).map((x, i) => `<tr><td class="ikincil">${i + 1}</td><td>${esc(x.no)}</td><td><b>${esc(x.ad)}</b></td><td>${x.sinif}-${esc(x.sube)}</td><td>${esc(x.veli)}</td><td class="ikincil">${tcMaske(x.veliTc)}</td><td class="ikincil">${B.telMaske(x.tel)}</td><td class="sag">${x.indirim ? '%' + x.indirim : '—'}</td></tr>`).join('')}</tbody>`
+      : `<thead><tr><th>Düzey</th><th>Paket</th><th>Tür</th><th>Kitaplar</th><th class="sag">Tutar</th></tr></thead>
+         <tbody>${k.slice(0, 10).map(x => `<tr><td>${x.sinif}. Sınıf</td><td><b>${esc(x.ad)}</b></td><td>${x.tur === 'sinif' ? '<span class="rozet rozet-marka">Sınıf listesi</span>' : '<span class="rozet">İsteğe bağlı</span>'}</td><td class="ikincil">${x.icerik.length} kitap</td><td class="sag mono">${tl(x.fiyat)}</td></tr>`).join('')}</tbody>`;
+    const fazla = k.length > (o.tur === 'ogrenci' ? 8 : 10) ? `<p class="alan-ipucu" style="margin-top:8px">İlk ${o.tur === 'ogrenci' ? 8 : 10} kayıt gösteriliyor; toplam ${B.sayi(k.length)} kayıt aktarılacak.</p>` : '';
+    return `<section class="kart onizleme">
+      <h2><i class="fa-solid fa-magnifying-glass-chart"></i> Önizleme: ${esc(o.dosyaAdi)}</h2>
+      <p class="aciklama">Sistem dosyayı kontrol etti. Onayladığınızda ${o.tur === 'ogrenci' ? 'öğrenci ve veli listesi' : 'kitap listesi ve fiyatlar'} güncellenir.</p>
+      <div class="paket-ozet">${sayilar.map(([n, ad]) => `<span class="paket"><b>${B.sayi(n)}</b> ${ad}</span>`).join('')}
+        ${o.hatalar.length ? `<span class="paket paket-hata"><b>${o.hatalar.length}</b> hatalı satır atlanacak</span>` : '<span class="paket paket-tamam"><i class="fa-solid fa-circle-check"></i> Hatalı satır yok</span>'}</div>
+      ${o.hatalar.length ? `<div class="mesaj-liste hata-liste">${o.hatalar.slice(0, 6).map(h => `<div><b>Satır ${h.satir}:</b> ${esc(h.mesaj)}</div>`).join('')}${o.hatalar.length > 6 ? `<div>… ve ${o.hatalar.length - 6} satır daha</div>` : ''}</div>` : ''}
+      ${o.uyarilar.length ? `<div class="mesaj-liste uyari-liste">${o.uyarilar.map(u => `<div><i class="fa-solid fa-circle-info"></i> ${esc(u)}</div>`).join('')}</div>` : ''}
+      <div class="tablo-kap" style="margin-top:14px"><table class="tablo">${tablo}</table></div>
+      ${fazla}
+      <div class="veri-btnler" style="justify-content:flex-end">
+        <button class="btn btn-ikincil" data-act="onizleme-kapat">Vazgeç</button>
+        <button class="btn btn-vurgu" data-act="ice-aktar" ${k.length ? '' : 'disabled'}><i class="fa-solid fa-check"></i> Onayla ve içe aktar (${B.sayi(k.length)} kayıt)</button>
+      </div>
+    </section>`;
+  }
+
+  function iceAktar() {
+    if (!onizleme || !onizleme.kayitlar || !onizleme.kayitlar.length) return;
+    const tamam = B.veriKaydet(onizleme.tur === 'ogrenci' ? { ogrenciler: onizleme.kayitlar } : { setler: onizleme.kayitlar });
+    if (!tamam) { B.bildir('Kayıt sırasında sorun oluştu (tarayıcı depolama alanı dolu olabilir).', 'hata'); return; }
+    try { sessionStorage.setItem('bbk-ice-aktarildi', onizleme.tur === 'ogrenci' ? `${onizleme.kayitlar.length} öğrenci` : `${onizleme.kayitlar.length} kitap paketi`); } catch (e) { /* yok say */ }
+    location.reload();
+  }
+
+  function sablonIndir(tur) {
+    let satirlar;
+    if (tur === 'ogrenci') {
+      satirlar = [SUTUNLAR.ogrenci.map(s => s[1])].concat(
+        B.OGRENCILER.slice().sort((a, b) => a.sinif - b.sinif || a.sube.localeCompare(b.sube) || a.ad.localeCompare(b.ad, 'tr'))
+          .map(o => [o.no, o.ad, o.sinif, o.sube, o.veli, o.veliTc || '', o.tel, o.indirim || '']));
+    } else {
+      satirlar = [SUTUNLAR.kitap.map(s => s[1])];
+      B.SETLER.forEach(st => {
+        const n = st.icerik.length;
+        const birim = Math.floor(B.fiyat(st.id) / n / 10) * 10;
+        st.icerik.forEach((kitap, i) => {
+          const f = i === n - 1 ? B.fiyat(st.id) - birim * (n - 1) : birim;
+          satirlar.push([st.sinif, st.ad, kitap, '', f, st.tur === 'sinif' ? 'Sınıf listesi' : 'İsteğe bağlı']);
+        });
+      });
+    }
+    const ad = tur === 'ogrenci' ? 'ogrenci-veli-listesi' : 'kitap-listesi-ve-fiyatlar';
+    if (!window.XLSX) { csvIndir(ad + '.csv', satirlar); return; }
+    const ws = XLSX.utils.aoa_to_sheet(satirlar);
+    ws['!cols'] = satirlar[0].map((h, i) => ({ wch: Math.max(10, ...satirlar.slice(0, 60).map(r => String(r[i] == null ? '' : r[i]).length + 2)) }));
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, tur === 'ogrenci' ? 'Öğrenciler' : 'Kitaplar');
+    XLSX.writeFile(wb, ad + '.xlsx');
+    B.bildir('Şablon indirildi. Mevcut veriler örnek olarak içinde; kendi listenizi yapıştırıp yükleyebilirsiniz.');
+  }
+
+  function veri() {
+    const ia = B.iceAktarim;
+    const kaynak = (t, metin) => (t
+      ? `<span class="rozet rozet-yesil"><i class="fa-solid fa-check"></i> ${B.tarih(t)} yüklendi · ${metin}</span>`
+      : `<span class="rozet">Örnek veri · ${metin}</span>`);
+    const cipler = tur => SUTUNLAR[tur].map(([k, ad]) => `<span class="cip-sutun ${ISTEGE_BAGLI[tur].includes(k) ? 'istege' : ''}">${ad}</span>`).join('');
+    const duzeyler = B.SINIFLAR.map(d => {
+      const ogr = B.OGRENCILER.filter(o => o.sinif === d);
+      const setler = B.sinifSetleri(d);
+      const liste = setler.filter(s => s.tur === 'sinif');
+      return { d, ogr: ogr.length, sube: new Set(ogr.map(o => o.sube)).size, liste: liste.length, ek: setler.length - liste.length, tutar: liste.reduce((t, s) => t + B.fiyat(s.id), 0) };
+    });
+
+    icerik().innerHTML = `
+      <header class="sayfa-bas">
+        <div><h1>Excel ile Toplu Tanımlama</h1><p>Öğrenciler, veliler, düzeyler, kitap listeleri ve fiyatlar dosyayla yüklenir; tek tek giriş yapılmaz.</p></div>
+        ${ia.ogrenci || ia.kitap ? '<div class="araclar"><button class="btn btn-ikincil" data-act="veri-sifirla"><i class="fa-solid fa-rotate-left"></i> Örnek verilere dön</button></div>' : ''}
+      </header>
+
+      <div class="akis">
+        <div><span>1</span><b>Şablonu indirin</b><small>Sütunlar hazır gelir</small></div>
+        <div><span>2</span><b>Listeyi yapıştırın</b><small>Okul yazılımından kopyalayın</small></div>
+        <div><span>3</span><b>Yükleyin</b><small>Sistem hataları gösterir</small></div>
+        <div><span>4</span><b>Onaylayın</b><small>Veliler anında görür</small></div>
+      </div>
+
+      <div class="izgara-2">
+        <section class="kart veri-kart">
+          <div class="veri-bas"><span class="veri-ikon"><i class="fa-solid fa-user-graduate"></i></span>
+            <div><h2>Öğrenci ve veli listesi</h2>${kaynak(ia.ogrenci, `${B.sayi(B.OGRENCILER.length)} öğrenci`)}</div></div>
+          <p class="aciklama">Her satır bir öğrenci. Aynı telefona sahip öğrenciler kardeş olarak tek veli hesabında birleşir.</p>
+          <div class="sutun-cipleri">${cipler('ogrenci')}</div>
+          <div class="veri-btnler">
+            <button class="btn btn-ikincil" data-act="sablon-ogrenci"><i class="fa-solid fa-download"></i> Şablonu indir</button>
+            <label class="btn btn-birincil"><input type="file" class="veri-dosya" data-tur="ogrenci" accept=".xlsx,.xls,.csv" hidden><i class="fa-solid fa-file-arrow-up"></i> Excel yükle</label>
+          </div>
+        </section>
+        <section class="kart veri-kart">
+          <div class="veri-bas"><span class="veri-ikon"><i class="fa-solid fa-book"></i></span>
+            <div><h2>Düzeylere göre kitap listesi</h2>${kaynak(ia.kitap, `${B.SETLER.length} paket, ${new Set(B.SETLER.map(s => s.sinif)).size} düzey`)}</div></div>
+          <p class="aciklama">Her satır bir kitap ve fiyatı. Aynı paket adındaki kitaplar birleşir; velinin ödeyeceği tutar otomatik hesaplanır.</p>
+          <div class="sutun-cipleri">${cipler('kitap')}</div>
+          <div class="veri-btnler">
+            <button class="btn btn-ikincil" data-act="sablon-kitap"><i class="fa-solid fa-download"></i> Şablonu indir</button>
+            <label class="btn btn-birincil"><input type="file" class="veri-dosya" data-tur="kitap" accept=".xlsx,.xls,.csv" hidden><i class="fa-solid fa-file-arrow-up"></i> Excel yükle</label>
+          </div>
+        </section>
+      </div>
+      <p class="alan-ipucu" style="margin:-4px 0 16px"><span class="cip-sutun istege" style="margin-right:6px">Soluk</span> sütunlar isteğe bağlıdır. Sütun sırası önemli değil; sistem başlıkları tanır.</p>
+
+      <div id="onizleme">${onizlemeHTML()}</div>
+
+      <section class="kart">
+        <h2>Düzey özeti <small>Velinin göreceği tutar, sınıf listesinin toplamıdır</small></h2>
+        <div class="tablo-kap" style="margin-top:12px">
+          <table class="tablo">
+            <thead><tr><th>Düzey</th><th>Kademe</th><th class="sag">Öğrenci</th><th class="sag">Şube</th><th class="sag">Sınıf listesi</th><th class="sag">İsteğe bağlı</th><th class="sag">Veli başı tutar</th></tr></thead>
+            <tbody>${duzeyler.map(x => `<tr>
+              <td><b>${x.d}. Sınıf</b></td><td class="ikincil">${B.kademe(x.d)}</td>
+              <td class="sag mono">${B.sayi(x.ogr)}</td><td class="sag">${x.sube}</td>
+              <td class="sag">${x.liste ? x.liste + ' paket' : '<span class="ikincil">Tanımlı değil</span>'}</td>
+              <td class="sag">${x.ek || '—'}</td>
+              <td class="sag mono">${x.tutar ? tl(x.tutar) : '—'}</td>
+            </tr>`).join('')}</tbody>
+          </table>
+        </div>
+      </section>`;
   }
 
   /* ---------- Modal ---------- */
@@ -693,10 +988,10 @@
       case 'cekmece-kapat': cekmeceKapat(); break;
       case 'daha': U.sipLimit += 50; siparisTablo(); break;
       case 'csv-siparis': {
-        const satirlar = [['Sipariş No', 'Tarih', 'Öğrenci No', 'Öğrenci', 'Şube', 'Set', 'Fiyat', 'Sipariş Toplamı', 'Taksit', 'Teslimat', 'Durum', 'Veli']];
+        const satirlar = [['Sipariş No', 'Tarih', 'Öğrenci No', 'Öğrenci', 'Şube', 'Set', 'Fiyat', 'Sipariş Toplamı', 'Taksit', 'Durum', 'Veli']];
         filtreliSiparisler().forEach(s => s.kalemler.forEach(k => {
           const o = B.ogrenciByNo(k.ogrenciNo);
-          satirlar.push([s.no, B.tarih(s.tarih), o.no, o.ad, `${o.sinif}-${o.sube}`, B.setById(k.setId).ad, csvSayi(k.fiyat), csvSayi(s.toplam), s.taksit, s.teslimat === 'okul' ? 'Okulda' : 'Kargo', B.DURUMLAR[s.durum].ad, s.veli]);
+          satirlar.push([s.no, B.tarih(s.tarih), o.no, o.ad, `${o.sinif}-${o.sube}`, B.setById(k.setId).ad, csvSayi(k.fiyat), csvSayi(s.toplam), s.taksit, B.DURUMLAR[s.durum].ad, s.veli]);
         }));
         csvIndir('siparisler.csv', satirlar);
         B.bildir('Sipariş listesi indirildi (Excel ile açılabilir).');
@@ -721,11 +1016,12 @@
         render();
         break;
       }
-      case 'sablon':
-        csvIndir('ogrenci-listesi-sablonu.csv', [
-          ['ogrenci_no', 'ad_soyad', 'sinif', 'sube', 'veli_ad_soyad', 'veli_telefon'],
-          ['2471', 'Elif Yılmaz', '7', 'A', 'Ayşe Yılmaz', '05XXXXXXXXX']
-        ]);
+      case 'sablon-ogrenci': sablonIndir('ogrenci'); break;
+      case 'sablon-kitap': sablonIndir('kitap'); break;
+      case 'onizleme-kapat': onizleme = null; onizlemeCiz(); break;
+      case 'ice-aktar': iceAktar(); break;
+      case 'veri-sifirla':
+        if (confirm('Yüklenen Excel listeleri silinip örnek verilere dönülsün mü?')) { B.veriSifirla(); location.reload(); }
         break;
       case 'sms-vermeyen': {
         const alinan = B.alinanlar();
@@ -739,7 +1035,6 @@
         U.secili.clear();
         if ($('#ogr-govde')) ogrenciTablo();
         break;
-      case 'yeni-set': B.bildir('Gerçek sürümde: kapak görseli, içerik listesi, stok ve yayınevi bilgisiyle yeni set tanımlanır.', 'bilgi'); break;
       case 'csv-yayinevi': {
         const satis = {};
         B.aktifSiparisler().forEach(s => s.kalemler.forEach(k => { satis[k.setId] = (satis[k.setId] || 0) + 1; }));
@@ -771,7 +1066,6 @@
     const t = e.target;
     if (t.id === 'sip-sinif') { U.sipSinif = t.value; U.sipLimit = 50; siparisTablo(); }
     else if (t.id === 'sip-durum') { U.sipDurum = t.value; U.sipLimit = 50; siparisTablo(); }
-    else if (t.id === 'sip-teslimat') { U.sipTeslimat = t.value; U.sipLimit = 50; siparisTablo(); }
     else if (t.id === 'durum-sec') {
       B.durumGuncelle(t.dataset.no, t.value);
       B.bildir(`${t.dataset.no} → ${B.DURUMLAR[t.value].ad}${t.value === 'teslim' ? ' · veliye teslim SMS’i gider' : ''}`);
@@ -799,8 +1093,8 @@
       });
       seciliGuncelle();
     }
-    else if (t.id === 'ogr-dosya' && t.files && t.files[0]) {
-      B.bildir(`“${esc(t.files[0].name)}” okundu: ${B.sayi(B.OGRENCILER.length)} öğrenci, ${B.SUBELER.length} şube güncellendi (demo).`);
+    else if (t.classList.contains('veri-dosya') && t.files && t.files[0]) {
+      dosyaOku(t.files[0], t.dataset.tur);
       t.value = '';
     }
     else if (t.id === 'set-sinif') { U.setSinif = t.value; setler(); }
@@ -812,7 +1106,6 @@
     }
     else if (t.id === 'ayar-satis') { B.ayarGuncelle({ satisAcik: t.checked }); B.bildir(t.checked ? 'Satış açıldı.' : 'Satış kapatıldı — veliler bilgilendirme mesajı görecek.'); }
     else if (t.id === 'ayar-kardes') { B.ayarGuncelle({ kardesIndirim: Math.max(0, Math.min(50, Number(t.value) || 0)) }); B.bildir('Kardeş indirimi güncellendi.'); }
-    else if (t.id === 'ayar-kargo') { B.ayarGuncelle({ kargo: Math.max(0, Number(t.value) || 0) }); B.bildir('Kargo ücreti güncellendi.'); }
     else if (t.classList.contains('ayar-taksit')) {
       const secili = [...document.querySelectorAll('.ayar-taksit:checked')].map(x => Number(x.value));
       B.ayarGuncelle({ taksitler: secili });
@@ -866,4 +1159,8 @@
   });
 
   render();
+  try {
+    const m = sessionStorage.getItem('bbk-ice-aktarildi');
+    if (m) { sessionStorage.removeItem('bbk-ice-aktarildi'); B.bildir(`İçe aktarıldı: ${m}. Veli ekranı güncellendi.`); }
+  } catch (e) { /* yok say */ }
 })();
