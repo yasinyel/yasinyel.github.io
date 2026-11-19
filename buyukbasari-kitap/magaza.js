@@ -130,7 +130,7 @@
     ana.innerHTML = `
       <section class="hero">
         <div class="hero-metin">
-          <span class="etiket"><i class="fa-solid fa-calendar-check"></i> ${B.OKUL.donem} Eğitim Yılı kitap satışları açık</span>
+          <span class="etiket"><i class="fa-solid fa-calendar-check"></i> Ortaokul ve Anadolu Lisesi · ${B.OKUL.donem} kitap satışları açık</span>
           <h1>Çocuğunuzun kitap seti <em>birkaç dakikada</em> hazır.</h1>
           <p>Öğrenci numaranızla giriş yapın, sınıfına özel setleri görün, kartla tek çekim ya da taksitle ödeyin. Kitaplar okulda öğrencinin sınıfına teslim edilsin.</p>
           <div class="hero-adimlar">
@@ -146,9 +146,9 @@
           <div class="demo-ipucu">
             <i class="fa-solid fa-wand-magic-sparkles"></i> Demo öğrencileri:
             <div class="cipler">
-              <button type="button" class="cip" data-act="demo-no" data-no="2471"><b>2471</b> · Elif, 7-A (kardeşi Can, 3-B)</button>
+              <button type="button" class="cip" data-act="demo-no" data-no="2471"><b>2471</b> · Elif, 7-A (kardeşi Can, 5-B)</button>
               <button type="button" class="cip" data-act="demo-no" data-no="3105"><b>3105</b> · Mert, 12-A</button>
-              <button type="button" class="cip" data-act="demo-no" data-no="1820"><b>1820</b> · Zeynep, 1-A</button>
+              <button type="button" class="cip" data-act="demo-no" data-no="1820"><b>1820</b> · Zeynep, 9-A</button>
             </div>
           </div>
         </div>
@@ -212,7 +212,7 @@
     const aktif = x.no === S.aktif;
     return `<button class="ogr-sekme ${aktif ? 'aktif' : ''}" role="tab" aria-selected="${aktif}" data-act="ogr" data-no="${x.no}">
       <span class="avatar">${esc(B.basHarfler(x.ad))}</span>
-      <span><b>${esc(x.ad)}</b><small>${x.sinif}-${x.sube} · No ${x.no}</small></span>
+      <span><b>${esc(x.ad)}</b><small>${x.sinif}-${x.sube} · ${B.kademe(x.sinif)}</small></span>
       ${n ? `<span class="sayac">${n} set</span>` : ''}
     </button>`;
   }
@@ -714,7 +714,7 @@
       <p>Okulda teslim edilen setlerde değişim, sınıf öğretmeni aracılığıyla da yapılabilir.</p>`],
     iletisim: ['İletişim', () => `
       <p><b>Okul muhasebe birimi</b></p>
-      <p><i class="fa-solid fa-phone"></i> [Okul telefonu]<br><i class="fa-solid fa-envelope"></i> [Muhasebe e-posta adresi]<br><i class="fa-solid fa-clock"></i> Hafta içi 08.30–17.00</p>`]
+      <p><i class="fa-solid fa-phone"></i> ${esc(B.OKUL.telefon)}<br><i class="fa-solid fa-envelope"></i> [Muhasebe e-posta adresi]<br><i class="fa-solid fa-clock"></i> Hafta içi 08.30–17.00</p>`]
   };
 
   function belgeAc(k) {

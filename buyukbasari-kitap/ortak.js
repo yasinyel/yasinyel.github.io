@@ -14,9 +14,15 @@
     kisaAd: 'Büyük Başarı',
     magazaAdresi: 'kitap.buyukbasari.k12.tr',
     donem: '2026–2027',
-    kampus: 'Merkez Kampüs',
+    kampus: 'Isparta',
+    telefon: '0246 223 39 99',
+    slogan: 'Bizimle Başlamak Başarmaktır.',
     siparisOnEki: 'BB26-'
   };
+
+  // Okulun kademeleri: Ortaokul (5–8) ve Anadolu Lisesi (9–12)
+  const SINIFLAR = [5, 6, 7, 8, 9, 10, 11, 12];
+  const kademe = sinif => (sinif <= 8 ? 'Ortaokul' : 'Anadolu Lisesi');
 
   /* ---------- Yardımcılar ---------- */
 
@@ -63,7 +69,7 @@
   /* ---------- Setler ---------- */
 
   const RENKLER = {
-    mavi: ['#2b5fb4', '#173b78'],
+    mavi: ['#5b6e83', '#36434f'],
     kirmizi: ['#d0503a', '#8f2a1c'],
     yesil: ['#2a9364', '#16583a'],
     turuncu: ['#e0912e', '#a35a0c'],
@@ -75,26 +81,8 @@
     const ekle = (sinif, kod, ad, kisa, tur, fiyat, icerik, renk, ikon) =>
       S.push({ id: `s${sinif}-${kod}`, sinif, kod, ad, kisa, tur, fiyat, icerik, renk, ikon });
 
-    for (let s = 1; s <= 12; s++) {
-      if (s <= 4) {
-        ekle(s, 'ana', `${s}. Sınıf Ana Yayın Seti`, 'Ana Yayın', 'sinif', 2950, [
-          'Türkçe Etkinlik Kitabı', 'Matematik Etkinlik Kitabı',
-          s <= 3 ? 'Hayat Bilgisi Etkinlik Kitabı' : 'Fen Bilimleri Etkinlik Kitabı',
-          s === 4 ? 'Sosyal Bilgiler Etkinlik Kitabı' : 'Değerler Eğitimi Kitabı',
-          'Haftalık Ödev Föyleri'
-        ], 'mavi', 'fa-book');
-        if (s === 1) {
-          ekle(1, 'iok', 'İlk Okuma Yazma Seti', 'İlk Okuma', 'sinif', 850, [
-            'Ses Temelli Okuma Yazma Kitabı', 'Yazı Defteri (2 adet)', 'Okuma Kartları'
-          ], 'turuncu', 'fa-pencil');
-        }
-        ekle(s, 'ing', `${s}. Sınıf İngilizce Seti`, 'İngilizce', 'sinif', 2250, [
-          "Student's Book", 'Workbook', 'Hikâye Kitabı (2 adet)', 'Dijital Platform Erişimi'
-        ], 'kirmizi', 'fa-language');
-        ekle(s, 'oku', 'Okuma Kitapları Seti', 'Okuma', 'ek', 1150, [
-          'Yaşa uygun 10 okuma kitabı', 'Okuma Takip Defteri'
-        ], 'yesil', 'fa-book-open');
-      } else if (s <= 8) {
+    for (const s of SINIFLAR) {
+      if (s <= 8) {
         if (s < 8) {
           ekle(s, 'ana', `${s}. Sınıf Ana Yayın Seti`, 'Ana Yayın', 'sinif', 3650, [
             'Türkçe Soru Bankası', 'Matematik Soru Bankası', 'Fen Bilimleri Soru Bankası',
@@ -157,16 +145,16 @@
   // Sunumda kullanılacak öğrenciler (bunlar için hazır sipariş üretilmez)
   const DEMO_OGRENCILER = [
     { no: '2471', ad: 'Elif Yılmaz', sinif: 7, sube: 'A', veli: 'Ayşe Yılmaz', tel: '05324164567', demo: true },
-    { no: '2472', ad: 'Can Yılmaz', sinif: 3, sube: 'B', veli: 'Ayşe Yılmaz', tel: '05324164567', demo: true },
+    { no: '2472', ad: 'Can Yılmaz', sinif: 5, sube: 'B', veli: 'Ayşe Yılmaz', tel: '05324164567', demo: true },
     { no: '3105', ad: 'Mert Demir', sinif: 12, sube: 'A', veli: 'Murat Demir', tel: '05051234589', demo: true },
-    { no: '1820', ad: 'Zeynep Kaya', sinif: 1, sube: 'A', veli: 'Esra Kaya', tel: '05437770312', demo: true }
+    { no: '1820', ad: 'Zeynep Kaya', sinif: 9, sube: 'A', veli: 'Esra Kaya', tel: '05437770312', demo: true }
   ];
 
   const r = prng(20262027);
   const sec = a => a[Math.floor(r() * a.length)];
   const OGRENCILER = [];
   let sira = 4001;
-  for (let s = 1; s <= 12; s++) {
+  for (const s of SINIFLAR) {
     for (const sube of ['A', 'B']) {
       const n = 16 + Math.floor(r() * 5);
       for (let i = 0; i < n; i++) {
@@ -182,7 +170,7 @@
   const OGR_MAP = Object.fromEntries(OGRENCILER.map(o => [o.no, o]));
 
   const SUBELER = [];
-  for (let s = 1; s <= 12; s++) for (const sube of ['A', 'B']) SUBELER.push({ sinif: s, sube, ad: `${s}-${sube}` });
+  for (const s of SINIFLAR) for (const sube of ['A', 'B']) SUBELER.push({ sinif: s, sube, ad: `${s}-${sube}` });
 
   /* ---------- Ödeme sabitleri ---------- */
 
@@ -215,7 +203,7 @@
   const AYAR_VARSAYILAN = { satisAcik: true, kardesIndirim: 5, kargo: 149.9, taksitler: [2, 3, 6] };
 
   const TOHUM = (function () {
-    const oran = s => (s <= 4 ? 0.8 : s <= 7 ? 0.66 : s === 8 ? 0.77 : s <= 10 ? 0.5 : 0.71);
+    const oran = s => (s <= 6 ? 0.74 : s === 7 ? 0.64 : s === 8 ? 0.79 : s <= 10 ? 0.52 : 0.72);
     const simdi = new Date();
     const bugun = new Date(simdi); bugun.setHours(0, 0, 0, 0);
     const liste = [];
@@ -355,7 +343,7 @@
   }
 
   window.BBK = {
-    OKUL, SETLER, OGRENCILER, SUBELER, DURUMLAR, VADE_FARKI, KART_PROGRAMLARI, RENKLER,
+    OKUL, SINIFLAR, kademe, SETLER, OGRENCILER, SUBELER, DURUMLAR, VADE_FARKI, KART_PROGRAMLARI, RENKLER,
     setById: id => SET_MAP[id],
     ogrenciByNo: no => OGR_MAP[String(no).trim()] || null,
     sinifSetleri, veliOgrencileri, siparisler, siparis, aktifSiparisler, alinanlar,

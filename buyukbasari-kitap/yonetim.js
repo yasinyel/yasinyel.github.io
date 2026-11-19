@@ -39,7 +39,7 @@
     return `<span class="durum ${x.cls}"><i class="fa-solid ${x.ikon}"></i> ${x.ad}</span>`;
   };
   const taksitAd = n => (n === 1 ? 'Tek çekim' : `${n} taksit`);
-  const sinifSecenekleri = sec => Array.from({ length: 12 }, (_, i) => i + 1)
+  const sinifSecenekleri = sec => B.SINIFLAR
     .map(g => `<option value="${g}" ${String(sec) === String(g) ? 'selected' : ''}>${g}. Sınıf</option>`).join('');
 
   function once(iso) {
@@ -70,7 +70,7 @@
     uyg.innerHTML = `
       <div class="giris-ekran">
         <form class="kart" id="yonetim-giris" novalidate>
-          <div class="marka"><span class="logo">BB</span><span><b>Büyük Başarı Koleji</b><small>Kitap Satış · Yönetim Paneli</small></span></div>
+          <div class="marka marka-dikey"><img class="logo-img" src="img/logo-koyu.png" alt="Büyük Başarı Koleji" width="512" height="192"><small>Kitap Satış · Yönetim Paneli</small></div>
           <h1>Personel girişi</h1>
           <p>Muhasebe, idare ve sınıf öğretmenleri için</p>
           <div class="alan"><label for="k-ad">Kullanıcı adı</label><input id="k-ad" value="muhasebe" autocomplete="username"></div>
@@ -85,7 +85,7 @@
     uyg.innerHTML = `
       <div class="panel">
         <aside class="yan" id="yan">
-          <a class="marka" href="#genel"><span class="logo">BB</span><span><b>Büyük Başarı</b><small>Kitap Satış Paneli</small></span></a>
+          <a class="marka marka-dikey" href="#genel" aria-label="Genel bakış"><img class="logo-img" src="img/logo-beyaz.png" alt="Büyük Başarı Koleji" width="512" height="192"><small>Kitap Satış Paneli</small></a>
           <button class="mobil-menu-btn" data-act="menu" aria-label="Menüyü aç"><i class="fa-solid fa-bars"></i></button>
           <nav id="nav" aria-label="Panel menüsü"></nav>
           <div class="yan-alt">
@@ -143,7 +143,7 @@
     const taksitli = aktif.length ? aktif.filter(s => s.taksit > 1).length / aktif.length : 0;
 
     const sinifVeri = [];
-    for (let g = 1; g <= 12; g++) {
+    for (const g of B.SINIFLAR) {
       const ogr = B.OGRENCILER.filter(o => o.sinif === g);
       const v = ogr.filter(o => veren.has(o.no)).length;
       let c = 0;
@@ -390,7 +390,7 @@
     const teslimSay = ogrs.filter(o => harita[o.no] && harita[o.no].siparisler.every(s => s.durum === 'teslim')).length;
 
     const subeSecenek = [];
-    for (let i = 1; i <= 12; i++) {
+    for (const i of B.SINIFLAR) {
       subeSecenek.push(`<optgroup label="${i}. Sınıf">${['A', 'B'].map(x => `<option value="${i}-${x}" ${U.dagSube === `${i}-${x}` ? 'selected' : ''}>${i}-${x}</option>`).join('')}</optgroup>`);
     }
 
