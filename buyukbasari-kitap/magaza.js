@@ -7,13 +7,16 @@
   const $ = (s, el) => (el || document).querySelector(s);
   const ana = $('#ana');
   const ustSag = $('#ust-sag');
-  const OTURUM = 'bbk-veli-oturum-v2';
+  const OTURUM = 'bbk-veli-oturum-v3';
 
   /* ---------- Oturum durumu (kart bilgisi asla burada tutulmaz) ---------- */
 
+  const DEMO_GIRIS = { tc: '11111111110', no: '2471', tel: '05324164567', kod: '1234' };
+
   function yeniOturum() {
     return {
-      adim: 'giris', girisTip: 'tc', girisKimlik: '', girisTel: '', adayNo: null, otp: false,
+      // Demo: giriş formu örnek veliyle dolu gelir (panel girişindeki gibi tek tıkla denenebilir)
+      adim: 'giris', girisTip: 'tc', girisKimlik: DEMO_GIRIS.tc, girisTel: DEMO_GIRIS.tel, adayNo: null, otp: false,
       tel: null, veliAd: '', aktif: null, gorulen: [], sepet: [],
       eposta: '', fatura: { tip: 'bireysel', tckn: '', unvan: '', vd: '', vno: '' },
       taksit: 1, sonSiparis: null
@@ -133,6 +136,7 @@
             <div class="hata-metni"></div>
           </div>
           <button class="btn btn-birincil btn-tam btn-buyuk" style="margin-top:18px">Devam et <i class="fa-solid fa-arrow-right"></i></button>
+          <p class="demo-not"><i class="fa-solid fa-flask"></i> <b>Demo:</b> örnek veli bilgileri hazır, “Devam et”e basmanız yeterli.</p>
         </form>`;
     } else {
       const o = B.ogrenciByNo(S.adayNo);
@@ -141,13 +145,13 @@
           <div class="bilgi-not"><i class="fa-solid fa-mobile-screen"></i><div><b>${esc(o.veli)}</b>, kayıtlı telefonunuza (<b>${B.telMaske(o.tel)}</b>) 4 haneli doğrulama kodu gönderdik.</div></div>
           <div class="alan" id="alan-otp">
             <label for="otp">Doğrulama kodu</label>
-            <input id="otp" class="otp-girdi" inputmode="numeric" autocomplete="one-time-code" maxlength="4" placeholder="••••">
+            <input id="otp" class="otp-girdi" inputmode="numeric" autocomplete="one-time-code" maxlength="4" placeholder="••••" value="${DEMO_GIRIS.kod}">
             <div class="hata-metni"></div>
           </div>
           <button class="btn btn-birincil btn-tam btn-buyuk" style="margin-top:16px">Doğrula ve giriş yap</button>
+          <p class="demo-not"><i class="fa-solid fa-flask"></i> <b>Demo:</b> SMS kodu otomatik dolduruldu, “Doğrula ve giriş yap”a basın.</p>
           <div style="display:flex;justify-content:space-between;gap:10px;margin-top:12px;font-size:13px">
             <button type="button" class="baglanti" data-act="geri-giris">Bilgileri değiştir</button>
-            <span style="color:var(--soluk)">Demo kodu: <b>1234</b></span>
           </div>
         </form>`;
     }
@@ -592,10 +596,10 @@
         </div>
         <p style="margin-bottom:12px">${B.telMaske(S.tel)} numaralı telefonunuza gönderilen tek kullanımlık şifreyi girin.</p>
         <div class="alan" id="alan-sms">
-          <input id="sms" class="otp-girdi" inputmode="numeric" maxlength="6" placeholder="••••••" autocomplete="one-time-code" aria-label="SMS şifresi">
+          <input id="sms" class="otp-girdi" inputmode="numeric" maxlength="6" placeholder="••••••" autocomplete="one-time-code" aria-label="SMS şifresi" value="123456">
           <div class="hata-metni"></div>
         </div>
-        <p class="alan-ipucu" style="text-align:center;margin-top:8px">Demo şifre: <b>123456</b></p>
+        <p class="demo-not"><i class="fa-solid fa-flask"></i> <b>Demo:</b> banka şifresi otomatik dolduruldu, “Onayla”ya basın.</p>
         <div style="display:flex;gap:10px;margin-top:16px">
           <button type="button" class="btn btn-ikincil" data-act="modal-kapat" style="flex:1">İptal</button>
           <button type="button" class="btn btn-birincil" data-act="ucd-onay" style="flex:2">Onayla</button>
@@ -820,7 +824,7 @@
         break;
       case 'giris-tip':
         girisFormuOku();
-        if (S.girisTip !== el.dataset.tip) { S.girisTip = el.dataset.tip; S.girisKimlik = ''; }
+        if (S.girisTip !== el.dataset.tip) { S.girisTip = el.dataset.tip; S.girisKimlik = S.girisTip === 'tc' ? DEMO_GIRIS.tc : DEMO_GIRIS.no; }
         render();
         break;
       case 'demo-veli':
