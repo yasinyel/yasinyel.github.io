@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Kitap Satış · Büyük Başarı Koleji (Demo)</title>
+    <meta name="description" content="Büyük Başarı Koleji online kitap ve yayın satış platformu — sunum demosu.">
+    <meta name="theme-color" content="#14325e">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="stil.css">
+</head>
+<body class="magaza">
+    <div class="demo-serit">
+        <span><i class="fa-solid fa-flask"></i> Sunum demosu — gerçek ödeme alınmaz, kart bilgisi hiçbir yere gönderilmez.</span>
+        <a href="yonetim.html" target="_blank" rel="noopener">Okul yönetim paneli <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+        <button type="button" data-act="sifirla">Demoyu sıfırla</button>
+    </div>
+
+    <header class="ust">
+        <div class="kap ust-ic">
+            <a class="marka" href="./" aria-label="Ana sayfa">
+                <span class="logo">BB</span>
+                <span><b>Büyük Başarı Koleji</b><small>Kitap &amp; Yayın Satış</small></span>
+            </a>
+            <div class="ust-sag" id="ust-sag"></div>
+        </div>
+    </header>
+
+    <main id="ana" class="kap"></main>
+
+    <footer class="alt">
+        <div class="kap alt-ic">
+            <div><b>Büyük Başarı Koleji</b><br>Kitap &amp; Yayın Satış Platformu</div>
+            <nav aria-label="Yasal bilgiler">
+                <button type="button" data-act="belge" data-belge="mss">Mesafeli Satış Sözleşmesi</button>
+                <button type="button" data-act="belge" data-belge="iade">İade ve Değişim</button>
+                <button type="button" data-act="belge" data-belge="kvkk">KVKK Aydınlatma Metni</button>
+                <button type="button" data-act="belge" data-belge="iletisim">İletişim</button>
+            </nav>
+            <div class="odeme-logolar" aria-label="Kabul edilen kartlar">
+                <i class="fa-brands fa-cc-visa" title="Visa"></i>
+                <i class="fa-brands fa-cc-mastercard" title="Mastercard"></i>
+                <span class="troy" title="Troy">TROY</span>
+                <span class="ssl"><i class="fa-solid fa-lock"></i> 3D Secure</span>
+            </div>
+        </div>
+    </footer>
+
+    <div id="modal"></div>
+
+    <script src="ortak.js"></script>
+    <script src="magaza.js"></script>
+</body>
+</html>
